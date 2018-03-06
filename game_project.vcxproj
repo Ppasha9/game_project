@@ -149,9 +149,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="def.h" />
     <ClInclude Include="math\math_def.h" />
     <ClInclude Include="math\matr.h" />
     <ClInclude Include="math\vec.h" />
+    <ClInclude Include="render\geom.h" />
+    <ClInclude Include="render\material.h" />
+    <ClInclude Include="render\prim.h" />
+    <ClInclude Include="render\render.h" />
+    <ClInclude Include="render\shader.h" />
+    <ClInclude Include="render\texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

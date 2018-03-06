@@ -5,8 +5,8 @@
   AUTHOR:
     Denisov Pavel,
     Lebed Pavel,
-    Vasiliev Petr
-  LAST UPDATE: 05.03.2018
+    Vasilyev Peter
+  LAST UPDATE: 06.03.2018
   NOTE: main project file
  */
 
