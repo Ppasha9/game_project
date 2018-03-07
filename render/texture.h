@@ -1,11 +1,11 @@
 /*
-  Game project
-
-  FILE: texture.h
-  AUTHOR:
-    Vasilyev Peter
-  LAST UPDATE: 07.03.2018
-  NOTE: texture resource handle file
+ * Game project
+ *
+ * FILE: texture.h
+ * AUTHORS:
+ *   Vasilyev Peter
+ * LAST UPDATE: 07.03.2018
+ * NOTE: texture resource handle file
  */
 
 #pragma once
@@ -16,17 +16,17 @@
 namespace render
 {
   /* Texture resource class */
-  class texture
+  class Texture
   {
-    friend class render;
+    friend class Render;
 
   private:
-    string Name;
+    string _name;
     // params
 
     /* Create texture function */
-    texture( /* params */ );
-  }; /* End of 'texture' class */
+    Texture( /* params */ );
+  }; /* End of 'Texture' class */
 }; /* end of 'render' namespace */
 
 /* END OF 'texture.h' FILE */

@@ -19,10 +19,34 @@
     <Filter Include="Source Files\Render support">
       <UniqueIdentifier>{e7082fbe-2007-4060-96a1-c8905304eec0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Windows support">
+      <UniqueIdentifier>{9398b741-786f-4f05-b1c6-aa51b1a59bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Geometry resource">
+      <UniqueIdentifier>{0e3eb20d-094a-477e-b249-81bf2d79f89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Material resource">
+      <UniqueIdentifier>{bf0d5406-1efc-4856-ac8d-158165457e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Primitive resource">
+      <UniqueIdentifier>{c18ea3d0-3dd3-4560-8856-6ce1a12760fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Shader resource">
+      <UniqueIdentifier>{5098481d-83ee-46a3-b4c7-3bdd4af87ce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Texture resource">
+      <UniqueIdentifier>{af7abdbc-50ed-46d5-9ce7-f3b4e4cedb0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win\win.cpp">
+      <Filter>Source Files\Windows support</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render.cpp">
+      <Filter>Source Files\Render support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,26 +59,29 @@
     <ClInclude Include="math\vec.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="def.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="win\win.h">
+      <Filter>Source Files\Windows support</Filter>
+    </ClInclude>
     <ClInclude Include="render\geom.h">
-      <Filter>Source Files\Render support</Filter>
+      <Filter>Source Files\Render support\Geometry resource</Filter>
     </ClInclude>
     <ClInclude Include="render\material.h">
-      <Filter>Source Files\Render support</Filter>
+      <Filter>Source Files\Render support\Material resource</Filter>
     </ClInclude>
     <ClInclude Include="render\prim.h">
-      <Filter>Source Files\Render support</Filter>
+      <Filter>Source Files\Render support\Primitive resource</Filter>
+    </ClInclude>
+    <ClInclude Include="render\shader.h">
+      <Filter>Source Files\Render support\Shader resource</Filter>
+    </ClInclude>
+    <ClInclude Include="render\texture.h">
+      <Filter>Source Files\Render support\Texture resource</Filter>
     </ClInclude>
     <ClInclude Include="render\render.h">
       <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="render\shader.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="render\texture.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="def.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

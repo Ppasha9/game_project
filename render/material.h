@@ -1,39 +1,39 @@
 /*
-  Game project
-
-  FILE: material.h
-  AUTHOR:
-    Vasilyev Peter
-  LAST UPDATE: 07.03.2018
-  NOTE: material handle file
+ * Game project
+ *
+ * FILE: material.h
+ * AUTHORS:
+ *   Vasilyev Peter
+ * LAST UPDATE: 07.03.2018
+ * NOTE: material handle file
  */
 
 #pragma once
 
 #include <vector>
 
-#include "shader.h"
 #include "texture.h"
 
 /* Render handle namespace */
 namespace render
 {
-  using texture_vector = std::vector<texture *>;
+  using TextureVector = std::vector<Texture *>;
 
   /* Material class */
-  class material
+  class Material
   {
-    friend class render;
+    friend class Render;
 
   private:
-    string Name;
-    // params
+    string _name;
+    // Ka, Kd, Ks, Kp
 
-    texture_vector Textures;
+     TextureVector Textures;
+    // Or fixed number
 
     /* Create material function */
-    material( /* params */ );
-  }; /* End of 'material' class */
+    Material( /* params */ );
+  }; /* End of 'Material' class */
 }; /* end of 'render' namespace */
 
 /* END OF 'material.h' FILE */

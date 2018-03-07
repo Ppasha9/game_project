@@ -1,13 +1,13 @@
 /*
-  Game project
-
-  FILE: def.h
-  AUTHOR:
-    Denisov Pavel,
-    Lebed Pavel,
-    Vasilyev Peter
-  LAST UPDATE: 07.03.2018
-  NOTE: default declaration file
+ * Game project
+ *
+ * FILE: def.h
+ * AUTHORS:
+ *   Denisov Pavel,
+ *   Lebed Pavel,
+ *   Vasilyev Peter
+ * LAST UPDATE: 07.03.2018
+ * NOTE: default declaration file
  */
 
 #pragma once
@@ -16,5 +16,8 @@
 
 using string = std::string;
 
-// Forward declaration
-class render;
+namespace render
+{
+  // Forward declaration
+  class Render;
+}

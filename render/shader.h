@@ -1,11 +1,11 @@
 /*
-  Game project
-
-  FILE: shader.h
-  AUTHOR:
-    Vasilyev Peter
-  LAST UPDATE: 07.03.2018
-  NOTE: shader resource handle file
+ * Game project
+ *
+ * FILE: shader.h
+ * AUTHORS:
+ *   Vasilyev Peter
+ * LAST UPDATE: 07.03.2018
+ * NOTE: shader resource handle file
  */
 
 #pragma once
@@ -16,17 +16,17 @@
 namespace render
 {
   /* Shader resource class */
-  class shader
+  class Shader
   {
-    friend class render;
+    friend class Render;
 
   private:
-    string Name;
+    string _name;
     // params
 
     /* Create shader function */
-    shader( /* params */ );
-  }; /* End of 'shader' class */
+    Shader( /* params */ );
+  }; /* End of 'Shader' class */
 }; /* end of 'render' namespace */
 
 /* END OF 'shader.h' FILE */

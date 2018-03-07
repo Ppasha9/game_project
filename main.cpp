@@ -1,20 +1,25 @@
 /*
-  Game project
-
-  FILE: main.cpp
-  AUTHOR:
-    Denisov Pavel,
-    Lebed Pavel,
-    Vasilyev Peter
-  LAST UPDATE: 06.03.2018
-  NOTE: main project file
+ * Game project
+ *
+ * FILE: main.cpp
+ * AUTHORS:
+ *   Denisov Pavel,
+ *   Lebed Pavel,
+ *   Vasilyev Peter
+ * LAST UPDATE: 07.03.2018
+ * NOTE: main project file
  */
 
-#include <Windows.h>
+#include "win\win.h"
+#include "render\render.h"
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-  MessageBoxA(NULL, "Top Game Development :-)", "Game App", 0);
+  //MessageBoxA(NULL, "Top Game Development :-)", "Game App", 0);
+
+  Win win;
+  win.run();
+
   return 0;
 }
 
