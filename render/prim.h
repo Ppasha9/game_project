@@ -4,7 +4,7 @@
   FILE: prim.h
   AUTHOR:
     Vasilyev Peter
-  LAST UPDATE: 06.03.2018
+  LAST UPDATE: 07.03.2018
   NOTE: geometry primitive handle file
  */
 
@@ -13,21 +13,25 @@
 #include "material.h"
 #include "geom.h"
 
-/* Geometry primitive resource class */
-class prim
+/* Render handle namespace */
+namespace render
 {
-  friend class render;
+  /* Geometry primitive resource class */
+  class prim
+  {
+    friend class render;
 
-private:
-  string Name;
+  private:
+    string Name;
 
-  geom *Geometry;
-  shader *Shader;
-  material *Material;
-  // World matrix
+    geom *Geometry;
+    shader *Shader;
+    material *Material;
+    // World matrix
 
-  /* Create primitive function */
-  prim( /* params */ );
-}; /* End of 'prim' class */
+    /* Create primitive function */
+    prim( /* params */ );
+  }; /* End of 'prim' class */
+}; /* end of 'render' namespace */
 
 /* END OF 'prim.h' FILE */

@@ -4,7 +4,7 @@
   FILE: render.h
   AUTHOR:
     Vasilyev Peter
-  LAST UPDATE: 06.03.2018
+  LAST UPDATE: 07.03.2018
   NOTE: render handle file
  */
 
@@ -12,91 +12,96 @@
 
 #include <map>
 
+#include "..\def.h"
 #include "prim.h"
 #include "material.h"
 
-using shader_map = std::map<string, shader *>;
-using material_map = std::map<string, material *>;
-using texture_map = std::map<string, texture *>;
-using geom_map = std::map<string, geom *>;
-using prim_map = std::map<string, prim *>;
+/* Render handle namespace */
+namespace render
+{
+  using shader_map = std::map<string, shader *>;
+  using material_map = std::map<string, material *>;
+  using texture_map = std::map<string, texture *>;
+  using geom_map = std::map<string, geom *>;
+  using prim_map = std::map<string, prim *>;
 
   /* Render handle class */
-class render
-{
-private:
-  static prim_map Prims;         // Registered primitives map
-  static material_map Materials; // Registered materials map
-  static shader_map Shaders;     // Registered shaders map
-  static texture_map Textures;   // Registered textures map
-  static geom_map Geometries;    // Registered geometry map
+  class render
+  {
+  private:
+    static prim_map Prims;         // Registered primitives map
+    static material_map Materials; // Registered materials map
+    static shader_map Shaders;     // Registered shaders map
+    static texture_map Textures;   // Registered textures map
+    static geom_map Geometries;    // Registered geometry map
 
-public:
-  /* Init render function */
-  void Init( void );
+    /* Create render function */
+    render( void );
 
-  /* Release render */
-  void Release( void );
+  public:
+    /* Destroy render function */
+    ~render( void );
 
-  /* Start frame function */
-  void StartFrame( void );
+    /* Start frame function */
+    void StartFrame( void );
 
-  /* End frame function */
-  void EndFrame( void );
+    /* End frame function */
+    void EndFrame( void );
 
-  /***
-   * Texture handle
-   ***/
+    /***
+     * Texture handle
+     ***/
 
-  /* Get texture interface function */
-  texture * GetTexture( const string &TexName );
+    /* Get texture interface function */
+    texture * GetTexture( const string &TexName );
 
-  /* Release texture function */
-  void ReleaseTexture( texture *Tex );
+    /* Release texture function */
+    void ReleaseTexture( texture *Tex );
 
-  /***
-   * Shader handle
-   ***/
-  /* Get shader interface function */
-  shader * GetShader( const string &TexName );
+    /***
+     * Shader handle
+     ***/
+    /* Get shader interface function */
+    shader * GetShader( const string &TexName );
 
-  /* Release primitive function */
-  void ReleaseShader( shader *Shader );
+    /* Release primitive function */
+    void ReleaseShader( shader *Shader );
 
-  /***
-   * Material handle
-   ***/
+    /***
+     * Material handle
+     ***/
 
-  /* Get material interface function */
-  material * CreateMaterial( /* params */ );
+    /* Get material interface function */
+    material * CreateMaterial( /* params */ );
 
-  /* Set primitive texture function */
-  void SetMaterialTexture( material *Mtl, texture *NewTexture, int TexId );
+    /* Set primitive texture function */
+    void SetMaterialTexture( material *Mtl, texture *NewTexture, int TexId );
 
-  /* Realease material function */
-  void ReleaseMaterial( material *Mtl );
+    /* Realease material function */
+    void ReleaseMaterial( material *Mtl );
 
-  /***
-   * Primitive handle
-   ***/
+    /***
+     * Primitive handle
+     ***/
 
-  /* Create sphere primitive function */
-  prim * CreateSphere( float Radius );
+    /* Create sphere primitive function */
+    prim * CreateSphere( float Radius );
 
-  /* Create box primitive function */
-  prim * CreateBox( float Width, float Height );
+    /* Create box primitive function */
+    prim * CreateBox( float Width, float Height );
 
-  /* Set primitive shader function */
-  void SetPrimShader( prim *Prim, shader *NewShader );
+    /* Set primitive shader function */
+    void SetPrimShader( prim *Prim, shader *NewShader );
 
-  /* Set primitive material function */
-  void SetPrimMaterial( prim *Prim, material *NewMaterial );
+    /* Set primitive material function */
+    void SetPrimMaterial( prim *Prim, material *NewMaterial );
 
-  /* Draw primitive function */
-  void DrawPrim( prim *Prim );
+    /* Draw primitive function */
+    void DrawPrim( prim *Prim );
 
-  /* Realease primitive function */
-  void ReleasePrim( prim *Prim );
-}; /* End of 'render' class */
+    /* Realease primitive function */
+    void ReleasePrim( prim *Prim );
+  }; /* End of 'render' class */
+}; /* end of 'render' namespace */
 
 /* END OF 'render.h' FILE */

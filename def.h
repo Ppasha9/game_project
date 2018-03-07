@@ -6,11 +6,13 @@
     Denisov Pavel,
     Lebed Pavel,
     Vasilyev Peter
-  LAST UPDATE: 06.03.2018
+  LAST UPDATE: 07.03.2018
   NOTE: default declaration file
  */
 
 #pragma once
+
+#include <string>
 
 using string = std::string;
 

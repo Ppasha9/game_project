@@ -4,7 +4,7 @@
   FILE: material.h
   AUTHOR:
     Vasilyev Peter
-  LAST UPDATE: 06.03.2018
+  LAST UPDATE: 07.03.2018
   NOTE: material handle file
  */
 
@@ -17,19 +17,23 @@
 
 using texture_vector = std::vector<texture *>;
 
-/* Material class */
-class material
+/* Render handle namespace */
+namespace render
 {
-  friend class render;
+  /* Material class */
+  class material
+  {
+    friend class render;
 
-private:
-  string Name;
-  // params
+  private:
+    string Name;
+    // params
 
-  texture_vector Textures;
+    texture_vector Textures;
 
-  /* Create material function */
-  material( /* params */ );
-}; /* End of 'material' class */
+    /* Create material function */
+    material( /* params */ );
+  }; /* End of 'material' class */
+}; /* end of 'render' namespace */
 
 /* END OF 'material.h' FILE */

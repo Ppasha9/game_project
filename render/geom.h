@@ -4,25 +4,29 @@
   FILE: geom.h
   AUTHOR:
     Vasilyev Peter
-  LAST UPDATE: 06.03.2018
+  LAST UPDATE: 07.03.2018
   NOTE: geometry directx resource handle file
  */
 
 #pragma once
 
-#include "def.h"
+#include "..\def.h"
 
-/* Geometry resource class */
-class geom
+/* Render handle namespace */
+namespace render
 {
-  friend class render;
+  /* Geometry resource class */
+  class geom
+  {
+    friend class render;
 
-private:
-  string Name;
-  // params
+  private:
+    string Name;
+    // params
 
-  /* Create geometry function */
-  geom( /* params */ );
-}; /* End of 'geom' class */
+    /* Create geometry function */
+    geom( /* params */ );
+  }; /* End of 'geom' class */
+} /* end of 'render' namespace */
 
 /* END OF 'geom.h' FILE */
