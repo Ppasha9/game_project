@@ -15,11 +15,11 @@
 #include "shader.h"
 #include "texture.h"
 
-using texture_vector = std::vector<texture *>;
-
 /* Render handle namespace */
 namespace render
 {
+  using texture_vector = std::vector<texture *>;
+
   /* Material class */
   class material
   {
