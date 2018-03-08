@@ -4,11 +4,17 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 08.03.2018
  * NOTE: render handle declaration file
  */
 
 #pragma once
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+
+#include <d3d11.h>
 
 #include <map>
 
@@ -35,23 +41,54 @@ namespace render
     TextureMap _textures;   // Registered textures map
     GeomMap _geometries;    // Registered geometry map
 
-    /* resources */
+    /* DirectX resources */
+    IDXGISwapChain          *_swapChain;
+    ID3D11Device            *_device;
+    ID3D11DeviceContext     *_deviceContext;
+    ID3D11RenderTargetView  *_renderTargetView;
+    ID3D11Texture2D         *_depthStencilBuffer;
+    ID3D11DepthStencilState *_depthStencilState;
+    ID3D11DepthStencilView  *_depthStencilView;
+    ID3D11RasterizerState   *_rasterState;
+    // _proj;
+    // _world;
+    // _view;
 
     /* Create render function */
     Render( void );
+
+    /* Create depth stencil buffer and view function (releases old if exists) */
+    void createDepthStencil( int Width, int Height );
+
+    /* Set viewport function */
+    void setViewport( int Width, int Height );
+
+    /* Release resource function */
+    template<typename Resource>
+      inline void releaseRes( Resource *(&R) )
+      {
+        if (R != nullptr)
+        {
+          R->Release();
+          R = nullptr;
+        }
+      } /* End of 'releaseRes' function */
 
   public:
     /* Destroy render function */
     ~Render( void );
 
     /* Get render instance function */
-    Render & getInstance( void ) const;
+    static Render & getInstance( void );
 
     /* Initialize DirectX function */
-    void init( /* params */ );
+    void init( int Width, int Height, HWND hWnd );
 
     /* Release DirectX function */
-    void release( /* params */ );
+    void release( void );
+
+    /* Resize render system function */
+    void resize( int Width, int Height );
 
     /* Start frame function */
     void startFrame( void );
@@ -107,12 +144,6 @@ namespace render
     /***
      * Primitive handle
      ***/
-
-    /* Create sphere primitive function */
-    Prim * createSphere( float Radius );
-
-    /* Create box primitive function */
-    Prim * createBox( float Width, float Height );
 
     /* Get primitive interface function */
     Prim * getPrim( const string &PrimName ) const;

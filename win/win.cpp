@@ -9,9 +9,10 @@
  */
 
 #include "win.h"
+#include "..\render\render.h"
 
 /* Create window function */
-Win::Win( HINSTANCE hInstance, int CmdShow )
+Win::Win(  HINSTANCE hInstance, int CmdShow )
 {
   WNDCLASSEX wc;
 
@@ -134,6 +135,10 @@ WPARAM Win::run( VOID )
 bool Win::onCreate( CREATESTRUCT *CS )
 {
   SetTimer(Win::_hWnd, 30, 1, nullptr);
+
+  render::Render & rnd = render::Render::getInstance();
+  rnd.init(1, 1, _hWnd);
+
   return true;
 } /* End of 'Win::onCreate' function */
 
@@ -149,7 +154,11 @@ void Win::onSize( UINT State, int W, int H )
 {
   _width = W;
   _height = H;
-  resize(W, H);
+  //resize(W, H);
+
+  render::Render & rnd = render::Render::getInstance();
+  rnd.resize(_width, _height);
+  rnd.render();
 } /* End of 'Win::onSize' function */
 
 /* WM_PAINT window message handle function */
@@ -182,7 +191,10 @@ bool Win::onErase( HDC hDC )
 void Win::onTimer( void )
 {
   HDC hDC = GetDC(_hWnd);
-  render();
+  render::Render & rnd = render::Render::getInstance();
+
+  rnd.render();
+
   ReleaseDC(_hWnd, hDC);
 } /* End of 'Win::onTimer' function */
 
