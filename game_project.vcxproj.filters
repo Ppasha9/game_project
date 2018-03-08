@@ -29,12 +29,6 @@
     <ClInclude Include="math\math_def.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="math\matr.h">
-      <Filter>Source Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vec.h">
-      <Filter>Source Files\Math</Filter>
-    </ClInclude>
     <ClInclude Include="render\geom.h">
       <Filter>Source Files\Render support</Filter>
     </ClInclude>
@@ -55,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="def.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\matrix.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

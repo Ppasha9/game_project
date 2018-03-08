@@ -151,8 +151,8 @@
   <ItemGroup>
     <ClInclude Include="def.h" />
     <ClInclude Include="math\math_def.h" />
-    <ClInclude Include="math\matr.h" />
-    <ClInclude Include="math\vec.h" />
+    <ClInclude Include="math\matrix.h" />
+    <ClInclude Include="math\vector.h" />
     <ClInclude Include="render\geom.h" />
     <ClInclude Include="render\material.h" />
     <ClInclude Include="render\prim.h" />

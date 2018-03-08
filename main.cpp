@@ -11,8 +11,9 @@
  */
 
 #include <Windows.h>
+#include  "math/math_def.h"
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
   MessageBoxA(NULL, "Top Game Development :-)", "Game App", 0);
   return 0;
