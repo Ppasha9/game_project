@@ -1,11 +1,11 @@
 /*
-  Game project
-
-  FILE: geom.h
-  AUTHOR:
-    Vasilyev Peter
-  LAST UPDATE: 07.03.2018
-  NOTE: geometry directx resource handle file
+ * Game project
+ *
+ * FILE: geom.h
+ * AUTHORS:
+ *   Vasilyev Peter
+ * LAST UPDATE: 07.03.2018
+ * NOTE: geometry directx resource handle file
  */
 
 #pragma once
@@ -16,17 +16,17 @@
 namespace render
 {
   /* Geometry resource class */
-  class geom
+  class Geom
   {
-    friend class render;
+    friend class Render;
 
   private:
-    string Name;
+    string _name;
     // params
 
     /* Create geometry function */
-    geom( /* params */ );
-  }; /* End of 'geom' class */
+    Geom( /* params */ );
+  }; /* End of 'Geom' class */
 } /* end of 'render' namespace */
 
 /* END OF 'geom.h' FILE */
