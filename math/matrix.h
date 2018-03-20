@@ -3,7 +3,7 @@
  * 
  * FILE: matrix.h 
  * AUTHORS:
- * Lebed Pavel
+ *   Lebed Pavel
  * LAST UPDATE: 07.03.2018 
  * NOTE: matrix calculation module 
  */
@@ -24,7 +24,7 @@ namespace math
   template <size_t Rows, size_t Columns, typename Type>
   class Matrix
   {
-  private:
+  public:
     Type _values[Rows][Columns];
   public:
     /* Constrictor with no initialize */
@@ -104,6 +104,8 @@ namespace math
         res *= matr._values[j][j];
       return res;
     } /* End of 'Det' function */
+
+    /* Set matrix like the inverse of  */
 
     /* Matrix multiply */
     template <size_t Column2>

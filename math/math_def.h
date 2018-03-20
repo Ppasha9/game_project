@@ -3,8 +3,9 @@
  * 
  * FILE: main.cpp 
  * AUTHORS:
- * Lebed Pavel
- * LAST UPDATE: 07.03.2018 
+ *   Lebed Pavel,
+ *   Denisov Pavel
+ * LAST UPDATE: 20.03.2018 
  * NOTE: math definitions module 
  */
 
@@ -13,7 +14,8 @@
 #pragma once
 
 #include "matrix.h"
-#include "Vector.h"
+#include "vector.h"
+#include "quat.h"
 
 /* Mathematics's namespace */
 namespace math
@@ -29,6 +31,11 @@ namespace math
   // Matrix predifinitions
   using Matr3f = Matrix<3, 3, float>;
   using Matr3d = Matrix<3, 3, double>;
+  using Matr4f = Matrix<4, 4, float>;
+  using Matr4d = Matrix<4, 4, double>;
+  // Quaternion predefinitions
+  using Quatf = Quat<float>;
+  using Quatd = Quat<double>;
 
   /// Some useful functions
   /* Integer power during link function */

@@ -147,6 +147,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="physics\collision\phys_collision.cpp" />
+    <ClCompile Include="physics\phys_object\phys_object.cpp" />
+    <ClCompile Include="physics\phys_system.cpp" />
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="win\win.cpp" />
   </ItemGroup>
@@ -154,7 +157,11 @@
     <ClInclude Include="def.h" />
     <ClInclude Include="math\math_def.h" />
     <ClInclude Include="math\matrix.h" />
+    <ClInclude Include="math\quat.h" />
     <ClInclude Include="math\vector.h" />
+    <ClInclude Include="physics\collision\phys_collision.h" />
+    <ClInclude Include="physics\phys_object\phys_object.h" />
+    <ClInclude Include="physics\phys_system.h" />
     <ClInclude Include="render\geom.h" />
     <ClInclude Include="render\material.h" />
     <ClInclude Include="render\prim.h" />

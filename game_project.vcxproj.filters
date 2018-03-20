@@ -19,10 +19,37 @@
     <Filter Include="Source Files\Render support">
       <UniqueIdentifier>{e7082fbe-2007-4060-96a1-c8905304eec0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Window handle">
+      <UniqueIdentifier>{86350ff1-4cf4-4184-ba87-d15d2266ab79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system">
+      <UniqueIdentifier>{e4b3afa1-72c4-46cb-9c40-78b6f4473eb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Physic object">
+      <UniqueIdentifier>{2c38f749-82ca-4c6e-a7c7-63ec4d2757a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Collision system">
+      <UniqueIdentifier>{61ee9492-e4ad-4c1c-bb53-884b11447570}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win\win.cpp">
+      <Filter>Source Files\Window handle</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render.cpp">
+      <Filter>Source Files\Render support</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\phys_system.cpp">
+      <Filter>Source Files\Physics system</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\phys_object\phys_object.cpp">
+      <Filter>Source Files\Physics system\Physic object</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\phys_collision.cpp">
+      <Filter>Source Files\Physics system\Collision system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +82,21 @@
     </ClInclude>
     <ClInclude Include="math\matrix.h">
       <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="win\win.h">
+      <Filter>Source Files\Window handle</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\phys_system.h">
+      <Filter>Source Files\Physics system</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\phys_object\phys_object.h">
+      <Filter>Source Files\Physics system\Physic object</Filter>
+    </ClInclude>
+    <ClInclude Include="math\quat.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\phys_collision.h">
+      <Filter>Source Files\Physics system\Collision system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
