@@ -138,6 +138,8 @@ bool Win::onCreate( CREATESTRUCT *CS )
 
   render::Render & rnd = render::Render::getInstance();
   rnd.init(1, 1, _hWnd);
+  rnd.createShader("test_shader");
+  rnd.createPrim("test_prim");
 
   return true;
 } /* End of 'Win::onCreate' function */

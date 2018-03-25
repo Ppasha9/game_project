@@ -4,7 +4,7 @@
  * FILE: prim.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 24.03.2018
  * NOTE: geometry primitive handle file
  */
 
@@ -18,21 +18,23 @@
 namespace render
 {
   /* Geometry primitive resource class */
-  class Prim
+  class Prim : public Resource
   {
     friend class Render;
+    friend class ResPtr<Prim>;
 
   private:
-    string _name;
+    GeomPtr _geometry;
+    ShaderPtr _shader;
+    MaterialPtr _material;
 
-    Geom *_geometry;
-    Shader *_shader;
-    Material *_material;
     // World matrix
 
     /* Create primitive function */
-    Prim( /* params */ );
+    Prim( const string &PrimName ) : Resource(PrimName) {}
   }; /* End of 'Prim' class */
+
+  using PrimPtr = ResPtr<Prim>;
 }; /* end of 'render' namespace */
 
 /* END OF 'prim.h' FILE */

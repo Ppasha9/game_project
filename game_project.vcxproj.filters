@@ -31,6 +31,30 @@
     <Filter Include="Source Files\Physics system\Collision system">
       <UniqueIdentifier>{61ee9492-e4ad-4c1c-bb53-884b11447570}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{f6ca02a1-9b19-48f8-87e3-ea4c5807aa60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources">
+      <UniqueIdentifier>{51fe7417-c186-4fd8-bd28-de193a1f3bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Geometry">
+      <UniqueIdentifier>{804f56ac-9ba0-4bb2-832a-b35964fac517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Const buffer">
+      <UniqueIdentifier>{d33b5269-2078-4a0d-b3ae-b8a2de591d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Primitive">
+      <UniqueIdentifier>{b226cfdb-b3fb-4eb2-be6f-9906e705c113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Shader">
+      <UniqueIdentifier>{4b6dc08d-b76d-4ba0-a881-9a7c1ba3cd4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Material">
+      <UniqueIdentifier>{4db79d57-cdfe-4ac8-88a6-573ae64b13d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Texture">
+      <UniqueIdentifier>{791d0856-bf1c-46a4-ba15-b403b7cf0329}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,27 +75,24 @@
     <ClCompile Include="physics\collision\phys_collision.cpp">
       <Filter>Source Files\Physics system\Collision system</Filter>
     </ClCompile>
+    <ClCompile Include="render\render_geom.cpp">
+      <Filter>Source Files\Render support\Resources\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render_const_buffer.cpp">
+      <Filter>Source Files\Render support\Resources\Const buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render_shader.cpp">
+      <Filter>Source Files\Render support\Resources\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render_prim.cpp">
+      <Filter>Source Files\Render support\Resources\Primitive</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\math_def.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="render\geom.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="render\material.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="render\prim.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
     <ClInclude Include="render\render.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="render\shader.h">
-      <Filter>Source Files\Render support</Filter>
-    </ClInclude>
-    <ClInclude Include="render\texture.h">
       <Filter>Source Files\Render support</Filter>
     </ClInclude>
     <ClInclude Include="def.h">
@@ -98,5 +119,34 @@
     <ClInclude Include="physics\collision\phys_collision.h">
       <Filter>Source Files\Physics system\Collision system</Filter>
     </ClInclude>
+    <ClInclude Include="render\resource.h">
+      <Filter>Source Files\Render support\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="render\geom.h">
+      <Filter>Source Files\Render support\Resources\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="render\const_buffer.h">
+      <Filter>Source Files\Render support\Resources\Const buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="render\material.h">
+      <Filter>Source Files\Render support\Resources\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="render\texture.h">
+      <Filter>Source Files\Render support\Resources\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="render\shader.h">
+      <Filter>Source Files\Render support\Resources\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="render\prim.h">
+      <Filter>Source Files\Render support\Resources\Primitive</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\ps_test_shader.hlsl">
+      <Filter>Source Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\vs_test_shader.hlsl">
+      <Filter>Source Files\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

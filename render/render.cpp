@@ -4,11 +4,18 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 08.03.2018
+ * LAST UPDATE: 24.03.2018
  * NOTE: render handle implementation file
  */
 
 #include <cassert>
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+
+#include <d3d11.h>
+#include <d3dcompiler.h>
 
 #include "render.h"
 
@@ -30,6 +37,7 @@ Render::Render( void ) :
 /* Destroy render function */
 Render::~Render( void )
 {
+  release();
 } /* End of 'Render::~Render' function */
 
 /* Get render instance function */
@@ -112,6 +120,8 @@ void Render::setViewport( int Width, int Height )
 void Render::init( int Width, int Height, HWND hWnd )
 {
   HRESULT result;
+
+  _hWnd = hWnd;
 
   /*** Init swap chain ***/
 
@@ -219,7 +229,7 @@ void Render::init( int Width, int Height, HWND hWnd )
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
   raster_desc.FillMode = D3D11_FILL_SOLID;
-  raster_desc.FrontCounterClockwise = false;
+  raster_desc.FrontCounterClockwise = true;
   raster_desc.MultisampleEnable = false;
   raster_desc.ScissorEnable = false;
   raster_desc.SlopeScaledDepthBias = 0.0f;
@@ -233,11 +243,24 @@ void Render::init( int Width, int Height, HWND hWnd )
 
   /*** Setup viewport ***/
   setViewport(Width, Height);
+
+  /*** Init constant buffer **/
+  initConstBuffer();
 } /* End of 'Render::init' function */
 
 /* Release DirectX function */
 void Render::release( void )
 {
+  // Realease all resources
+  releaseAllRes<Shader>(releaseShader, _shaders);
+  releaseAllRes<Prim>(releasePrim, _primitives);
+  releaseAllRes<Texture>(releaseTexture, _textures);
+  releaseAllRes<Material>(releaseMaterial, _materials);
+  releaseAllRes<Geom>(releaseGeom, _geometries);
+
+  // Release constant buffer
+  releaseConstBuffer();
+
   // Set to windowed mode or when released swap chain throws an exception.
   if(_swapChain)
     _swapChain->SetFullscreenState(false, NULL);
@@ -307,6 +330,19 @@ void Render::render( void )
 {
   startFrame();
 
+  static float angle = 0;
+
+  angle += 0.030f;
+
+  _constBuffer._data._world = DirectX::XMMatrixRotationZ(angle);
+  _constBuffer._data._view = DirectX::XMMatrixIdentity();
+  _constBuffer._data._proj = DirectX::XMMatrixIdentity();//XMMatrixPerspectiveRH(2, 2, -10, 10);
+
+  updateConstBuffer();
+
+  for (auto &p : _primitives)
+    drawPrim(p.second);
+
   endFrame();
 } /* End of 'Render::render' function */
 
@@ -321,82 +357,46 @@ void Render::endFrame( void )
  ***/
 
 /* Get texture interface function */
-Texture * Render::getTexture( const string &TexName ) const
+TexturePtr Render::getTexture( const string &TexName ) const
 {
-  auto tex = _textures.find(TexName);
-
-  if (tex == _textures.end())
-    return nullptr;
-
-  return tex->second;
+  return getRes<Texture>(TexName, _textures);
 } /* End of 'Render::getTexture' function */
 
 /* Release texture function */
-void Render::releaseTexture( Texture *Tex )
+void Render::releaseTexture( Render *Rnd, Texture *Tex )
 {
 } /* End of 'Render::releaseTexture' function */
 
-/***
- * Shader handle
- ***/
-/* Get shader interface function */
-Shader * Render::getShader( const string &TexName ) const
+/* Release texture function */
+void Render::releaseTexture( TexturePtr &Tex )
 {
-  auto shdr = _shaders.find(TexName);
-
-  if (shdr == _shaders.end())
-    return nullptr;
-
-  return shdr->second;
-} /* End of 'Render::getShader' function */
-
-/* Release primitive function */
-void Render::releaseShader( Shader *Shader )
-{
-} /* End of 'Render::releaseShader' function */
+  releaseRes<Texture>(Tex, releaseTexture, _textures);
+} /* End of 'Render::releaseTexture' function */
 
 /***
  * Material handle
  ***/
 
 /* Get material interface function */
-Material * Render::createMaterial( /* params */ )
+MaterialPtr Render::createMaterial( /* params */ )
 {
   return nullptr;
 } /* End of 'Render::createMaterial' function */
 
 /* Set material texture function */
-void Render::setMaterialTexture( Material *Mtl, Texture *NewTexture, int TexNo )
+void Render::setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo )
 {
 } /* End of 'Render::setMaterialTexture' function */
 
-/* Realease material function */
-void Render::releaseMaterial( Material *Mtl )
+/* Release material function */
+void Render::releaseMaterial( Render *Rnd, Material *Mtl )
 {
 } /* End of 'Render::releaseMaterial' function */
 
-/***
- * Primitive handle
- ***/
-
-/* Set primitive shader function */
-void Render::setPrimShader( Prim *Prim, Shader *NewShader )
+/* Realease material function */
+void Render::releaseMaterial( MaterialPtr &Mtl )
 {
-} /* End of 'Render::setPrimShader' function */
-
-/* Set primitive material function */
-void Render::setPrimMaterial( Prim *Prim, Material *NewMaterial )
-{
-} /* End of 'Render::setPrimMaterial' function */
-
-/* Draw primitive function */
-void Render::drawPrim( Prim *Prim )
-{
-} /* End of 'Render::drawPrim' function */
-
-/* Realease primitive function */
-void Render::releasePrim( Prim *Prim )
-{
-} /* End of 'Render::releasePrim' function */
+  releaseRes<Material>(Mtl, releaseMaterial, _materials);
+} /* End of 'Render::releaseMaterial' function */
 
 /* END OF 'render.cpp' FILE */

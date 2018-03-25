@@ -10,17 +10,13 @@
 
 #pragma once
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-
-#include <d3d11.h>
-
 #include <map>
 
 #include "..\def.h"
-#include "Prim.h"
+#include "prim.h"
 #include "material.h"
+#include "res_ptr.h"
+#include "const_buffer.h"
 
 /* Render handle namespace */
 namespace render
@@ -35,11 +31,13 @@ namespace render
   class Render
   {
   private:
-    PrimMap _prims;         // Registered primitives map
+    PrimMap _primitives;         // Registered primitives map
     MaterialMap _materials; // Registered materials map
     ShaderMap _shaders;     // Registered shaders map
     TextureMap _textures;   // Registered textures map
     GeomMap _geometries;    // Registered geometry map
+
+    HWND _hWnd; // Window handler
 
     /* DirectX resources */
     IDXGISwapChain          *_swapChain;
@@ -50,9 +48,8 @@ namespace render
     ID3D11DepthStencilState *_depthStencilState;
     ID3D11DepthStencilView  *_depthStencilView;
     ID3D11RasterizerState   *_rasterState;
-    // _proj;
-    // _world;
-    // _view;
+
+    ConstBuffer _constBuffer;
 
     /* Create render function */
     Render( void );
@@ -99,66 +96,176 @@ namespace render
     /* End frame function */
     void endFrame( void );
 
+  private:
+    template<typename ResType>
+      static ResType * getRes( const string &ResName, const std::map<string, ResType *> &ResMap )
+      {
+        auto res = ResMap.find(ResName);
+
+        if (res == ResMap.end())
+          return nullptr;
+
+        return res->second;
+      }
+
+    template<typename ResType>
+      void releaseRes( ResPtr<ResType> &Res,
+        void (*ReleaseFunc)( Render *Rnd, ResType *Res ), std::map<string, ResType *> &ResMap )
+      {
+        if (Res._resource == nullptr)
+          return;
+
+        if (Res._resource->_nooInst > 1)
+        {
+          Res._resource->_nooInst--;
+          return;
+        }
+
+        ReleaseFunc(this, Res._resource);
+
+        ResMap.erase(Res._resource->_name);
+        delete Res._resource;
+        Res._resource = nullptr;
+      }
+
+    template<typename ResType>
+      void releaseAllRes( void (*ReleaseFunc)( Render *Rnd, ResType *Res ),
+        std::map<string, ResType *> &ResMap )
+      {
+        while (ResMap.size() != 0)
+        {
+          ResType *r = ResMap.begin()->second;
+          ReleaseFunc(this, r);
+          ResMap.erase(ResMap.begin());
+        }
+      }
+
+    /***
+     * Constant buffer handle
+     ***/
+
+    /* Create shader constant buffer function */
+    void initConstBuffer( void );
+
+    /* Update const buffer function */
+    void updateConstBuffer( void );
+
+    /* Release shader constant buffer function */
+    void releaseConstBuffer( void );
+
+  public:
+
     /***
      * Texture handle
      ***/
 
     /* Get texture interface function */
-    Texture * createTexture( const string &TexName );
+    TexturePtr createTexture( const string &TexName );
 
     /* Get texture interface function */
-    Texture * getTexture( const string &TexName ) const;
+    TexturePtr getTexture( const string &TexName ) const;
 
+  private:
     /* Release texture function */
-    void releaseTexture( Texture *Tex );
+    static void releaseTexture( Render *Rnd, Texture *Tex );
+
+  public:
+    /* Release texture function */
+    void releaseTexture( TexturePtr &Tex );
+
 
     /***
      * Shader handle
      ***/
 
+  private:
+    /* Set shader as active function */
+    void setShader( Shader *Sh );
+
+  public:
     /* Get shader interface function */
-    Shader * createShader( const string &ShName );
+    ShaderPtr createShader( const string &ShName );
 
     /* Get shader interface function */
-    Shader * getShader( const string &ShName ) const;
+    ShaderPtr getShader( const string &ShName ) const;
 
-    /* Release primitive function */
-    void releaseShader( Shader *Shader );
+  public:
+    /* Release shader function */
+    static void releaseShader( Render *Rnd, Shader *Sh );
+
+  public:
+    /* Release shader function */
+    void releaseShader( ShaderPtr &Sh );
 
     /***
      * Material handle
      ***/
 
     /* Create material function */
-    Material * createMaterial( /* params */ );
+    MaterialPtr createMaterial( /* params */ );
 
     /* Get material interface function */
-    Material * getMaterial( const string &MtlName ) const;
+    MaterialPtr getMaterial( const string &MtlName ) const;
 
     /* Set material texture function */
-    void setMaterialTexture( Material *Mtl, Texture *NewTexture, int TexNo );
+    void setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo );
 
+  private:
     /* Realease material function */
-    void releaseMaterial( Material *Mtl );
+    static void releaseMaterial( Render *Rnd, Material *Mtl );
+
+  public:
+    /* Realease material function */
+    void releaseMaterial( MaterialPtr &Mtl );
+
+    /***
+     * Geometry resource handle
+     ***/
+
+    /* Create geometry function */
+    // Geom * createGeom( const geometry &Geomery, const string &GeomName );
+    GeomPtr createGeom( const string &GeomName );
+
+    /* Get geometry interface function */
+    GeomPtr getGeom( const string &GeomName ) const;
+
+  private:
+    /* Draw geometry function */
+    void drawGeom( Geom *G );
+
+    /* Realease geometry function */
+    static void releaseGeom( Render *Rnd, Geom *Geom );
+
+  public:
+    /* Realease geometry function */
+    void releaseGeom( GeomPtr &G );
 
     /***
      * Primitive handle
      ***/
 
+    /* Create primitive function */
+    PrimPtr createPrim( const string &PrimName );
+
     /* Get primitive interface function */
-    Prim * getPrim( const string &PrimName ) const;
+    PrimPtr getPrim( const string &PrimName ) const;
 
     /* Set primitive shader function */
-    void setPrimShader( Prim *Prim, Shader *NewShader );
+    void setPrimShader( PrimPtr &P, Shader *NewShader );
 
     /* Set primitive material function */
-    void setPrimMaterial( Prim *Prim, Material *NewMaterial );
+    void setPrimMaterial( PrimPtr &P, Material *NewMaterial );
 
+  private:
     /* Draw primitive function */
-    void drawPrim( Prim *Prim );
+    void drawPrim( Prim *P );
 
     /* Realease primitive function */
-    void releasePrim( Prim *Prim );
+    static void releasePrim( Render *Rnd, Prim *P ) {}
+
+  public:
+    /* Realease primitive function */
+    void releasePrim( PrimPtr &P );
   }; /* End of 'Render' class */
 }; /* end of 'render' namespace */
 

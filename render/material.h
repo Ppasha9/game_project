@@ -20,9 +20,10 @@ namespace render
   using TextureVector = std::vector<Texture *>;
 
   /* Material class */
-  class Material
+  class Material : Resource
   {
     friend class Render;
+    friend class ResPtr<Material>;
 
   private:
     string _name;
@@ -34,6 +35,8 @@ namespace render
     /* Create material function */
     Material( /* params */ );
   }; /* End of 'Material' class */
+
+  using MaterialPtr = ResPtr<Material>;
 }; /* end of 'render' namespace */
 
 /* END OF 'material.h' FILE */
