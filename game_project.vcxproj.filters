@@ -140,6 +140,9 @@
     <ClInclude Include="render\prim.h">
       <Filter>Source Files\Render support\Resources\Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="render\res_ptr.h">
+      <Filter>Source Files\Render support\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\ps_test_shader.hlsl">

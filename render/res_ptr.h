@@ -4,7 +4,7 @@
  * FILE: res_ptr.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 25.03.2018
  * NOTE: resource pointer handle file
  */
 
@@ -40,6 +40,9 @@ namespace render
       /* Destroy resource pointer function */
       ResPtr & operator=( ResPtr &Ptr )
       {
+        if (_resource != nullptr)
+          _resource->_nooInst--;
+
         _resource = Ptr._resource;
         if (_resource != nullptr)
           _resource->_nooInst++;
