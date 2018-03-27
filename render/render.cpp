@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 27.03.2018
  * NOTE: render handle implementation file
  */
 
@@ -116,10 +116,23 @@ void Render::setViewport( int Width, int Height )
   _deviceContext->RSSetViewports(1, &viewport);
 } /* End of 'Render::setViewport' function */
 
+/* Initialize render function */
+void Render::init( void )
+{
+  init(_width, _height, _hWnd);
+
+  createPrim("test_prim");
+} /* End of 'Render::init' function */
+
 /* Initialize DirectX function */
 void Render::init( int Width, int Height, HWND hWnd )
 {
   HRESULT result;
+
+  if (Width == 0)
+    Width = 1;
+  if (Height == 0)
+    Height = 1;
 
   _hWnd = hWnd;
 
