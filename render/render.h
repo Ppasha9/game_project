@@ -4,7 +4,7 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 08.03.2018
+ * LAST UPDATE: 27.03.2018
  * NOTE: render handle declaration file
  */
 
@@ -12,7 +12,9 @@
 
 #include <map>
 
+
 #include "..\def.h"
+#include "..\win\win.h"
 #include "prim.h"
 #include "material.h"
 #include "res_ptr.h"
@@ -29,7 +31,7 @@ namespace render
   using PrimMap = std::map<string, Prim *>;
 
   /* Render handle class */
-  class Render
+  class Render : public Win
   {
   private:
     PrimMap _primitives;         // Registered primitives map
@@ -37,8 +39,6 @@ namespace render
     ShaderMap _shaders;     // Registered shaders map
     TextureMap _textures;   // Registered textures map
     GeomMap _geometries;    // Registered geometry map
-
-    HWND _hWnd; // Window handler
 
     /* DirectX resources */
     IDXGISwapChain          *_swapChain;
@@ -80,9 +80,14 @@ namespace render
     /* Get render instance function */
     static Render & getInstance( void );
 
+    /* Initialize render function */
+    void init( void );
+
+  private:
     /* Initialize DirectX function */
     void init( int Width, int Height, HWND hWnd );
 
+  public:
     /* Release DirectX function */
     void release( void );
 
