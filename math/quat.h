@@ -40,7 +40,7 @@ namespace math
 
   public:
     /* Default class constructor */
-    Quat(void)
+    Quat(void) : _r(0), _i(0), _j(0), _k(0)
     {
     } /* End of constructor */
 
@@ -101,7 +101,7 @@ namespace math
      */
     void addScaledVector(const Vector<3, Type> &Vec, Type scale)
     {
-      Quat q(0, Vec._coords[0] * scale, Vec._coords[1] * scale, Vec._coords[2] * scale);
+      Quat q(0, Vec[0] * scale, Vec[1] * scale, Vec[2] * scale);
       q *= *this;
       _r += q._r * ((Type)0.5);
       _i += q._i * ((Type)0.5);

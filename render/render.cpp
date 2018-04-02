@@ -244,8 +244,11 @@ void Render::init( int Width, int Height, HWND hWnd )
   /*** Setup viewport ***/
   setViewport(Width, Height);
 
-  /*** Init constant buffer **/
+  /*** Init constant buffer ***/
   initConstBuffer();
+
+  /*** Init camera ***/
+  _camera.setCamera(true, { 0, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
 } /* End of 'Render::init' function */
 
 /* Release DirectX function */

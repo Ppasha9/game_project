@@ -12,6 +12,7 @@
 
 #include <d3d11.h>
 #include <directxmath.h>
+#include "../math/math_def.h"
 
 /* Render handle namespace */
 namespace render

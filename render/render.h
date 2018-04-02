@@ -17,6 +17,7 @@
 #include "material.h"
 #include "res_ptr.h"
 #include "const_buffer.h"
+#include "camera\camera.h"
 
 /* Render handle namespace */
 namespace render
@@ -50,6 +51,7 @@ namespace render
     ID3D11RasterizerState   *_rasterState;
 
     ConstBuffer _constBuffer;
+    Camera _camera;
 
     /* Create render function */
     Render( void );

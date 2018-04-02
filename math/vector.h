@@ -3,8 +3,8 @@
  * 
  * FILE: Vector.h 
  * AUTHORS:
- * Lebed Pavel
- * LAST UPDATE: 07.03.2018 
+ *   Lebed Pavel
+ * LAST UPDATE: 31.03.2018 
  * NOTE: Vector calculation module 
  */
 
@@ -19,7 +19,7 @@ namespace math
   template <size_t Metrix, typename Type>
   class Vector
   {
-  private:
+  public:
     // Coordinate in Metrix size space
     Type _coords[Metrix];
   public:
@@ -136,7 +136,7 @@ namespace math
     } /* End of 'operator*=' function */
 
     /* Cross multiply */
-    inline Vector operator&( const Vector &Vec );
+    inline Vector operator&( const Vector &Vec ) const;
 
     /* Clumb Vector values */
     inline void clump( Type Min, Type Max )
@@ -154,11 +154,21 @@ namespace math
       // TO_DO Assert or exception for user not hit
       return _coords[Id];
     } /* End of 'operator[]' function */
-  };
+
+    /* Negate operator */
+    inline Vector operator-(void) const
+    {
+      Vector res;
+
+      for (size_t i = 0; i < Metrix; i++)
+        res._coords[i] = -_coords[i];
+      return res;
+    } /* End of 'operator-' function */
+  }; /* End of 'Vector' class */
 
   /* Cross multiply */
   template <>
-  inline Vector<3, float> Vector<3, float>::operator&( const Vector &Vec )
+  inline Vector<3, float> Vector<3, float>::operator&( const Vector &Vec ) const
   {
     return Vector{_coords[1] * Vec._coords[2] - _coords[2] * Vec._coords[1],
                   _coords[2] * Vec._coords[0] - _coords[0] * Vec._coords[2],
@@ -167,7 +177,7 @@ namespace math
   
   /* Cross multiply */
   template <>
-  inline Vector<3, double> Vector<3, double>::operator&( const Vector &Vec )
+  inline Vector<3, double> Vector<3, double>::operator&( const Vector &Vec ) const
   {
     return Vector{_coords[1] * Vec._coords[2] - _coords[2] * Vec._coords[1],
                   _coords[2] * Vec._coords[0] - _coords[0] * Vec._coords[2],
