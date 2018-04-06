@@ -42,12 +42,17 @@ void Render::setMaterial( const MaterialPtr &Mtl )
   else
     _constBuffer._data._mtlCoeffs = Mtl._resource->_coeffs;
 
-  // set active textures here
+  for (int i = 0; i < 4; i++)
+    setTexture(Mtl._resource->_textures[i]._resource, i);
 } /* End of 'Render::setMaterial' function */
   
 /* Set material texture function */
 void Render::setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo )
 {
+  if (TexNo >= 4 || TexNo < 0)
+    return;
+
+  Mtl._resource->_textures[TexNo] = NewTexture;
 } /* End of 'Render::setMaterialTexture' function */
 
 /* Realease material function */

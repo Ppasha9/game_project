@@ -35,9 +35,7 @@ namespace render
 
   private:
     Coeffs _coeffs;
-
-    //TextureVector Textures;
-    // Or fixed number. Crabsolutely a fixed number.
+    TexturePtr _textures[4];
 
     /* Create material function */
     Material( const string &MtlName, Coeffs Cfs ) : Resource(MtlName), _coeffs(Cfs) {}

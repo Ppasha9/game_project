@@ -31,9 +31,6 @@
     <Filter Include="Source Files\Physics system\Collision system">
       <UniqueIdentifier>{61ee9492-e4ad-4c1c-bb53-884b11447570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{f6ca02a1-9b19-48f8-87e3-ea4c5807aa60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Render support\Resources">
       <UniqueIdentifier>{51fe7417-c186-4fd8-bd28-de193a1f3bd4}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,9 @@
     </Filter>
     <Filter Include="Source Files\Physics system\Collision system\Bounding volumes">
       <UniqueIdentifier>{410dff92-5c20-4b0c-a13c-6407aff73b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{f6ca02a1-9b19-48f8-87e3-ea4c5807aa60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="render\render_material.cpp">
       <Filter>Source Files\Render support\Resources\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render_texture.cpp">
+      <Filter>Source Files\Render support\Resources\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

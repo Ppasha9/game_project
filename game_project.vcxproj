@@ -163,6 +163,7 @@
     <ClCompile Include="render\render_material.cpp" />
     <ClCompile Include="render\render_prim.cpp" />
     <ClCompile Include="render\render_shader.cpp" />
+    <ClCompile Include="render\render_texture.cpp" />
     <ClCompile Include="win\win.cpp" />
   </ItemGroup>
   <ItemGroup>

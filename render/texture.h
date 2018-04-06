@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <d3d11.h>
+
 #include "..\def.h"
 #include "resource.h"
 #include "res_ptr.h"
@@ -24,7 +26,17 @@ namespace render
     friend class ResPtr<Texture>;
 
   private:
-    // params
+    struct TargaHeader
+    {
+      unsigned char _data1[12];
+      unsigned short _width;
+      unsigned short _height;
+      unsigned char _bpp;
+      unsigned char _data2;
+    };
+
+    ID3D11Texture2D *_texBuffer;
+    ID3D11ShaderResourceView *_texView;
 
     /* Create texture function */
     Texture( const string &TexName ) : Resource(TexName) {}

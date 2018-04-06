@@ -175,6 +175,9 @@ void Render::setShader( Shader *Sh )
   // Set vertex and pixel shaders
   _deviceContext->VSSetShader(Sh->_vertexShader, NULL, 0);
   _deviceContext->PSSetShader(Sh->_pixelShader, NULL, 0);
+
+  // Set texture sampler state
+  _deviceContext->PSSetSamplers(0, 1, &_samplerState);
 } /* End of 'Render::setShader' function */
 
 /* END OF 'render_shader.cpp' FILE */

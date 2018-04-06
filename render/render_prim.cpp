@@ -24,7 +24,10 @@ PrimPtr Render::createPrim( const string &PrimName )
 
   P->_geometry = createGeom(PrimName);
   P->_material = createMaterial("test_material", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0, 0, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
-  //P->_material = createMaterial("test_material", {{0.01f, 0.01f, 0.01f}, {0.69f, 0, 0}, {0.7f, 0.7f, 0.7f}, 1000});
+  setMaterialTexture(P->_material, createTexture("test_texture"), 0);
+  setMaterialTexture(P->_material, getTexture("test_texture"), 1);
+  setMaterialTexture(P->_material, getTexture("test_texture"), 2);
+  setMaterialTexture(P->_material, getTexture("test_texture"), 3);
   P->_shader = createShader("test_shader");
 
   _primitives.add(PrimName, P);
@@ -58,11 +61,12 @@ void Render::setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial )
 /* Draw primitive function */
 void Render::drawPrim( Prim *P )
 {
+  setShader(P->_shader._resource);
+
   _constBuffer._data._world = P->_world;
   setMaterial(P->_material);
 
   updateConstBuffer();
-  setShader(P->_shader._resource);
   drawGeom(P->_geometry._resource);
 } /* End of 'Render::drawPrim' function */
 

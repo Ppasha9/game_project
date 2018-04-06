@@ -22,14 +22,15 @@ using namespace render;
 
 /* Create render function */
 Render::Render( void ) :
-  _swapChain(0),
-  _device(0),
-  _deviceContext(0),
-  _renderTargetView(0),
-  _depthStencilBuffer(0),
-  _depthStencilState(0),
-  _depthStencilView(0),
-  _rasterState(0),
+  _swapChain(nullptr),
+  _device(nullptr),
+  _deviceContext(nullptr),
+  _renderTargetView(nullptr),
+  _depthStencilBuffer(nullptr),
+  _depthStencilState(nullptr),
+  _depthStencilView(nullptr),
+  _rasterState(nullptr),
+  _samplerState(nullptr),
   _shaders(this, releaseShader),
   _materials(this, releaseMaterial),
   _geometries(this, releaseGeom),
@@ -259,6 +260,25 @@ void Render::init( int Width, int Height, HWND hWnd )
   // Set active rasterizer state
   _deviceContext->RSSetState(_rasterState);
 
+  /*** Init sampler state ***/
+  D3D11_SAMPLER_DESC sampler_desc;
+  sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_desc.MipLODBias = 0.0f;
+  sampler_desc.MaxAnisotropy = 1;
+  sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+  sampler_desc.BorderColor[0] = 0;
+  sampler_desc.BorderColor[1] = 0;
+  sampler_desc.BorderColor[2] = 0;
+  sampler_desc.BorderColor[3] = 0;
+  sampler_desc.MinLOD = 0;
+  sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+  result = _device->CreateSamplerState(&sampler_desc, &_samplerState);
+  assert(!FAILED(result));
+
   /*** Setup viewport ***/
   setViewport(Width, Height);
 
@@ -287,6 +307,7 @@ void Render::release( void )
     _swapChain->SetFullscreenState(false, NULL);
 
   // Release DirectX resources
+  releaseRes<ID3D11SamplerState>(_samplerState);
   releaseRes<ID3D11RasterizerState>(_rasterState);
   releaseRes<ID3D11DepthStencilView>(_depthStencilView);
   releaseRes<ID3D11DepthStencilState>(_depthStencilState);
@@ -332,6 +353,9 @@ void Render::resize( int Width, int Height )
 
   // Reset viewport
   setViewport(Width, Height);
+
+  // Redraw frame
+  render();
 } /* End of 'Render::resize' function */
 
 /* Start frame function */
@@ -390,26 +414,5 @@ void Render::endFrame( void )
 {
   _swapChain->Present(1, 0);
 } /* End of 'Render::endFrame' function */
-
-/***
- * Texture handle
- ***/
-
-/* Get texture interface function */
-TexturePtr Render::getTexture( const string &TexName ) const
-{
-  return _textures.get(TexName);
-} /* End of 'Render::getTexture' function */
-
-/* Release texture function */
-void Render::releaseTexture( Render *Rnd, Texture *Tex )
-{
-} /* End of 'Render::releaseTexture' function */
-
-/* Release texture function */
-void Render::releaseTexture( TexturePtr &Tex )
-{
-  _textures.release(Tex);
-} /* End of 'Render::releaseTexture' function */
 
 /* END OF 'render.cpp' FILE */

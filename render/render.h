@@ -22,12 +22,6 @@
 /* Render handle namespace */
 namespace render
 {
-  //using ShaderMap = std::map<string, Shader *>;
-  //using MaterialMap = std::map<string, Material *>;
-  //using TextureMap = std::map<string, Texture *>;
-  //using GeomMap = std::map<string, Geom *>;
-  //using PrimMap = std::map<string, Prim *>;
-
   using ShaderMap = ResMap<Shader>;
   using MaterialMap = ResMap<Material>;
   using TextureMap = ResMap<Texture>;
@@ -38,7 +32,7 @@ namespace render
   class Render : public Win
   {
   private:
-    PrimMap _primitives;         // Registered primitives map
+    PrimMap _primitives;    // Registered primitives map
     MaterialMap _materials; // Registered materials map
     ShaderMap _shaders;     // Registered shaders map
     TextureMap _textures;   // Registered textures map
@@ -53,6 +47,7 @@ namespace render
     ID3D11DepthStencilState *_depthStencilState;
     ID3D11DepthStencilView  *_depthStencilView;
     ID3D11RasterizerState   *_rasterState;
+    ID3D11SamplerState      *_samplerState;
 
     ConstBuffer _constBuffer;
     Camera _camera;
@@ -77,28 +72,9 @@ namespace render
         }
       } /* End of 'releaseRes' function */
 
-  public:
-    /* Destroy render function */
-    ~Render( void );
-
-    /* Get render instance function */
-    static Render & getInstance( void );
-
-    /* Initialize render function */
-    void init( void );
-
-  private:
     /* Initialize DirectX function */
     void init( int Width, int Height, HWND hWnd );
 
-  public:
-    /* Release DirectX function */
-    void release( void );
-
-    /* Resize render system function */
-    void resize( int Width, int Height );
-
-  private:
     /* Start frame function */
     void startFrame( void );
 
@@ -108,6 +84,38 @@ namespace render
     /* End frame function */
     void endFrame( void );
 
+    /* Resize render system function */
+    void resize( int Width, int Height );
+
+    /* Set shader as active function */
+    void setShader( Shader *Sh );
+
+    /* Set texture as active function */
+    void setTexture( Texture *Tex, int Id );
+
+    /* Set material as active function */
+    void setMaterial( const MaterialPtr &Mtl );
+
+    /* Draw geometry function */
+    void drawGeom( Geom *G );
+
+    /* Draw primitive function */
+    void drawPrim( Prim *P );
+
+    /* Release texture function */
+    static void releaseTexture( Render *Rnd, Texture *Tex );
+
+    /* Release shader function */
+    static void releaseShader( Render *Rnd, Shader *Sh );
+
+    /* Realease material function */
+    static void releaseMaterial( Render *Rnd, Material *Mtl ) {}
+
+    /* Realease geometry function */
+    static void releaseGeom( Render *Rnd, Geom *Geom );
+
+    /* Realease primitive function */
+    static void releasePrim( Render *Rnd, Prim *P ) {}
 
     /***
      * Constant buffer handle
@@ -123,6 +131,18 @@ namespace render
     void releaseConstBuffer( void );
 
   public:
+    /* Destroy render function */
+    ~Render( void );
+
+    /* Get render instance function */
+    static Render & getInstance( void );
+
+    /* Initialize render function */
+    void init( void );
+
+    /* Release DirectX function */
+    void release( void );
+
 
     /***
      * Texture handle
@@ -134,11 +154,6 @@ namespace render
     /* Get texture interface function */
     TexturePtr getTexture( const string &TexName ) const;
 
-  private:
-    /* Release texture function */
-    static void releaseTexture( Render *Rnd, Texture *Tex );
-
-  public:
     /* Release texture function */
     void releaseTexture( TexturePtr &Tex );
 
@@ -147,24 +162,15 @@ namespace render
      * Shader handle
      ***/
 
-  private:
-    /* Set shader as active function */
-    void setShader( Shader *Sh );
-
-  public:
     /* Get shader interface function */
     ShaderPtr createShader( const string &ShName );
 
     /* Get shader interface function */
     ShaderPtr getShader( const string &ShName ) const;
 
-  public:
-    /* Release shader function */
-    static void releaseShader( Render *Rnd, Shader *Sh );
-
-  public:
     /* Release shader function */
     void releaseShader( ShaderPtr &Sh );
+
 
     /***
      * Material handle
@@ -179,16 +185,9 @@ namespace render
     /* Set material texture function */
     void setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo );
 
-  private:
-    /* Set material as active function */
-    void setMaterial( const MaterialPtr &Mtl );
-
-    /* Realease material function */
-    static void releaseMaterial( Render *Rnd, Material *Mtl ) {}
-
-  public:
     /* Realease material function */
     void releaseMaterial( MaterialPtr &Mtl );
+
 
     /***
      * Geometry resource handle
@@ -201,16 +200,9 @@ namespace render
     /* Get geometry interface function */
     GeomPtr getGeom( const string &GeomName ) const;
 
-  private:
-    /* Draw geometry function */
-    void drawGeom( Geom *G );
-
-    /* Realease geometry function */
-    static void releaseGeom( Render *Rnd, Geom *Geom );
-
-  public:
     /* Realease geometry function */
     void releaseGeom( GeomPtr &G );
+
 
     /***
      * Primitive handle
@@ -231,14 +223,6 @@ namespace render
     /* Set primitive material function */
     void setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial );
 
-  private:
-    /* Draw primitive function */
-    void drawPrim( Prim *P );
-
-    /* Realease primitive function */
-    static void releasePrim( Render *Rnd, Prim *P ) {}
-
-  public:
     /* Realease primitive function */
     void releasePrim( PrimPtr &P );
   }; /* End of 'Render' class */
