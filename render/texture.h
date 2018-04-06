@@ -4,7 +4,7 @@
  * FILE: texture.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: texture resource handle file
  */
 
@@ -18,7 +18,7 @@
 namespace render
 {
   /* Texture resource class */
-  class Texture : Resource
+  class Texture : public Resource
   {
     friend class Render;
     friend class ResPtr<Texture>;

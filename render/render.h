@@ -4,30 +4,35 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: render handle declaration file
  */
 
 #pragma once
-
-#include <map>
 
 #include "..\def.h"
 #include "..\win\win.h"
 #include "prim.h"
 #include "material.h"
 #include "res_ptr.h"
+#include "res_map.h"
 #include "const_buffer.h"
 #include "camera\camera.h"
 
 /* Render handle namespace */
 namespace render
 {
-  using ShaderMap = std::map<string, Shader *>;
-  using MaterialMap = std::map<string, Material *>;
-  using TextureMap = std::map<string, Texture *>;
-  using GeomMap = std::map<string, Geom *>;
-  using PrimMap = std::map<string, Prim *>;
+  //using ShaderMap = std::map<string, Shader *>;
+  //using MaterialMap = std::map<string, Material *>;
+  //using TextureMap = std::map<string, Texture *>;
+  //using GeomMap = std::map<string, Geom *>;
+  //using PrimMap = std::map<string, Prim *>;
+
+  using ShaderMap = ResMap<Shader>;
+  using MaterialMap = ResMap<Material>;
+  using TextureMap = ResMap<Texture>;
+  using GeomMap = ResMap<Geom>;
+  using PrimMap = ResMap<Prim>;
 
   /* Render handle class */
   class Render : public Win
@@ -93,6 +98,7 @@ namespace render
     /* Resize render system function */
     void resize( int Width, int Height );
 
+  private:
     /* Start frame function */
     void startFrame( void );
 
@@ -102,49 +108,6 @@ namespace render
     /* End frame function */
     void endFrame( void );
 
-  private:
-    template<typename ResType>
-      static ResType * getRes( const string &ResName, const std::map<string, ResType *> &ResMap )
-      {
-        auto res = ResMap.find(ResName);
-
-        if (res == ResMap.end())
-          return nullptr;
-
-        return res->second;
-      }
-
-    template<typename ResType>
-      void releaseRes( ResPtr<ResType> &Res,
-        void (*ReleaseFunc)( Render *Rnd, ResType *Res ), std::map<string, ResType *> &ResMap )
-      {
-        if (Res._resource == nullptr)
-          return;
-
-        if (Res._resource->_nooInst > 1)
-        {
-          Res._resource->_nooInst--;
-          return;
-        }
-
-        ReleaseFunc(this, Res._resource);
-
-        ResMap.erase(Res._resource->_name);
-        delete Res._resource;
-        Res._resource = nullptr;
-      }
-
-    template<typename ResType>
-      void releaseAllRes( void (*ReleaseFunc)( Render *Rnd, ResType *Res ),
-        std::map<string, ResType *> &ResMap )
-      {
-        while (ResMap.size() != 0)
-        {
-          ResType *r = ResMap.begin()->second;
-          ReleaseFunc(this, r);
-          ResMap.erase(ResMap.begin());
-        }
-      }
 
     /***
      * Constant buffer handle

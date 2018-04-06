@@ -4,7 +4,7 @@
  * FILE: res_ptr.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: resource pointer handle file
  */
 
@@ -19,6 +19,7 @@ namespace render
   template<typename ResType>
     class ResPtr
     {
+      friend class ResMap<ResType>;
       friend class Render;
 
     private:
@@ -56,7 +57,7 @@ namespace render
         if (_resource != nullptr)
           _resource->_nooInst--;
       } /* End of '~ResPtr' function */
-    }; /* End of 'resource' class */
+    }; /* End of 'Resource' class */
 } /* end of 'render' namespace */
 
 /* END OF 'res_ptr.h' FILE */

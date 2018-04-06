@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -27,7 +27,7 @@ PrimPtr Render::createPrim( const string &PrimName )
   //P->_material = createMaterial("test_material", {{0.01f, 0.01f, 0.01f}, {0.69f, 0, 0}, {0.7f, 0.7f, 0.7f}, 1000});
   P->_shader = createShader("test_shader");
 
-  _primitives[PrimName] = P;
+  _primitives.add(PrimName, P);
 
   return P;
 } /* End of 'Render::createPrim' function */
@@ -35,7 +35,7 @@ PrimPtr Render::createPrim( const string &PrimName )
 /* Get primitive interface function */
 PrimPtr Render::getPrim( const string &PrimName ) const
 {
-  return getRes<Prim>(PrimName, _primitives);
+  return _primitives.get(PrimName);
 } /* End of 'Render::getPrim' function */
 
 /* Set primitive world matrix function */
@@ -69,7 +69,7 @@ void Render::drawPrim( Prim *P )
 /* Realease primitive function */
 void Render::releasePrim( PrimPtr &P )
 {
-  releaseRes<Prim>(P, releasePrim, _primitives);
+  _primitives.release(P);
 } /* End of 'Render::releasePrim' function */
 
 /* END OF 'render_prim.cpp' FILE */

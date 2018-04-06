@@ -4,7 +4,7 @@
  * FILE: shader.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: shader resource handle file
  */
 
@@ -20,7 +20,7 @@
 namespace render
 {
   /* Shader resource class */
-  class Shader : Resource
+  class Shader : public Resource
   {
     friend class Render;
     friend class ResPtr<Shader>;

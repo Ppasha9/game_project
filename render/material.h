@@ -4,7 +4,7 @@
  * FILE: material.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: material handle file
  */
 
@@ -20,7 +20,7 @@ namespace render
   using TextureVector = std::vector<Texture *>;
 
   /* Material class */
-  class Material : Resource
+  class Material : public Resource
   {
     friend class Render;
     friend class ResPtr<Material>;

@@ -190,6 +190,7 @@
     <ClInclude Include="render\prim.h" />
     <ClInclude Include="render\render.h" />
     <ClInclude Include="render\resource.h" />
+    <ClInclude Include="render\res_map.h" />
     <ClInclude Include="render\res_ptr.h" />
     <ClInclude Include="render\shader.h" />
     <ClInclude Include="render\texture.h" />

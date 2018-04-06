@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 04.04.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -29,7 +29,12 @@ Render::Render( void ) :
   _depthStencilBuffer(0),
   _depthStencilState(0),
   _depthStencilView(0),
-  _rasterState(0)
+  _rasterState(0),
+  _shaders(this, releaseShader),
+  _materials(this, releaseMaterial),
+  _geometries(this, releaseGeom),
+  _textures(this, releaseTexture),
+  _primitives(this, releasePrim)
 {
 } /* End of 'Render::Render' function */
 
@@ -268,11 +273,11 @@ void Render::init( int Width, int Height, HWND hWnd )
 void Render::release( void )
 {
   // Realease all resources
-  releaseAllRes<Shader>(releaseShader, _shaders);
-  releaseAllRes<Prim>(releasePrim, _primitives);
-  releaseAllRes<Texture>(releaseTexture, _textures);
-  releaseAllRes<Material>(releaseMaterial, _materials);
-  releaseAllRes<Geom>(releaseGeom, _geometries);
+  _shaders.releaseAll();
+  _primitives.releaseAll();
+  _textures.releaseAll();
+  _materials.releaseAll();
+  _geometries.releaseAll();
 
   // Release constant buffer
   releaseConstBuffer();
@@ -361,11 +366,21 @@ void Render::render( void )
   _constBuffer._data._cameraDir = {_camera._dir[0], _camera._dir[1], _camera._dir[2], 1};
   _constBuffer._data._cameraPos = {_camera._loc[0], _camera._loc[1], _camera._loc[2], 1};
 
-  for (auto &p : _primitives)
+  class dummy
   {
-    p.second->_world = math::Matr4f().setIdentity(1);
-    drawPrim(p.second);
-  }
+  private:
+    Render *_rnd;
+
+  public:
+    dummy( Render *Rnd ) : _rnd(Rnd) {}
+
+    void operator()( Prim *P )
+    {
+      P->_world = math::Matr4f().setIdentity(1);
+      _rnd->drawPrim(P);
+    }
+  };
+  _primitives.iterate<dummy>(dummy(this));
 
   endFrame();
 } /* End of 'Render::render' function */
@@ -383,7 +398,7 @@ void Render::endFrame( void )
 /* Get texture interface function */
 TexturePtr Render::getTexture( const string &TexName ) const
 {
-  return getRes<Texture>(TexName, _textures);
+  return _textures.get(TexName);
 } /* End of 'Render::getTexture' function */
 
 /* Release texture function */
@@ -394,7 +409,7 @@ void Render::releaseTexture( Render *Rnd, Texture *Tex )
 /* Release texture function */
 void Render::releaseTexture( TexturePtr &Tex )
 {
-  releaseRes<Texture>(Tex, releaseTexture, _textures);
+  _textures.release(Tex);
 } /* End of 'Render::releaseTexture' function */
 
 /* END OF 'render.cpp' FILE */

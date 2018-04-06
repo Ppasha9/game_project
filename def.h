@@ -3,10 +3,11 @@
  *
  * FILE: def.h
  * AUTHORS:
- *   Denisov Pavel,
- *   Lebed Pavel,
  *   Vasilyev Peter
- * LAST UPDATE: 04.04.2018
+ *   Denisov Pavel,
+ *   Kozlov Ilya,
+ *   Lebed Pavel
+ * LAST UPDATE: 06.04.2018
  * NOTE: default declaration file
  */
 
@@ -22,4 +23,6 @@ namespace render
 {
   // Forward declaration
   class Render;
+  template<typename ResType>
+    class ResMap;
 }

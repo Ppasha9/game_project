@@ -4,7 +4,7 @@
  * FILE: render_geom.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: render geometry resource handle implementation file
  */
 
@@ -123,7 +123,7 @@ GeomPtr Render::createGeom( const string &GeomName )
   delete[] i;
   delete[] v;
 
-  _geometries[GeomName] = G;
+  _geometries.add(GeomName, G);
 
   return G;
 } /* End of 'Render::createGeom' function */
@@ -131,7 +131,7 @@ GeomPtr Render::createGeom( const string &GeomName )
 /* Get geometry interface function */
 GeomPtr Render::getGeom( const string &GeomName ) const
 {
-  return getRes<Geom>(GeomName, _geometries);
+  return _geometries.get(GeomName);
 } /* End of 'Render::getGeom' function */
 
 /* Draw geometry function */
@@ -159,7 +159,7 @@ void Render::releaseGeom( Render *Rnd, Geom *G )
 /* Realease geometry function */
 void Render::releaseGeom( GeomPtr &G )
 {
-  releaseRes<Geom>(G, releaseGeom, _geometries);
+  _geometries.release(G);
 } /* End of 'Render::releaseGeom' function */
 
 /* END OF 'render_geom.cpp' FILE */

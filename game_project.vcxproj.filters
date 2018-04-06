@@ -218,6 +218,9 @@
     <ClInclude Include="physics\collision\resolution\collision_resolver.h">
       <Filter>Source Files\Physics system\Collision system\Collision resolution</Filter>
     </ClInclude>
+    <ClInclude Include="render\res_map.h">
+      <Filter>Source Files\Render support\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\ps_test_shader.hlsl">

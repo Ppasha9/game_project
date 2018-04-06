@@ -4,7 +4,7 @@
  * FILE: render_shader.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: render shader resource handle implementation file
  */
 
@@ -138,7 +138,7 @@ ShaderPtr Render::createShader( const string &ShName )
   vertex_shader_buffer->Release();
   pixel_shader_buffer->Release();
 
-  _shaders[ShName] = out;
+  _shaders.add(ShName, out);
 
   return out;
 } /* End of 'Render::createShader' function */
@@ -146,7 +146,7 @@ ShaderPtr Render::createShader( const string &ShName )
 /* Get shader interface function */
 ShaderPtr Render::getShader( const string &ShName ) const
 {
-  return getRes<Shader>(ShName, _shaders);
+  return _shaders.get(ShName);
 } /* End of 'Render::getShader' function */
 
 /* Release primitive function */
@@ -163,7 +163,7 @@ void Render::releaseShader( Render *Rnd, Shader *Sh )
 /* Release primitive function */
 void Render::releaseShader( ShaderPtr &Sh )
 {
-  releaseRes<Shader>(Sh, releaseShader, _shaders);
+  _shaders.release(Sh);
 } /* End of 'Render::releaseShader' function */
 
 /* Set shader as active function */

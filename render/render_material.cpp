@@ -4,7 +4,7 @@
  * FILE: render_material.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: render material handle implementation file
  */
 
@@ -21,7 +21,7 @@ MaterialPtr Render::createMaterial( const string &MtlName, const Material::Coeff
     return tmp;
 
   Material *M = new Material(MtlName, Coeffs);
-  _materials[MtlName] = M;
+  _materials.add(MtlName, M);
 
   return M;
 } /* End of 'Render::createMaterial' function */
@@ -29,7 +29,7 @@ MaterialPtr Render::createMaterial( const string &MtlName, const Material::Coeff
 /* Get material interface function */
 MaterialPtr Render::getMaterial( const string &MtlName ) const
 {
-  return getRes<Material>(MtlName, _materials);
+  return _materials.get(MtlName);
 } /* End of 'Render::getMaterial' function */
 
 /* Set material as active function */
@@ -53,7 +53,7 @@ void Render::setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int T
 /* Realease material function */
 void Render::releaseMaterial( MaterialPtr &Mtl )
 {
-  releaseRes<Material>(Mtl, releaseMaterial, _materials);
+  _materials.release(Mtl);
 } /* End of 'Render::releaseMaterial' function */
 
 /* END OF 'render_material.cpp' FILE */
