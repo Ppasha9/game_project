@@ -4,11 +4,13 @@
  * FILE: prim.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 01.04.2018
  * NOTE: geometry primitive handle file
  */
 
 #pragma once
+
+#include <directxmath.h>
 
 #include "material.h"
 #include "shader.h"
@@ -28,7 +30,7 @@ namespace render
     ShaderPtr _shader;
     MaterialPtr _material;
 
-    // World matrix
+    math::Matr4f _world;
 
     /* Create primitive function */
     Prim( const string &PrimName ) : Resource(PrimName) {}

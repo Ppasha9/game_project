@@ -6,13 +6,15 @@
  *   Denisov Pavel,
  *   Lebed Pavel,
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 04.04.2018
  * NOTE: default declaration file
  */
 
 #pragma once
 
 #include <string>
+
+#include "math\math_def.h"
 
 using string = std::string;
 

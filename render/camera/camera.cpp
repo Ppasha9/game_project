@@ -53,10 +53,10 @@ void Camera::updateLookAtLocUp(void)
 void Camera::updateViewMatr(void)
 {
   /* Make view transformation matrix */
-  _viewMatr = {      _right[0],      _up[0],      _dir[0],
-                     _right[1],      _up[1],      _dir[1],
-                     _right[2],      _up[2],      _dir[2],
-                -_loc * _right, -_loc * _up, -_loc * _dir };
+  _viewMatr = {      _right[0],      _up[0],      _dir[0], 0,
+                     _right[1],      _up[1],      _dir[1], 0,
+                     _right[2],      _up[2],      _dir[2], 0,
+                -_loc * _right, -_loc * _up, -_loc * _dir, 1};
 } /* End of 'updateViewMatr' function */
 
 /* Update projection data of camera function. */

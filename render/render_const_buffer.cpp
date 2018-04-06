@@ -4,7 +4,7 @@
  * FILE: render_const_buffer.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 01.04.2018
  * NOTE: render constant buffer handle implementation file
  */
 
@@ -13,6 +13,7 @@
 #include "render.h"
 
 using namespace render;
+using namespace DirectX;
 
 /* Create shader constant buffer function */
 void Render::initConstBuffer( void )
@@ -40,10 +41,6 @@ void Render::updateConstBuffer( void )
   ConstBuffer::Data *data_ptr;
   unsigned int buffer_number;
 
-  _constBuffer._data._world = DirectX::XMMatrixTranspose(_constBuffer._data._world);
-  _constBuffer._data._view = DirectX::XMMatrixTranspose(_constBuffer._data._view);
-  _constBuffer._data._proj = DirectX::XMMatrixTranspose(_constBuffer._data._proj);
-
   // Lock constant buffer so to write in it
   result = _deviceContext->Map(_constBuffer._buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
   assert(!FAILED(result));
@@ -54,14 +51,22 @@ void Render::updateConstBuffer( void )
   // Copy data into constant buffer
   *data_ptr = _constBuffer._data;
 
+  //XMStoreFloat4x4(&data_ptr->_world, XMMatrixTranspose(XMLoadFloat4x4(&data_ptr->_world)));
+  //XMStoreFloat4x4(&data_ptr->_view, XMMatrixTranspose(XMLoadFloat4x4(&data_ptr->_view)));
+  //XMStoreFloat4x4(&data_ptr->_proj, XMMatrixTranspose(XMLoadFloat4x4(&data_ptr->_proj)));
+  data_ptr->_world = data_ptr->_world.getTranspose();
+  data_ptr->_view = data_ptr->_view.getTranspose();
+  data_ptr->_proj = data_ptr->_proj.getTranspose();
+
   // Unlock constant buffer
   _deviceContext->Unmap(_constBuffer._buffer, 0);
 
   // Set position of constant buffer in vertex shader
   buffer_number = 0;
 
-  // Set updated constant buffer in vertex shader
+  // Set updated constant buffer in shaders
   _deviceContext->VSSetConstantBuffers(buffer_number, 1, &_constBuffer._buffer);
+  _deviceContext->PSSetConstantBuffers(buffer_number, 1, &_constBuffer._buffer);
 } /* End of 'Render::updateConstBuffer' function */
 
 /* Release shader constant buffer function */

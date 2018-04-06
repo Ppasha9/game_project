@@ -4,14 +4,13 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 27.03.2018
+ * LAST UPDATE: 01.04.2018
  * NOTE: render handle declaration file
  */
 
 #pragma once
 
 #include <map>
-
 
 #include "..\def.h"
 #include "..\win\win.h"
@@ -209,7 +208,7 @@ namespace render
      ***/
 
     /* Create material function */
-    MaterialPtr createMaterial( /* params */ );
+    MaterialPtr createMaterial( const string &MtlName, const Material::Coeffs &Coeffs );
 
     /* Get material interface function */
     MaterialPtr getMaterial( const string &MtlName ) const;
@@ -218,8 +217,11 @@ namespace render
     void setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo );
 
   private:
+    /* Set material as active function */
+    void setMaterial( const MaterialPtr &Mtl );
+
     /* Realease material function */
-    static void releaseMaterial( Render *Rnd, Material *Mtl );
+    static void releaseMaterial( Render *Rnd, Material *Mtl ) {}
 
   public:
     /* Realease material function */
@@ -257,11 +259,14 @@ namespace render
     /* Get primitive interface function */
     PrimPtr getPrim( const string &PrimName ) const;
 
+    /* Set primitive world matrix function */
+    void setPrimMatrix( PrimPtr &P, const math::Matr4f &World );
+
     /* Set primitive shader function */
-    void setPrimShader( PrimPtr &P, Shader *NewShader );
+    void setPrimShader( PrimPtr &P, ShaderPtr &NewShader );
 
     /* Set primitive material function */
-    void setPrimMaterial( PrimPtr &P, Material *NewMaterial );
+    void setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial );
 
   private:
     /* Draw primitive function */

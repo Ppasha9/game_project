@@ -160,6 +160,7 @@
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="render\render_const_buffer.cpp" />
     <ClCompile Include="render\render_geom.cpp" />
+    <ClCompile Include="render\render_material.cpp" />
     <ClCompile Include="render\render_prim.cpp" />
     <ClCompile Include="render\render_shader.cpp" />
     <ClCompile Include="win\win.cpp" />

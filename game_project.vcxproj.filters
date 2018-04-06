@@ -129,6 +129,9 @@
     <ClCompile Include="physics\collision\resolution\collision_resolver.cpp">
       <Filter>Source Files\Physics system\Collision system\Collision resolution</Filter>
     </ClCompile>
+    <ClCompile Include="render\render_material.cpp">
+      <Filter>Source Files\Render support\Resources\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\math_def.h">

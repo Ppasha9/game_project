@@ -64,15 +64,15 @@ GeomPtr Render::createGeom( const string &GeomName )
 
   v[0]._norm[0] = 0;
   v[0]._norm[1] = 0;
-  v[0]._norm[2] = -1;
+  v[0]._norm[2] = 1;
 
   v[1]._norm[0] = 0;
   v[1]._norm[1] = 0;
-  v[1]._norm[2] = -1;
+  v[1]._norm[2] = 1;
 
   v[2]._norm[0] = 0;
   v[2]._norm[1] = 0;
-  v[2]._norm[2] = -1;
+  v[2]._norm[2] = 1;
 
   i[0] = 0;
   i[1] = 1;

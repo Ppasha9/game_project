@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 01.04.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -23,7 +23,8 @@ PrimPtr Render::createPrim( const string &PrimName )
   Prim *P = new Prim(PrimName);
 
   P->_geometry = createGeom(PrimName);
-  //P->_material = nullptr;
+  P->_material = createMaterial("test_material", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0, 0, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
+  //P->_material = createMaterial("test_material", {{0.01f, 0.01f, 0.01f}, {0.69f, 0, 0}, {0.7f, 0.7f, 0.7f}, 1000});
   P->_shader = createShader("test_shader");
 
   _primitives[PrimName] = P;
@@ -37,19 +38,30 @@ PrimPtr Render::getPrim( const string &PrimName ) const
   return getRes<Prim>(PrimName, _primitives);
 } /* End of 'Render::getPrim' function */
 
-/* Set primitive shader function */
-void Render::setPrimShader( PrimPtr &Prim, Shader *NewShader )
+/* Set primitive world matrix function */
+void Render::setPrimMatrix( PrimPtr &P, const math::Matr4f &World )
 {
+  P._resource->_world = World;
+} /* End of 'setPrimMatrix' function */
+
+/* Set primitive shader function */
+void Render::setPrimShader( PrimPtr &P, ShaderPtr &NewShader )
+{
+  P._resource->_shader = NewShader;
 } /* End of 'Render::setPrimShader' function */
 
 /* Set primitive material function */
-void Render::setPrimMaterial( PrimPtr &Prim, Material *NewMaterial )
+void Render::setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial )
 {
 } /* End of 'Render::setPrimMaterial' function */
 
 /* Draw primitive function */
 void Render::drawPrim( Prim *P )
 {
+  _constBuffer._data._world = P->_world;
+  setMaterial(P->_material);
+
+  updateConstBuffer();
   setShader(P->_shader._resource);
   drawGeom(P->_geometry._resource);
 } /* End of 'Render::drawPrim' function */

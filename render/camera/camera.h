@@ -84,7 +84,7 @@ namespace render
 
     /* Set camera parameters constructor */
     void setCamera(bool IsLookAt, const math::Vec3f &Loc, const math::Vec3f &At, const math::Vec3f &Up,
-      int ScreenW = 500, int ScreenH = 500, float ProjW = 0.4, float ProjH = 0.3, float ProJDist = 1.0, float Far = 10000.0);
+      int ScreenW = 500, int ScreenH = 500, float ProjW = 1, float ProjH = 1, float ProJDist = 1.0, float Far = 10000.0);
 
     ///*** Transformation functions ***///
 

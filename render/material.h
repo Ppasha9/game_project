@@ -4,7 +4,7 @@
  * FILE: material.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 01.04.2018
  * NOTE: material handle file
  */
 
@@ -25,15 +25,22 @@ namespace render
     friend class Render;
     friend class ResPtr<Material>;
 
-  private:
-    string _name;
-    // Ka, Kd, Ks, Kp
+  public:
+    struct Coeffs
+    {
+      DirectX::XMFLOAT4 _kA, _kD, _kS;
+      float _kP;
+      float _dummy[3];
+    };
 
-     TextureVector Textures;
-    // Or fixed number
+  private:
+    Coeffs _coeffs;
+
+    //TextureVector Textures;
+    // Or fixed number. Crabsolutely a fixed number.
 
     /* Create material function */
-    Material( /* params */ );
+    Material( const string &MtlName, Coeffs Cfs ) : Resource(MtlName), _coeffs(Cfs) {}
   }; /* End of 'Material' class */
 
   using MaterialPtr = ResPtr<Material>;

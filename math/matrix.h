@@ -64,9 +64,11 @@ namespace math
     } /* End of 'setZero' function */
 
     /* Set matrix as identity */
-    inline void setIdentity( Type DiagValue )
+    inline Matrix & setIdentity( Type DiagValue )
     {
       setDiag(1);
+
+      return *this;
     } /* End of 'setIdentity' function */
 
     /* Set to diagonal using standart operations */

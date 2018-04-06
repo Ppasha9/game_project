@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 27.03.2018
+ * LAST UPDATE: 04.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -15,7 +15,6 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include <d3d11.h>
-#include <d3dcompiler.h>
 
 #include "render.h"
 
@@ -238,6 +237,7 @@ void Render::init( int Width, int Height, HWND hWnd )
   // Setup the raster description
   raster_desc.AntialiasedLineEnable = false;
   raster_desc.CullMode = D3D11_CULL_BACK;
+  //raster_desc.CullMode = D3D11_CULL_NONE;
   raster_desc.DepthBias = 0;
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
@@ -347,17 +347,25 @@ void Render::render( void )
   startFrame();
 
   static float angle = 0;
-
   angle += 0.030f;
 
-  _constBuffer._data._world = DirectX::XMMatrixRotationZ(angle);
-  _constBuffer._data._view = DirectX::XMMatrixIdentity();
-  _constBuffer._data._proj = DirectX::XMMatrixIdentity();//XMMatrixPerspectiveRH(2, 2, -10, 10);
+  _camera.setCamera(true, { 0, 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
 
-  updateConstBuffer();
+  _constBuffer._data._view = _camera._viewMatr;
+  _constBuffer._data._proj = _camera._projMatr;
+
+  _constBuffer._data._lightPos = {sin(angle), cos(angle), 1, 1};
+
+  _constBuffer._data._lightColor = {1, 1, 1, 1};
+
+  _constBuffer._data._cameraDir = {_camera._dir[0], _camera._dir[1], _camera._dir[2], 1};
+  _constBuffer._data._cameraPos = {_camera._loc[0], _camera._loc[1], _camera._loc[2], 1};
 
   for (auto &p : _primitives)
+  {
+    p.second->_world = math::Matr4f().setIdentity(1);
     drawPrim(p.second);
+  }
 
   endFrame();
 } /* End of 'Render::render' function */
@@ -388,31 +396,5 @@ void Render::releaseTexture( TexturePtr &Tex )
 {
   releaseRes<Texture>(Tex, releaseTexture, _textures);
 } /* End of 'Render::releaseTexture' function */
-
-/***
- * Material handle
- ***/
-
-/* Get material interface function */
-MaterialPtr Render::createMaterial( /* params */ )
-{
-  return nullptr;
-} /* End of 'Render::createMaterial' function */
-
-/* Set material texture function */
-void Render::setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo )
-{
-} /* End of 'Render::setMaterialTexture' function */
-
-/* Release material function */
-void Render::releaseMaterial( Render *Rnd, Material *Mtl )
-{
-} /* End of 'Render::releaseMaterial' function */
-
-/* Realease material function */
-void Render::releaseMaterial( MaterialPtr &Mtl )
-{
-  releaseRes<Material>(Mtl, releaseMaterial, _materials);
-} /* End of 'Render::releaseMaterial' function */
 
 /* END OF 'render.cpp' FILE */
