@@ -4,7 +4,7 @@
  * FILE: texture.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: texture resource handle file
  */
 
@@ -26,15 +26,6 @@ namespace render
     friend class ResPtr<Texture>;
 
   private:
-    struct TargaHeader
-    {
-      unsigned char _data1[12];
-      unsigned short _width;
-      unsigned short _height;
-      unsigned char _bpp;
-      unsigned char _data2;
-    };
-
     ID3D11Texture2D *_texBuffer;
     ID3D11ShaderResourceView *_texView;
 

@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -13,7 +13,8 @@
 using namespace render;
 
 /* Create primitive function */
-PrimPtr Render::createPrim( const string &PrimName )
+PrimPtr Render::createPrim( const string &PrimName,
+  const string &MtlName, const string &ShName )
 {
   PrimPtr tmp;
 
@@ -23,12 +24,28 @@ PrimPtr Render::createPrim( const string &PrimName )
   Prim *P = new Prim(PrimName);
 
   P->_geometry = createGeom(PrimName);
-  P->_material = createMaterial("test_material", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0, 0, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
-  setMaterialTexture(P->_material, createTexture("test_texture"), 0);
-  setMaterialTexture(P->_material, getTexture("test_texture"), 1);
-  setMaterialTexture(P->_material, getTexture("test_texture"), 2);
-  setMaterialTexture(P->_material, getTexture("test_texture"), 3);
-  P->_shader = createShader("test_shader");
+  P->_material = getMaterial(MtlName);
+  P->_shader = getShader(ShName);
+
+  _primitives.add(PrimName, P);
+
+  return P;
+} /* End of 'Render::createPrim' function */
+
+/* Create primitive function */
+PrimPtr Render::createPrim( const string &PrimName,
+  const MaterialPtr &Mtl, const ShaderPtr &Sh )
+{
+  PrimPtr tmp;
+
+  if ((tmp = getPrim(PrimName))._resource != nullptr)
+    return tmp;
+
+  Prim *P = new Prim(PrimName);
+
+  P->_geometry = createGeom(PrimName);
+  P->_material = Mtl;
+  P->_shader = Sh;
 
   _primitives.add(PrimName, P);
 
@@ -56,12 +73,13 @@ void Render::setPrimShader( PrimPtr &P, ShaderPtr &NewShader )
 /* Set primitive material function */
 void Render::setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial )
 {
+  P._resource->_material = NewMaterial;
 } /* End of 'Render::setPrimMaterial' function */
 
 /* Draw primitive function */
 void Render::drawPrim( Prim *P )
 {
-  setShader(P->_shader._resource);
+  setShader(P->_shader);
 
   _constBuffer._data._world = P->_world;
   setMaterial(P->_material);

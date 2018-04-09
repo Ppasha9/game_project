@@ -4,7 +4,7 @@
  * FILE: render_texture.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render texture handle implementation file
  */
 
@@ -12,8 +12,14 @@
 
 using namespace render;
 
-/* Get texture interface function */
+/* Create texture from Image buffer function */
 TexturePtr Render::createTexture( const string &TexName )
+{
+  return createTexture(TexName, Image().loadTGA(string("bin\\textures\\").append(TexName)));
+} /* End of 'Render::createTexture' function */
+
+/* Create texture from Image buffer function */
+TexturePtr Render::createTexture( const string &TexName, const Image &Src )
 {
   TexturePtr tmp;
   if ((tmp = getTexture(TexName))._resource != nullptr)
@@ -21,11 +27,9 @@ TexturePtr Render::createTexture( const string &TexName )
 
   Texture *T = new Texture(TexName);
 
-  const int w = 2, h = 2;
-
   D3D11_TEXTURE2D_DESC buffer_desc;
-  buffer_desc.Width = w;
-  buffer_desc.Height = w;
+  buffer_desc.Width = Src.getWidth();
+  buffer_desc.Height = Src.getHeight();
   buffer_desc.MipLevels = 0;
   buffer_desc.ArraySize = 1;
   buffer_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -34,7 +38,7 @@ TexturePtr Render::createTexture( const string &TexName )
   buffer_desc.Usage = D3D11_USAGE_DEFAULT;
   buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
   buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-  buffer_desc.MiscFlags = 0;//D3D11_RESOURCE_MISC_GENERATE_MIPS;
+  buffer_desc.MiscFlags = 0;
 
   HRESULT result;
   result = _device->CreateTexture2D(&buffer_desc, nullptr, &T->_texBuffer);
@@ -45,13 +49,9 @@ TexturePtr Render::createTexture( const string &TexName )
     return nullptr;
   }
 
-
-  unsigned int rowPitch = (w * 4) * sizeof(unsigned char);
-  unsigned char data[w * h * 4] = {255, 255, 255, 255,
-                                   0, 0, 0, 255,
-                                   0, 0, 0, 255,
-                                   255, 255, 255, 255,};
-  _deviceContext->UpdateSubresource(T->_texBuffer, 0, nullptr, data, rowPitch, 0);
+  unsigned int rowPitch = (buffer_desc.Width * 4) * sizeof(unsigned char);
+  _deviceContext->UpdateSubresource(T->_texBuffer, 0, nullptr,
+    (unsigned char *)Src.getPixels(), rowPitch, 0);
 
   D3D11_SHADER_RESOURCE_VIEW_DESC view_desc;
   view_desc.Format = buffer_desc.Format;
@@ -73,12 +73,12 @@ TexturePtr Render::createTexture( const string &TexName )
 } /* End of 'Render::createTexture' function */
 
 /* Set texture as active function */
-void Render::setTexture( Texture *Tex, int Id )
+void Render::setTexture( TexturePtr &Tex, int Id )
 {
-  if (Tex == nullptr || Tex->_texView == nullptr)
-    return;
+  if (Tex._resource == nullptr)
+    Tex = getTexture("default");
 
-  _deviceContext->PSSetShaderResources(Id, 1, &Tex->_texView);
+  _deviceContext->PSSetShaderResources(Id, 1, &Tex._resource->_texView);
 } /* End of 'Render::setTexture' function */
 
 /* Get texture interface function */

@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -125,9 +125,30 @@ void Render::setViewport( int Width, int Height )
 void Render::init( void )
 {
   init(_width, _height, _hWnd);
+  createDefResources();
 
   createPrim("test_prim");
 } /* End of 'Render::init' function */
+
+/* Create default resources function */
+void Render::createDefResources( void )
+{
+  math::Vec4uc def_texture[16 * 16 * 4];
+
+  for (unsigned char i = 0; i < 16; i++)
+    for (unsigned char j = 0; j < 16; j++)
+      def_texture[i * 16 + j] = {(unsigned char)(255 * ((i + j) % 2)),
+                                 (unsigned char)(255 * ((i + j) % 2)),
+                                 (unsigned char)(255 * ((i + j) % 2)), 255};
+
+  createShader("default");
+  auto tex = createTexture("default", Image(def_texture, 16, 16));
+  auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
+  setMaterialTexture(mtl, tex, 0);
+  setMaterialTexture(mtl, tex, 1);
+  setMaterialTexture(mtl, tex, 2);
+  setMaterialTexture(mtl, tex, 3);
+} /* End of 'Render::createDefResources' function */
 
 /* Initialize DirectX function */
 void Render::init( int Width, int Height, HWND hWnd )
@@ -262,7 +283,7 @@ void Render::init( int Width, int Height, HWND hWnd )
 
   /*** Init sampler state ***/
   D3D11_SAMPLER_DESC sampler_desc;
-  sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
   sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
   sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
   sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -378,7 +399,7 @@ void Render::render( void )
   static float angle = 0;
   angle += 0.030f;
 
-  _camera.setCamera(true, { 0, 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
+  _camera.setCamera(true, { 5 * sin(angle / 3), 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
 
   _constBuffer._data._view = _camera._viewMatr;
   _constBuffer._data._proj = _camera._projMatr;

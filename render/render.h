@@ -4,7 +4,7 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render handle declaration file
  */
 
@@ -12,11 +12,11 @@
 
 #include "..\def.h"
 #include "..\win\win.h"
-#include "prim.h"
-#include "material.h"
-#include "res_ptr.h"
-#include "res_map.h"
 #include "const_buffer.h"
+#include "res_map.h"
+#include "material.h"
+#include "prim.h"
+#include "image\image.h"
 #include "camera\camera.h"
 
 /* Render handle namespace */
@@ -75,6 +75,9 @@ namespace render
     /* Initialize DirectX function */
     void init( int Width, int Height, HWND hWnd );
 
+    /* Create default resources function */
+    void createDefResources( void );
+
     /* Start frame function */
     void startFrame( void );
 
@@ -88,13 +91,13 @@ namespace render
     void resize( int Width, int Height );
 
     /* Set shader as active function */
-    void setShader( Shader *Sh );
+    void setShader( ShaderPtr &Sh );
 
     /* Set texture as active function */
-    void setTexture( Texture *Tex, int Id );
+    void setTexture( TexturePtr &Tex, int Id );
 
     /* Set material as active function */
-    void setMaterial( const MaterialPtr &Mtl );
+    void setMaterial( MaterialPtr &Mtl );
 
     /* Draw geometry function */
     void drawGeom( Geom *G );
@@ -148,8 +151,11 @@ namespace render
      * Texture handle
      ***/
 
-    /* Get texture interface function */
+    /* Create texture from 'TexName' file function */
     TexturePtr createTexture( const string &TexName );
+
+    /* Create texture from Image buffer function */
+    TexturePtr createTexture( const string &TexName, const Image &Src );
 
     /* Get texture interface function */
     TexturePtr getTexture( const string &TexName ) const;
@@ -209,7 +215,12 @@ namespace render
      ***/
 
     /* Create primitive function */
-    PrimPtr createPrim( const string &PrimName );
+    PrimPtr createPrim( const string &PrimName,
+      const string &MtlName = "default", const string &ShName = "default" );
+
+    /* Create primitive function */
+    PrimPtr createPrim( const string &PrimName,
+      const MaterialPtr &Mtl, const ShaderPtr &Sh );
 
     /* Get primitive interface function */
     PrimPtr getPrim( const string &PrimName ) const;

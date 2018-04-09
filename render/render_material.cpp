@@ -4,7 +4,7 @@
  * FILE: render_material.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render material handle implementation file
  */
 
@@ -33,17 +33,15 @@ MaterialPtr Render::getMaterial( const string &MtlName ) const
 } /* End of 'Render::getMaterial' function */
 
 /* Set material as active function */
-void Render::setMaterial( const MaterialPtr &Mtl )
+void Render::setMaterial( MaterialPtr &Mtl )
 {
   if (Mtl._resource == nullptr)
-  {
-    // set default material
-  }
-  else
-    _constBuffer._data._mtlCoeffs = Mtl._resource->_coeffs;
+    Mtl = getMaterial("default");
+
+  _constBuffer._data._mtlCoeffs = Mtl._resource->_coeffs;
 
   for (int i = 0; i < 4; i++)
-    setTexture(Mtl._resource->_textures[i]._resource, i);
+    setTexture(Mtl._resource->_textures[i], i);
 } /* End of 'Render::setMaterial' function */
   
 /* Set material texture function */

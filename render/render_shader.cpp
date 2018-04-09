@@ -4,7 +4,7 @@
  * FILE: render_shader.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render shader resource handle implementation file
  */
 
@@ -167,14 +167,17 @@ void Render::releaseShader( ShaderPtr &Sh )
 } /* End of 'Render::releaseShader' function */
 
 /* Set shader as active function */
-void Render::setShader( Shader *Sh )
+void Render::setShader( ShaderPtr &Sh )
 {
+  if (Sh._resource == nullptr)
+    Sh = getShader("default");
+
   // Set vertex input layout
-  _deviceContext->IASetInputLayout(Sh->_inputLayout);
+  _deviceContext->IASetInputLayout(Sh._resource->_inputLayout);
 
   // Set vertex and pixel shaders
-  _deviceContext->VSSetShader(Sh->_vertexShader, NULL, 0);
-  _deviceContext->PSSetShader(Sh->_pixelShader, NULL, 0);
+  _deviceContext->VSSetShader(Sh._resource->_vertexShader, NULL, 0);
+  _deviceContext->PSSetShader(Sh._resource->_pixelShader, NULL, 0);
 
   // Set texture sampler state
   _deviceContext->PSSetSamplers(0, 1, &_samplerState);

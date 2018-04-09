@@ -76,13 +76,13 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{f6ca02a1-9b19-48f8-87e3-ea4c5807aa60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Render support\Resources\Texture\Image">
+      <UniqueIdentifier>{ecb29d94-ac5e-4e86-9756-76f7aa979d52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win\win.cpp">
-      <Filter>Source Files\Window handle</Filter>
     </ClCompile>
     <ClCompile Include="render\render.cpp">
       <Filter>Source Files\Render support</Filter>
@@ -134,6 +134,12 @@
     </ClCompile>
     <ClCompile Include="render\render_texture.cpp">
       <Filter>Source Files\Render support\Resources\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="render\image\image.cpp">
+      <Filter>Source Files\Render support\Resources\Texture\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="win\win.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,12 +230,15 @@
     <ClInclude Include="render\res_map.h">
       <Filter>Source Files\Render support\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="render\image\image.h">
+      <Filter>Source Files\Render support\Resources\Texture\Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\ps_test_shader.hlsl">
+    <FxCompile Include="shaders\ps_default.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\vs_test_shader.hlsl">
+    <FxCompile Include="shaders\vs_default.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
