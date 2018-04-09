@@ -36,9 +36,9 @@ TexturePtr Render::createTexture( const string &TexName, const Image &Src )
   buffer_desc.SampleDesc.Count = 1;
   buffer_desc.SampleDesc.Quality = 0;
   buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-  buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-  buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-  buffer_desc.MiscFlags = 0;
+  buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+  buffer_desc.CPUAccessFlags = 0;
+  buffer_desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
   HRESULT result;
   result = _device->CreateTexture2D(&buffer_desc, nullptr, &T->_texBuffer);
@@ -66,6 +66,8 @@ TexturePtr Render::createTexture( const string &TexName, const Image &Src )
     delete T;
     return nullptr;
   }
+
+  _deviceContext->GenerateMips(T->_texView);
 
   _textures.add(TexName, T);
 

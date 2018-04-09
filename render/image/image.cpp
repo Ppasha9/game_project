@@ -72,7 +72,7 @@ Image & Image::loadTGA( const string &FileName )
   unsigned int image_size;
   FILE *file;
   TargaHeader targa_header;
-  math::Vec4uc *targa_image;
+  unsigned char *targa_image;
 
   // Open TGA file
   if ((file = fopen(FileName.c_str(), "rb")) == nullptr)
@@ -80,7 +80,7 @@ Image & Image::loadTGA( const string &FileName )
 
   // Read file header
   if ((unsigned int)fread(&targa_header, sizeof(TargaHeader), 1, file) != 1 ||
-      targa_header._bpp != 32)
+      (targa_header._bpp != 32 && targa_header._bpp != 24))
   {
     fclose(file);
     return *this;
@@ -90,14 +90,16 @@ Image & Image::loadTGA( const string &FileName )
   _height = targa_header._height;
   _width = targa_header._width;
 
+  unsigned char noo_bytes = targa_header._bpp / 8;
+
   // Calculate pixel array size
-  image_size = _width * _height;
+  image_size = _width * _height * noo_bytes;
 
   // Allocate targa image data
-  targa_image = new math::Vec4uc[image_size];
+  targa_image = new unsigned char[image_size];
 
   // Read in the targa image data.
-  if (fread(targa_image, 4, image_size, file) != image_size)
+  if (fread(targa_image, 1, image_size, file) != image_size)
   {
     delete[] targa_image;
     fclose(file);
@@ -115,10 +117,10 @@ Image & Image::loadTGA( const string &FileName )
     for (unsigned int j = 0; j < _width; j++)
     {
       unsigned int index = (_height - 1 - i) * _width + j;
-      _pixels[i * _width + j] = {targa_image[index][2], // R
-                                 targa_image[index][1], // G
-                                 targa_image[index][0], // B
-                                 targa_image[index][3]};
+      _pixels[i * _width + j] = {targa_image[index * noo_bytes + 2], // R
+                                 targa_image[index * noo_bytes + 1], // G
+                                 targa_image[index * noo_bytes + 0], // B
+                                 targa_header._bpp == 32 ? targa_image[index * noo_bytes + 3] : (unsigned char)255};
     }
   delete[] targa_image;
 

@@ -127,6 +127,8 @@ void Render::init( void )
   init(_width, _height, _hWnd);
   createDefResources();
 
+  //setMaterialTexture(getMaterial("default"), createTexture("mPDezWfq4M8.tga"), 2);
+
   createPrim("test_prim");
 } /* End of 'Render::init' function */
 
@@ -142,7 +144,8 @@ void Render::createDefResources( void )
                                  (unsigned char)(255 * ((i + j) % 2)), 255};
 
   createShader("default");
-  auto tex = createTexture("default", Image(def_texture, 16, 16));
+  //auto tex = createTexture("default", Image(def_texture, 16, 16));
+  auto tex = createTexture("default.tga");
   auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
   setMaterialTexture(mtl, tex, 0);
   setMaterialTexture(mtl, tex, 1);
@@ -283,7 +286,8 @@ void Render::init( int Width, int Height, HWND hWnd )
 
   /*** Init sampler state ***/
   D3D11_SAMPLER_DESC sampler_desc;
-  sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+  sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  //sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
   sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
   sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
   sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
