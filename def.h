@@ -3,10 +3,11 @@
  *
  * FILE: def.h
  * AUTHORS:
- *   Denisov Pavel,
- *   Lebed Pavel,
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ *   Denisov Pavel,
+ *   Kozlov Ilya,
+ *   Lebed Pavel
+ * LAST UPDATE: 10.04.2018
  * NOTE: default declaration file
  */
 
@@ -14,10 +15,16 @@
 
 #include <string>
 
+#include "math\math_def.h"
+
 using string = std::string;
 
 namespace render
 {
   // Forward declaration
   class Render;
+  template<typename ResType>
+    class ResMap;
 }
+
+/* END OF 'def.h' FILE */
