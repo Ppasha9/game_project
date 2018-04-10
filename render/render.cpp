@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -15,7 +15,6 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include <d3d11.h>
-#include <d3dcompiler.h>
 
 #include "render.h"
 
@@ -23,14 +22,20 @@ using namespace render;
 
 /* Create render function */
 Render::Render( void ) :
-  _swapChain(0),
-  _device(0),
-  _deviceContext(0),
-  _renderTargetView(0),
-  _depthStencilBuffer(0),
-  _depthStencilState(0),
-  _depthStencilView(0),
-  _rasterState(0)
+  _swapChain(nullptr),
+  _device(nullptr),
+  _deviceContext(nullptr),
+  _renderTargetView(nullptr),
+  _depthStencilBuffer(nullptr),
+  _depthStencilState(nullptr),
+  _depthStencilView(nullptr),
+  _rasterState(nullptr),
+  _samplerState(nullptr),
+  _shaders(this, releaseShader),
+  _materials(this, releaseMaterial),
+  _geometries(this, releaseGeom),
+  _textures(this, releaseTexture),
+  _primitives(this, releasePrim)
 {
 } /* End of 'Render::Render' function */
 
@@ -116,10 +121,47 @@ void Render::setViewport( int Width, int Height )
   _deviceContext->RSSetViewports(1, &viewport);
 } /* End of 'Render::setViewport' function */
 
+/* Initialize render function */
+void Render::init( void )
+{
+  init(_width, _height, _hWnd);
+  createDefResources();
+
+  //setMaterialTexture(getMaterial("default"), createTexture("mPDezWfq4M8.tga"), 2);
+
+  createPrim("test_prim");
+} /* End of 'Render::init' function */
+
+/* Create default resources function */
+void Render::createDefResources( void )
+{
+  math::Vec4uc def_texture[16 * 16 * 4];
+
+  for (unsigned char i = 0; i < 16; i++)
+    for (unsigned char j = 0; j < 16; j++)
+      def_texture[i * 16 + j] = {(unsigned char)(255 * ((i + j) % 2)),
+                                 (unsigned char)(255 * ((i + j) % 2)),
+                                 (unsigned char)(255 * ((i + j) % 2)), 255};
+
+  createShader("default");
+  //auto tex = createTexture("default", Image(def_texture, 16, 16));
+  auto tex = createTexture("default.tga");
+  auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
+  setMaterialTexture(mtl, tex, 0);
+  setMaterialTexture(mtl, tex, 1);
+  setMaterialTexture(mtl, tex, 2);
+  setMaterialTexture(mtl, tex, 3);
+} /* End of 'Render::createDefResources' function */
+
 /* Initialize DirectX function */
 void Render::init( int Width, int Height, HWND hWnd )
 {
   HRESULT result;
+
+  if (Width == 0)
+    Width = 1;
+  if (Height == 0)
+    Height = 1;
 
   _hWnd = hWnd;
 
@@ -225,6 +267,7 @@ void Render::init( int Width, int Height, HWND hWnd )
   // Setup the raster description
   raster_desc.AntialiasedLineEnable = false;
   raster_desc.CullMode = D3D11_CULL_BACK;
+  //raster_desc.CullMode = D3D11_CULL_NONE;
   raster_desc.DepthBias = 0;
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
@@ -241,22 +284,45 @@ void Render::init( int Width, int Height, HWND hWnd )
   // Set active rasterizer state
   _deviceContext->RSSetState(_rasterState);
 
+  /*** Init sampler state ***/
+  D3D11_SAMPLER_DESC sampler_desc;
+  sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  //sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+  sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_desc.MipLODBias = 0.0f;
+  sampler_desc.MaxAnisotropy = 1;
+  sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+  sampler_desc.BorderColor[0] = 0;
+  sampler_desc.BorderColor[1] = 0;
+  sampler_desc.BorderColor[2] = 0;
+  sampler_desc.BorderColor[3] = 0;
+  sampler_desc.MinLOD = 0;
+  sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+  result = _device->CreateSamplerState(&sampler_desc, &_samplerState);
+  assert(!FAILED(result));
+
   /*** Setup viewport ***/
   setViewport(Width, Height);
 
-  /*** Init constant buffer **/
+  /*** Init constant buffer ***/
   initConstBuffer();
+
+  /*** Init camera ***/
+  _camera.setCamera(true, { 0, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
 } /* End of 'Render::init' function */
 
 /* Release DirectX function */
 void Render::release( void )
 {
   // Realease all resources
-  releaseAllRes<Shader>(releaseShader, _shaders);
-  releaseAllRes<Prim>(releasePrim, _primitives);
-  releaseAllRes<Texture>(releaseTexture, _textures);
-  releaseAllRes<Material>(releaseMaterial, _materials);
-  releaseAllRes<Geom>(releaseGeom, _geometries);
+  _shaders.releaseAll();
+  _primitives.releaseAll();
+  _textures.releaseAll();
+  _materials.releaseAll();
+  _geometries.releaseAll();
 
   // Release constant buffer
   releaseConstBuffer();
@@ -266,6 +332,7 @@ void Render::release( void )
     _swapChain->SetFullscreenState(false, NULL);
 
   // Release DirectX resources
+  releaseRes<ID3D11SamplerState>(_samplerState);
   releaseRes<ID3D11RasterizerState>(_rasterState);
   releaseRes<ID3D11DepthStencilView>(_depthStencilView);
   releaseRes<ID3D11DepthStencilState>(_depthStencilState);
@@ -311,6 +378,9 @@ void Render::resize( int Width, int Height )
 
   // Reset viewport
   setViewport(Width, Height);
+
+  // Redraw frame
+  render();
 } /* End of 'Render::resize' function */
 
 /* Start frame function */
@@ -331,17 +401,35 @@ void Render::render( void )
   startFrame();
 
   static float angle = 0;
-
   angle += 0.030f;
 
-  _constBuffer._data._world = DirectX::XMMatrixRotationZ(angle);
-  _constBuffer._data._view = DirectX::XMMatrixIdentity();
-  _constBuffer._data._proj = DirectX::XMMatrixIdentity();//XMMatrixPerspectiveRH(2, 2, -10, 10);
+  _camera.setCamera(true, { 5 * sin(angle / 3), 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
 
-  updateConstBuffer();
+  _constBuffer._data._view = _camera._viewMatr;
+  _constBuffer._data._proj = _camera._projMatr;
 
-  for (auto &p : _primitives)
-    drawPrim(p.second);
+  _constBuffer._data._lightPos = {sin(angle), cos(angle), 1, 1};
+
+  _constBuffer._data._lightColor = {1, 1, 1, 1};
+
+  _constBuffer._data._cameraDir = {_camera._dir[0], _camera._dir[1], _camera._dir[2], 1};
+  _constBuffer._data._cameraPos = {_camera._loc[0], _camera._loc[1], _camera._loc[2], 1};
+
+  class dummy
+  {
+  private:
+    Render *_rnd;
+
+  public:
+    dummy( Render *Rnd ) : _rnd(Rnd) {}
+
+    void operator()( Prim *P )
+    {
+      P->_world = math::Matr4f().setIdentity(1);
+      _rnd->drawPrim(P);
+    }
+  };
+  _primitives.iterate<dummy>(dummy(this));
 
   endFrame();
 } /* End of 'Render::render' function */
@@ -351,52 +439,5 @@ void Render::endFrame( void )
 {
   _swapChain->Present(1, 0);
 } /* End of 'Render::endFrame' function */
-
-/***
- * Texture handle
- ***/
-
-/* Get texture interface function */
-TexturePtr Render::getTexture( const string &TexName ) const
-{
-  return getRes<Texture>(TexName, _textures);
-} /* End of 'Render::getTexture' function */
-
-/* Release texture function */
-void Render::releaseTexture( Render *Rnd, Texture *Tex )
-{
-} /* End of 'Render::releaseTexture' function */
-
-/* Release texture function */
-void Render::releaseTexture( TexturePtr &Tex )
-{
-  releaseRes<Texture>(Tex, releaseTexture, _textures);
-} /* End of 'Render::releaseTexture' function */
-
-/***
- * Material handle
- ***/
-
-/* Get material interface function */
-MaterialPtr Render::createMaterial( /* params */ )
-{
-  return nullptr;
-} /* End of 'Render::createMaterial' function */
-
-/* Set material texture function */
-void Render::setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo )
-{
-} /* End of 'Render::setMaterialTexture' function */
-
-/* Release material function */
-void Render::releaseMaterial( Render *Rnd, Material *Mtl )
-{
-} /* End of 'Render::releaseMaterial' function */
-
-/* Realease material function */
-void Render::releaseMaterial( MaterialPtr &Mtl )
-{
-  releaseRes<Material>(Mtl, releaseMaterial, _materials);
-} /* End of 'Render::releaseMaterial' function */
 
 /* END OF 'render.cpp' FILE */

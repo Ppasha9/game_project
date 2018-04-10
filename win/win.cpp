@@ -4,15 +4,14 @@
  * FILE: win.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 27.03.2018
  * NOTE: windows handle class implementation file
  */
 
 #include "win.h"
-#include "..\render\render.h"
 
 /* Create window function */
-Win::Win(  HINSTANCE hInstance, int CmdShow )
+Win::Win(  HINSTANCE hInstance, int CmdShow ) : _hInstance(hInstance)
 {
   WNDCLASSEX wc;
 
@@ -131,15 +130,22 @@ WPARAM Win::run( VOID )
   return msg.wParam;
 } /* End of 'Win::run' function */
 
+/* Get window handler function */
+HWND Win::getHWnd( void )
+{
+  return _hWnd;
+} /* End of 'Win::getHWnd' function */
+
+/* Get window handler function */
+HINSTANCE Win::getHInstanse( void )
+{
+  return _hInstance;
+} /* End of 'Win::getHInstanse' function */
+
 /* WM_CREATE window message handle function */
 bool Win::onCreate( CREATESTRUCT *CS )
 {
-  SetTimer(Win::_hWnd, 30, 1, nullptr);
-
-  render::Render & rnd = render::Render::getInstance();
-  rnd.init(1, 1, _hWnd);
-  rnd.createShader("test_shader");
-  rnd.createPrim("test_prim");
+  SetTimer(_hWnd, 30, 1, nullptr);
 
   return true;
 } /* End of 'Win::onCreate' function */
@@ -156,11 +162,7 @@ void Win::onSize( UINT State, int W, int H )
 {
   _width = W;
   _height = H;
-  //resize(W, H);
-
-  render::Render & rnd = render::Render::getInstance();
-  rnd.resize(_width, _height);
-  rnd.render();
+  resize(W, H);
 } /* End of 'Win::onSize' function */
 
 /* WM_PAINT window message handle function */
@@ -193,9 +195,8 @@ bool Win::onErase( HDC hDC )
 void Win::onTimer( void )
 {
   HDC hDC = GetDC(_hWnd);
-  render::Render & rnd = render::Render::getInstance();
 
-  rnd.render();
+  render();
 
   ReleaseDC(_hWnd, hDC);
 } /* End of 'Win::onTimer' function */
@@ -205,11 +206,5 @@ void Win::exit( void )
 {
   PostMessage(_hWnd, WM_CLOSE, 0, 0);
 } /* End of 'Win::exit' function */
-
-/* Get window descriptor function */
-HWND Win::getHWnd( void )
-{
-  return _hWnd;
-} /* End of 'Win::getHWnd' function */
 
 /* END OF 'win.cpp' CLASS */

@@ -4,7 +4,7 @@
  * FILE: material.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: material handle file
  */
 
@@ -20,20 +20,25 @@ namespace render
   using TextureVector = std::vector<Texture *>;
 
   /* Material class */
-  class Material : Resource
+  class Material : public Resource
   {
     friend class Render;
     friend class ResPtr<Material>;
 
-  private:
-    string _name;
-    // Ka, Kd, Ks, Kp
+  public:
+    struct Coeffs
+    {
+      DirectX::XMFLOAT4 _kA, _kD, _kS;
+      float _kP;
+      float _dummy[3];
+    };
 
-     TextureVector Textures;
-    // Or fixed number
+  private:
+    Coeffs _coeffs;
+    TexturePtr _textures[4];
 
     /* Create material function */
-    Material( /* params */ );
+    Material( const string &MtlName, Coeffs Cfs ) : Resource(MtlName), _coeffs(Cfs) {}
   }; /* End of 'Material' class */
 
   using MaterialPtr = ResPtr<Material>;

@@ -4,7 +4,7 @@
  * FILE: render_geom.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render geometry resource handle implementation file
  */
 
@@ -29,10 +29,10 @@ GeomPtr Render::createGeom( const string &GeomName )
   Geom *G = new Geom(GeomName);
 
   // Set the number of vertices in the vertex array.
-  G->_nooV = 3;
+  G->_nooV = 4;
 
   // Set the number of indices in the index array.
-  G->_nooI = 3;
+  G->_nooI = 6;
 
   // Create the vertex array
   v = new Vertex[G->_nooV];
@@ -58,25 +58,50 @@ GeomPtr Render::createGeom( const string &GeomName )
   v[1]._pos[1] = -1;
   v[1]._pos[2] = 0;
 
-  v[2]._pos[0] = 0;
+  v[2]._pos[0] = -1;
   v[2]._pos[1] = 1;
   v[2]._pos[2] = 0;
 
+  v[3]._pos[0] = 1;
+  v[3]._pos[1] = 1;
+  v[3]._pos[2] = 0;
+
+
   v[0]._norm[0] = 0;
   v[0]._norm[1] = 0;
-  v[0]._norm[2] = -1;
+  v[0]._norm[2] = 1;
 
   v[1]._norm[0] = 0;
   v[1]._norm[1] = 0;
-  v[1]._norm[2] = -1;
+  v[1]._norm[2] = 1;
 
   v[2]._norm[0] = 0;
   v[2]._norm[1] = 0;
-  v[2]._norm[2] = -1;
+  v[2]._norm[2] = 1;
+
+  v[3]._norm[0] = 0;
+  v[3]._norm[1] = 0;
+  v[3]._norm[2] = 1;
+
+  v[0]._tex[0] = 0;
+  v[0]._tex[1] = 1;
+
+  v[1]._tex[0] = 1;
+  v[1]._tex[1] = 1;
+
+  v[2]._tex[0] = 0;
+  v[2]._tex[1] = 0;
+
+  v[3]._tex[0] = 1;
+  v[3]._tex[1] = 0;
 
   i[0] = 0;
   i[1] = 1;
   i[2] = 2;
+
+  i[3] = 2;
+  i[4] = 1;
+  i[5] = 3;
 
   // Set up vertex buffer description
   v_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -123,7 +148,7 @@ GeomPtr Render::createGeom( const string &GeomName )
   delete[] i;
   delete[] v;
 
-  _geometries[GeomName] = G;
+  _geometries.add(GeomName, G);
 
   return G;
 } /* End of 'Render::createGeom' function */
@@ -131,7 +156,7 @@ GeomPtr Render::createGeom( const string &GeomName )
 /* Get geometry interface function */
 GeomPtr Render::getGeom( const string &GeomName ) const
 {
-  return getRes<Geom>(GeomName, _geometries);
+  return _geometries.get(GeomName);
 } /* End of 'Render::getGeom' function */
 
 /* Draw geometry function */
@@ -159,7 +184,7 @@ void Render::releaseGeom( Render *Rnd, Geom *G )
 /* Realease geometry function */
 void Render::releaseGeom( GeomPtr &G )
 {
-  releaseRes<Geom>(G, releaseGeom, _geometries);
+  _geometries.release(G);
 } /* End of 'Render::releaseGeom' function */
 
 /* END OF 'render_geom.cpp' FILE */

@@ -4,7 +4,7 @@
  * FILE: resource.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 06.04.2018
  * NOTE: resource handle file
  */
 
@@ -18,9 +18,7 @@ namespace render
   /* Render resource class */
   class Resource
   {
-    friend class Render;
-
-  protected:
+  public:
     string _name;
     int _nooInst;
 

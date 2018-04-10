@@ -31,9 +31,6 @@
     <Filter Include="Source Files\Physics system\Collision system">
       <UniqueIdentifier>{61ee9492-e4ad-4c1c-bb53-884b11447570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{f6ca02a1-9b19-48f8-87e3-ea4c5807aa60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Render support\Resources">
       <UniqueIdentifier>{51fe7417-c186-4fd8-bd28-de193a1f3bd4}</UniqueIdentifier>
     </Filter>
@@ -55,13 +52,37 @@
     <Filter Include="Source Files\Render support\Resources\Texture">
       <UniqueIdentifier>{791d0856-bf1c-46a4-ba15-b403b7cf0329}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics system\Forces">
+      <UniqueIdentifier>{e199b1f9-9216-442a-933c-8b60ad4f8106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Forces\Gravity">
+      <UniqueIdentifier>{dc8f264b-39cf-4e56-b22a-32e224fd5b1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Camera">
+      <UniqueIdentifier>{c94e7cfd-4910-4191-ac48-06af9d2427d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Collision system\Collision detection">
+      <UniqueIdentifier>{49f6745d-b021-4502-ad43-0f6ecaa51cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Collision system\Contact generation">
+      <UniqueIdentifier>{44031786-bf2d-4950-bd33-73e465f24e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Collision system\Collision resolution">
+      <UniqueIdentifier>{f7a2b4a3-b5a2-4635-9e63-ce045a8d0083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics system\Collision system\Bounding volumes">
+      <UniqueIdentifier>{410dff92-5c20-4b0c-a13c-6407aff73b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{f6ca02a1-9b19-48f8-87e3-ea4c5807aa60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render support\Resources\Texture\Image">
+      <UniqueIdentifier>{ecb29d94-ac5e-4e86-9756-76f7aa979d52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win\win.cpp">
-      <Filter>Source Files\Window handle</Filter>
     </ClCompile>
     <ClCompile Include="render\render.cpp">
       <Filter>Source Files\Render support</Filter>
@@ -71,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="physics\phys_object\phys_object.cpp">
       <Filter>Source Files\Physics system\Physic object</Filter>
-    </ClCompile>
-    <ClCompile Include="physics\collision\phys_collision.cpp">
-      <Filter>Source Files\Physics system\Collision system</Filter>
     </ClCompile>
     <ClCompile Include="render\render_geom.cpp">
       <Filter>Source Files\Render support\Resources\Geometry</Filter>
@@ -86,6 +104,42 @@
     </ClCompile>
     <ClCompile Include="render\render_prim.cpp">
       <Filter>Source Files\Render support\Resources\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\forces\gravity\gravity.cpp">
+      <Filter>Source Files\Physics system\Forces\Gravity</Filter>
+    </ClCompile>
+    <ClCompile Include="render\camera\camera.cpp">
+      <Filter>Source Files\Render support\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\bounding volumes\bounding_box.cpp">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\bounding volumes\bounding_plane.cpp">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\bounding volumes\bounding_sphere.cpp">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\detection\collision_detector.cpp">
+      <Filter>Source Files\Physics system\Collision system\Collision detection</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\generation\contact_generator.cpp">
+      <Filter>Source Files\Physics system\Collision system\Contact generation</Filter>
+    </ClCompile>
+    <ClCompile Include="physics\collision\resolution\collision_resolver.cpp">
+      <Filter>Source Files\Physics system\Collision system\Collision resolution</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render_material.cpp">
+      <Filter>Source Files\Render support\Resources\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="render\render_texture.cpp">
+      <Filter>Source Files\Render support\Resources\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="render\image\image.cpp">
+      <Filter>Source Files\Render support\Resources\Texture\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="win\win.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +170,6 @@
     <ClInclude Include="math\quat.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="physics\collision\phys_collision.h">
-      <Filter>Source Files\Physics system\Collision system</Filter>
-    </ClInclude>
     <ClInclude Include="render\resource.h">
       <Filter>Source Files\Render support\Resources</Filter>
     </ClInclude>
@@ -143,12 +194,51 @@
     <ClInclude Include="render\res_ptr.h">
       <Filter>Source Files\Render support\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="physics\forces\force.h">
+      <Filter>Source Files\Physics system\Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\forces\gravity\gravity.h">
+      <Filter>Source Files\Physics system\Forces\Gravity</Filter>
+    </ClInclude>
+    <ClInclude Include="render\camera\camera.h">
+      <Filter>Source Files\Render support\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\detection\collision_detector.h">
+      <Filter>Source Files\Physics system\Collision system\Collision detection</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\bounding volumes\bounding_box.h">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\bounding volumes\bounding_plane.h">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\bounding volumes\bounding_sphere.h">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\bounding volumes\bounding_volume.h">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\bounding volumes\bounding_volume_def.h">
+      <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\generation\collision_generator.h">
+      <Filter>Source Files\Physics system\Collision system\Contact generation</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\collision\resolution\collision_resolver.h">
+      <Filter>Source Files\Physics system\Collision system\Collision resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="render\res_map.h">
+      <Filter>Source Files\Render support\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="render\image\image.h">
+      <Filter>Source Files\Render support\Resources\Texture\Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\ps_test_shader.hlsl">
+    <FxCompile Include="shaders\ps_default.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\vs_test_shader.hlsl">
+    <FxCompile Include="shaders\vs_default.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -4,7 +4,7 @@
  * FILE: matrix.h 
  * AUTHORS:
  *   Lebed Pavel
- * LAST UPDATE: 07.03.2018 
+ * LAST UPDATE: 27.03.2018 
  * NOTE: matrix calculation module 
  */
 
@@ -64,9 +64,11 @@ namespace math
     } /* End of 'setZero' function */
 
     /* Set matrix as identity */
-    inline void setIdentity( Type DiagValue )
+    inline Matrix & setIdentity( Type DiagValue )
     {
       setDiag(1);
+
+      return *this;
     } /* End of 'setIdentity' function */
 
     /* Set to diagonal using standart operations */
@@ -143,7 +145,7 @@ namespace math
       return *this;
     } /* End of 'operator*' function */
 
-    inline Vector<Rows, Type> operator*( const Vector<Rows, Type> &Vec )
+    inline Vector<Rows, Type> operator*( const Vector<Rows, Type> &Vec ) const
     {
       if (Rows != Columns)
         return Vector<Rows, Type>(0);
@@ -190,10 +192,20 @@ namespace math
       return res;
     } /* End of 'getInverse' function */
 
-    inline void invirsize( void )
+    inline void inversize( void )
     {
       *this = getInverse();
-    } /* End of 'invirsize' function */
+    } /* End of 'inversize' function */
+
+    inline Matrix<Columns, Rows, Type> getTranspose(void) const
+    {
+      Matrix<Columns, Rows, Type> res;
+
+      for (size_t j = 0; j < Rows; j++)
+        for (size_t i = 0; i < Columns; i++)
+          res._values[i][j] = _values[j][i];
+      return res;
+    } /* End of 'getTranspose' function */
   }; /* End of 'Matrix' class */
 
   /// Determinant realizations

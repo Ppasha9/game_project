@@ -4,7 +4,7 @@
  * FILE: win.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 27.03.2018
  * NOTE: windows handle class declaration file
  */
 
@@ -15,10 +15,11 @@
 /* Windows handle class */
 class Win
 {
-private:
-  HWND _hWnd;          // Window descriptor
-  int _width, _height; // Window size
-  bool _isActive;      // Window is active boolean
+protected:
+  HWND _hWnd;           // Window descriptor
+  HINSTANCE _hInstance; // App descriptor
+  int _width, _height;  // Window size
+  bool _isActive;       // Window is active boolean
 
 public:
   /* Create window function */
@@ -37,14 +38,20 @@ public:
   } /* End of 'setActive' function */
 
   /* Virtual render function */
-   virtual void render( void )
-   {
-   } /* End of 'render' function */
+  virtual void render( void )
+  {
+  } /* End of 'render' function */
 
   /* Virtual resize for rendering system function */
-   virtual void resize( int W, int H )
-   {
-   } /* End of 'resize' function */
+  virtual void resize( int W, int H )
+  {
+  } /* End of 'resize' function */
+
+  /* Get window handler function */
+  HWND getHWnd( void );
+
+  /* Get window handler function */
+  HINSTANCE getHInstanse( void );
 
   /* WM_CREATE window message handle function */
    bool onCreate( CREATESTRUCT *CS );
@@ -69,9 +76,6 @@ public:
 
   /* Exit window function */
   void exit( void );
-
-  /* Get window descriptor function */
-  HWND getHWnd( void );
 }; /* End of 'Win' class */
 
 /* END OF 'win.h' CLASS */

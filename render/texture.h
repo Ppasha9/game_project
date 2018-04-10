@@ -4,11 +4,13 @@
  * FILE: texture.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 07.03.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: texture resource handle file
  */
 
 #pragma once
+
+#include <d3d11.h>
 
 #include "..\def.h"
 #include "resource.h"
@@ -18,13 +20,14 @@
 namespace render
 {
   /* Texture resource class */
-  class Texture : Resource
+  class Texture : public Resource
   {
     friend class Render;
     friend class ResPtr<Texture>;
 
   private:
-    // params
+    ID3D11Texture2D *_texBuffer;
+    ID3D11ShaderResourceView *_texView;
 
     /* Create texture function */
     Texture( const string &TexName ) : Resource(TexName) {}

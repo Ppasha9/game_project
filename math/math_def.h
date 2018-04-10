@@ -5,7 +5,7 @@
  * AUTHORS:
  *   Lebed Pavel,
  *   Denisov Pavel
- * LAST UPDATE: 20.03.2018 
+ * LAST UPDATE: 09.04.2018 
  * NOTE: math definitions module 
  */
 
@@ -13,6 +13,7 @@
 #define _MATH_DEF_H_INCLUDED__
 #pragma once
 
+#include <vector>
 #include "matrix.h"
 #include "vector.h"
 #include "quat.h"
@@ -28,6 +29,9 @@ namespace math
   // Vector predifinitions
   using Vec3f = Vector<3, float>;
   using Vec3d = Vector<3, double>;
+  using Vec4f = Vector<4, float>;
+  using Vec4d = Vector<4, double>;
+  using Vec4uc = Vector<4, unsigned char>;
   // Matrix predifinitions
   using Matr3f = Matrix<3, 3, float>;
   using Matr3d = Matrix<3, 3, double>;

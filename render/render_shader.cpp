@@ -4,7 +4,7 @@
  * FILE: render_shader.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ * LAST UPDATE: 09.04.2018
  * NOTE: render shader resource handle implementation file
  */
 
@@ -138,7 +138,7 @@ ShaderPtr Render::createShader( const string &ShName )
   vertex_shader_buffer->Release();
   pixel_shader_buffer->Release();
 
-  _shaders[ShName] = out;
+  _shaders.add(ShName, out);
 
   return out;
 } /* End of 'Render::createShader' function */
@@ -146,7 +146,7 @@ ShaderPtr Render::createShader( const string &ShName )
 /* Get shader interface function */
 ShaderPtr Render::getShader( const string &ShName ) const
 {
-  return getRes<Shader>(ShName, _shaders);
+  return _shaders.get(ShName);
 } /* End of 'Render::getShader' function */
 
 /* Release primitive function */
@@ -163,18 +163,24 @@ void Render::releaseShader( Render *Rnd, Shader *Sh )
 /* Release primitive function */
 void Render::releaseShader( ShaderPtr &Sh )
 {
-  releaseRes<Shader>(Sh, releaseShader, _shaders);
+  _shaders.release(Sh);
 } /* End of 'Render::releaseShader' function */
 
 /* Set shader as active function */
-void Render::setShader( Shader *Sh )
+void Render::setShader( ShaderPtr &Sh )
 {
+  if (Sh._resource == nullptr)
+    Sh = getShader("default");
+
   // Set vertex input layout
-  _deviceContext->IASetInputLayout(Sh->_inputLayout);
+  _deviceContext->IASetInputLayout(Sh._resource->_inputLayout);
 
   // Set vertex and pixel shaders
-  _deviceContext->VSSetShader(Sh->_vertexShader, NULL, 0);
-  _deviceContext->PSSetShader(Sh->_pixelShader, NULL, 0);
+  _deviceContext->VSSetShader(Sh._resource->_vertexShader, NULL, 0);
+  _deviceContext->PSSetShader(Sh._resource->_pixelShader, NULL, 0);
+
+  // Set texture sampler state
+  _deviceContext->PSSetSamplers(0, 1, &_samplerState);
 } /* End of 'Render::setShader' function */
 
 /* END OF 'render_shader.cpp' FILE */

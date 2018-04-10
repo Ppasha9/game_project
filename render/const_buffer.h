@@ -4,7 +4,7 @@
  * FILE: const_buffer.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 25.03.2018
+ * LAST UPDATE: 01.04.2018
  * NOTE: constant buffer handle file
  */
 
@@ -12,6 +12,8 @@
 
 #include <d3d11.h>
 #include <directxmath.h>
+
+#include "material.h"
 
 /* Render handle namespace */
 namespace render
@@ -24,9 +26,17 @@ namespace render
   private:
     struct Data
     {
-      DirectX::XMMATRIX _world;
-      DirectX::XMMATRIX _view;
-      DirectX::XMMATRIX _proj;
+      math::Matr4f _world;
+      math::Matr4f _view;
+      math::Matr4f _proj;
+
+      math::Vec4f _cameraPos;
+      math::Vec4f _cameraDir;
+
+      Material::Coeffs _mtlCoeffs;
+
+      math::Vec4f _lightPos;
+      math::Vec4f _lightColor;
     };
 
     ID3D11Buffer *_buffer;
