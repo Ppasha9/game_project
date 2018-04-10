@@ -3,12 +3,14 @@
  *
  * FILE: render_geom.cpp
  * AUTHORS:
- *   Vasilyev Peter
- * LAST UPDATE: 09.04.2018
+ *   Vasilyev Peter,
+ *   Kozlov Ilya
+ * LAST UPDATE: 11.04.2018
  * NOTE: render geometry resource handle implementation file
  */
 
 #include "render.h"
+#include "..\geometry\geometry.h"
 
 using namespace render;
 
@@ -16,7 +18,7 @@ using namespace render;
 // Geom * createGeom( const geometry &Geomery, const string &GeomName );
 GeomPtr Render::createGeom( const string &GeomName )
 {
-  Vertex *v;
+  geom::Vertex *v;
   unsigned long *i;
   D3D11_BUFFER_DESC v_buffer_desc, i_buffer_desc;
   D3D11_SUBRESOURCE_DATA v_data, i_data;
@@ -27,7 +29,7 @@ GeomPtr Render::createGeom( const string &GeomName )
     return tmp;
 
   Geom *G = new Geom(GeomName);
-
+#if 0
   // Set the number of vertices in the vertex array.
   G->_nooV = 4;
 
@@ -102,17 +104,27 @@ GeomPtr Render::createGeom( const string &GeomName )
   i[3] = 2;
   i[4] = 1;
   i[5] = 3;
+#endif
+  geom::Geom test;
+
+  //test.createPlane(math::Vec3f({-1, -1, 0}), math::Vec3f({1, 0, 0}), math::Vec3f({0, 1, 0}), 2, 2);
+  //test.createTriangle(math::Vec3f({-1, -1, 0}), math::Vec3f({1, -1, 0}), math::Vec3f({1, 1, 0}));
+  test.createSphere(math::Vec3f({0, 0, 0}), 1, 50, 40);
+
+  G->_nooV = test.getNumOfV();
+  G->_nooI = test.getNumOfI();
 
   // Set up vertex buffer description
   v_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-  v_buffer_desc.ByteWidth = sizeof(Vertex) * G->_nooV;
+  v_buffer_desc.ByteWidth = sizeof(geom::Vertex) * G->_nooV;
   v_buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
   v_buffer_desc.CPUAccessFlags = 0;
   v_buffer_desc.MiscFlags = 0;
   v_buffer_desc.StructureByteStride = 0;
 
   // Give subresource structure pointer to vertex data
-  v_data.pSysMem = v;
+  std::vector<geom::Vertex> vv = test.getVertices();
+  v_data.pSysMem = vv.data();
   v_data.SysMemPitch = 0;
   v_data.SysMemSlicePitch = 0;
 
@@ -133,7 +145,8 @@ GeomPtr Render::createGeom( const string &GeomName )
   i_buffer_desc.StructureByteStride = 0;
 
   // Give subresource structure pointer to index data
-  i_data.pSysMem = i;
+  std::vector<unsigned long> iv = test.getIndices();
+  i_data.pSysMem = iv.data();
   i_data.SysMemPitch = 0;
   i_data.SysMemSlicePitch = 0;
 
@@ -145,8 +158,8 @@ GeomPtr Render::createGeom( const string &GeomName )
     return nullptr;
   }
 
-  delete[] i;
-  delete[] v;
+///  delete[] i;
+///  delete[] v;
 
   _geometries.add(GeomName, G);
 
@@ -165,7 +178,7 @@ void Render::drawGeom( Geom *Geom )
   unsigned int stride;
   unsigned int offset;
 
-  stride = sizeof(Vertex);
+  stride = sizeof(geom::Vertex);
   offset = 0;
   _deviceContext->IASetVertexBuffers(0, 1, &Geom->_vertexBuffer, &stride, &offset);
   _deviceContext->IASetIndexBuffer(Geom->_indexBuffer, DXGI_FORMAT_R32_UINT, 0);

@@ -3,8 +3,9 @@
  *
  * FILE: geom.h
  * AUTHORS:
- *   Vasilyev Peter
- * LAST UPDATE: 24.03.2018
+ *   Vasilyev Peter,
+ *   Kozlov Ilya
+ * LAST UPDATE: 11.04.2018
  * NOTE: geometry directx resource handle file
  */
 
@@ -19,14 +20,6 @@
 /* Render handle namespace */
 namespace render
 {
-  /* 3D-space vertex structure */
-  struct Vertex
-  {
-    float _pos[3];
-    float _norm[3];
-    float _tex[2];
-  }; /* End of 'Vertex' function */
-
   /* Geometry resource class */
   class Geom : public Resource
   {

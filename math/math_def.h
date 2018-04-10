@@ -5,7 +5,7 @@
  * AUTHORS:
  *   Lebed Pavel,
  *   Denisov Pavel
- * LAST UPDATE: 09.04.2018 
+ * LAST UPDATE: 11.04.2018 
  * NOTE: math definitions module 
  */
 
@@ -27,6 +27,7 @@ namespace math
 
   /// Some Types predefinition
   // Vector predifinitions
+  using Vec2f = Vector<2, float>;
   using Vec3f = Vector<3, float>;
   using Vec3d = Vector<3, double>;
   using Vec4f = Vector<4, float>;

@@ -272,6 +272,7 @@ void Render::init( int Width, int Height, HWND hWnd )
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
   raster_desc.FillMode = D3D11_FILL_SOLID;
+  //raster_desc.FillMode = D3D11_FILL_WIREFRAME;
   raster_desc.FrontCounterClockwise = true;
   raster_desc.MultisampleEnable = false;
   raster_desc.ScissorEnable = false;
@@ -311,7 +312,7 @@ void Render::init( int Width, int Height, HWND hWnd )
   initConstBuffer();
 
   /*** Init camera ***/
-  _camera.setCamera(true, { 0, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
+  _camera.setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
 } /* End of 'Render::init' function */
 
 /* Release DirectX function */
@@ -403,12 +404,12 @@ void Render::render( void )
   static float angle = 0;
   angle += 0.030f;
 
-  _camera.setCamera(true, { 5 * sin(angle / 3), 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
+  _camera.setCamera(true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
 
   _constBuffer._data._view = _camera._viewMatr;
   _constBuffer._data._proj = _camera._projMatr;
 
-  _constBuffer._data._lightPos = {sin(angle), cos(angle), 1, 1};
+  _constBuffer._data._lightPos = {sin(angle) * 20, cos(angle) * 20, 20, 1};
 
   _constBuffer._data._lightColor = {1, 1, 1, 1};
 

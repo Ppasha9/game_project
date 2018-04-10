@@ -79,6 +79,9 @@
     <Filter Include="Source Files\Render support\Resources\Texture\Image">
       <UniqueIdentifier>{ecb29d94-ac5e-4e86-9756-76f7aa979d52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Geometry">
+      <UniqueIdentifier>{f32a2cda-b140-45c5-9e55-f95109508c11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -140,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="win\win.cpp">
       <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\geometry.cpp">
+      <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="render\image\image.h">
       <Filter>Source Files\Render support\Resources\Texture\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\geometry.h">
+      <Filter>Source Files\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

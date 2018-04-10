@@ -4,7 +4,7 @@
  * FILE: Vector.h 
  * AUTHORS:
  *   Lebed Pavel
- * LAST UPDATE: 31.03.2018 
+ * LAST UPDATE: 11.04.2018 
  * NOTE: Vector calculation module 
  */
 
@@ -124,7 +124,7 @@ namespace math
       Vector res;
 
       for (size_t i = 0; i < Metrix; i++)
-        res = _coords[i] * Num;
+        res._coords[i] = _coords[i] * Num;
       return res;
     } /* End of 'operator*' function */
 
