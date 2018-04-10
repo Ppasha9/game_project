@@ -14,10 +14,20 @@
 
 #include <string>
 
+#include <exception>
+#include <stdexcept>
+
 using string = std::string;
 
 namespace render
 {
   // Forward declaration
   class Render;
+}
+
+namespace error
+{
+  /// Errors definitions
+  using RunError = std::runtime_error;
+  using LogError = std::logic_error;
 }
