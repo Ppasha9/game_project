@@ -35,6 +35,7 @@ namespace render
   public:
     enum struct SplitScreenMode
     {
+      FULL,
       HALVES,
       QUARTERS
     };
@@ -111,6 +112,9 @@ namespace render
 
     /* Resize render system function */
     void resize( int Width, int Height );
+
+    /* Resize cameras function */
+    void resizeCameras( void );
 
     /* Set camera as active function */
     void applyCamera( int Id );

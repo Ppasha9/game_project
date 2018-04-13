@@ -37,7 +37,7 @@ Render::Render( void ) :
   _geometries(this, releaseGeom),
   _textures(this, releaseTexture),
   _primitives(this, releasePrim),
-  _splitScreenMode(SplitScreenMode::HALVES)
+  _splitScreenMode(SplitScreenMode::FULL)
 {
 } /* End of 'Render::Render' function */
 
@@ -384,17 +384,39 @@ void Render::resize( int Width, int Height )
   // Reset active render target and depth stencil
   _deviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 
-  // Reset viewport
-  setViewport(0, 0, (float)Width, (float)Height);
+  // Resize cameras according to split-screen mode
+  resizeCameras();
 
   // Redraw frame
   render();
 } /* End of 'Render::resize' function */
 
+/* Resize cameras function */
+void Render::resizeCameras( void )
+{
+  switch (_splitScreenMode)
+  {
+  case SplitScreenMode::FULL:
+    _camera[0].resize(_width, _height);
+    break;
+  case SplitScreenMode::HALVES:
+    _camera[0].resize(_width, _height / 2);
+    _camera[1].resize(_width, _height / 2);
+    break;
+  case SplitScreenMode::QUARTERS:
+    _camera[0].resize(_width / 2, _height / 2);
+    _camera[1].resize(_width / 2, _height / 2);
+    _camera[2].resize(_width / 2, _height / 2);
+    _camera[3].resize(_width / 2, _height / 2);
+    break;
+  }
+} /* End of 'Render::resizeCameras' function */
+
 /* Set split-screen mode function */
 void Render::setSplitScreen( SplitScreenMode Mode )
 {
   _splitScreenMode = Mode;
+  resizeCameras();
 } /* End of 'Render::setSplitScreen' function */
 
 /* Set camera 3d space parameters function */
@@ -478,6 +500,11 @@ void Render::render( void )
 
   switch (_splitScreenMode)
   {
+  case SplitScreenMode::FULL:
+    applyCamera(0);
+    setViewport(0, 0, (float)_width, (float)_height);
+    _primitives.iterate<dummy>(dummy(this));
+    break;
   case SplitScreenMode::HALVES:
     applyCamera(0);
     setViewport(0, 0, (float)_width, _height / 2.0F);

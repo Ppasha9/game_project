@@ -17,7 +17,7 @@ void dummyResponse( void )
 {
   render::Render &rnd =  render::Render::getInstance();
 
-  rnd.setSplitScreen(render::Render::SplitScreenMode::QUARTERS);
+  rnd.setSplitScreen(render::Render::SplitScreenMode::FULL);
 
   static float angle = 0;
   angle += 0.030f;

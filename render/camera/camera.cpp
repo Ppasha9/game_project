@@ -223,7 +223,7 @@ void Camera::resize(const int NewW, const int NewH)
   _screenHeight = NewH;
   _screenWidth = NewW;
 
-  updateViewMatr();
+  updateProjData();
 } /* End of 'resize' function */
 
 /* END OF 'camera.cpp' FILE */
