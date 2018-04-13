@@ -63,7 +63,7 @@ namespace render
 
     /* Class constructor */
     Camera(bool IsLookAt, const math::Vec3f &Loc, const math::Vec3f &At, const math::Vec3f &Up,
-      int ScreenW = 500, int ScreenH = 500, float ProjW = 0.4, float ProjH = 0.3, float ProJDist = 1.0, float Far = 10000.0);
+      const int ScreenW = 500, const int ScreenH = 500, const float ProjW = 0.4, const float ProjH = 0.3, const float ProJDist = 1.0, const float Far = 10000.0);
 
     ///*** Setting functions ***///
 
@@ -74,7 +74,7 @@ namespace render
     void setDir(const math::Vec3f &At);
 
     /* Setting projection plane parameters function. */
-    void setProjParams(float W, float H, float ProjD = 1.0, float Far = 10000.0);
+    void setProjParams(const float W, const float H, const float ProjD = 1.0, const float Far = 10000.0);
 
     /* Set camera look at, location and up vectors function. */
     void setLookAtLocUp(const math::Vec3f &Loc, const math::Vec3f &LookAt, const math::Vec3f &Up);
@@ -84,33 +84,38 @@ namespace render
 
     /* Set camera parameters constructor */
     void setCamera(bool IsLookAt, const math::Vec3f &Loc, const math::Vec3f &At, const math::Vec3f &Up,
-      int ScreenW = 500, int ScreenH = 500, float ProjW = 1, float ProjH = 1, float ProJDist = 1.0, float Far = 10000.0);
+      const int ScreenW = 500, const int ScreenH = 500, const float ProjW = 1, const float ProjH = 1, const float ProJDist = 1.0, const float Far = 10000.0);
 
     ///*** Transformation functions ***///
 
     /* Move forward camera function. */
-    Camera & moveForward(float Dist);
+    Camera & moveForward(const float Dist);
 
     /* Translate camera by vector function. */
     Camera & translate(const math::Vec3f &Trans);
 
     /* Translate camera by axis components function. */
-    Camera & translate(float Dx, float Dy, float Dz);
+    Camera & translate(const float Dx, const float Dy, const float Dz);
 
     /* Move right camera function. */
-    Camera & moveRight(float Dist);
+    Camera & moveRight(const float Dist);
 
     /* Move up camera function. */
-    Camera & moveUp(float Dist);
+    Camera & moveUp(const float Dist);
 
     /* Rotate camera around right vector function. */
-    Camera & rotateAroundRight(float Angle);
+    Camera & rotateAroundRight(const float Angle);
 
     /* Rotate camera around direction vector function. */
-    Camera & rotateAroundDir(float Angle);
+    Camera & rotateAroundDir(const float Angle);
 
     /* Rotate camera around up vector function. */
-    Camera & rotateAroundUp(float Angle);
+    Camera & rotateAroundUp(const float Angle);
+
+    ///*** Resize functions ***///
+
+    /* Resize camera by new size of window */
+    void resize(const int NewW, const int NewH);
   }; /* End of 'Camera' class */
 } /* End of 'render' namespace */
 

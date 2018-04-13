@@ -13,7 +13,7 @@ using namespace render;
 
 /* Class constructor */
 Camera::Camera(bool IsLookAt, const math::Vec3f &Loc, const math::Vec3f &At, const math::Vec3f &Up,
-  int ScreenW, int ScreenH, float ProjW, float ProjH, float ProJDist, float Far) :
+  const int ScreenW, const int ScreenH, const float ProjW, const float ProjH, const float ProJDist, const float Far) :
   _loc(Loc), _up(Up), _farClip(Far), _screenHeight(ScreenH), _screenWidth(ScreenW), _projWidth(ProjW), _projHeight(ProjH), _projDist(ProJDist),
   _dir(At), _lookAt(At)
 {
@@ -97,7 +97,7 @@ void Camera::setDir(const math::Vec3f &At)
 } /* End of 'setDir' function */
 
 /* Setting projection plane parameters function. */
-void Camera::setProjParams(float W, float H, float ProjD, float Far)
+void Camera::setProjParams(const float W, const float H, const float ProjD, const float Far)
 {
   _projWidth = W;
   _projHeight = H;
@@ -148,13 +148,13 @@ Camera & Camera::operator=(const Camera &Cam)
 
 /* Set camera parameters constructor */
 void Camera::setCamera(bool IsLookAt, const math::Vec3f &Loc, const math::Vec3f &At, const math::Vec3f &Up,
-  int ScreenW, int ScreenH, float ProjW, float ProjH, float ProJDist, float Far)
+  const int ScreenW, const int ScreenH, const float ProjW, const float ProjH, const float ProJDist, const float Far)
 {
   *this = Camera(IsLookAt, Loc, At, Up, ScreenW, ScreenH, ProjW, ProjH, ProJDist, Far);
 } /* End of 'setCamera' function */
 
 /* Move forward camera function. */
-Camera & Camera::moveForward(float Dist)
+Camera & Camera::moveForward(const float Dist)
 {
   _loc += _dir * Dist;
   _lookAt += _dir * Dist;
@@ -172,14 +172,14 @@ Camera & Camera::translate(const math::Vec3f &Trans)
 } /* End of 'translate' function */
 
 /* Translate camera by axis components function. */
-Camera & Camera::translate(float Dx, float Dy, float Dz)
+Camera & Camera::translate(const float Dx, const float Dy, const float Dz)
 {
   math::Vec3f trans = { Dx, Dy, Dz };
   return translate(trans);
 } /* End of 'translate' function */
 
 /* Move right camera function. */
-Camera & Camera::moveRight(float Dist)
+Camera & Camera::moveRight(const float Dist)
 {
   _loc += _right * Dist;
   _lookAt += _right * Dist;
@@ -188,7 +188,7 @@ Camera & Camera::moveRight(float Dist)
 } /* End of 'moveRight' function */
 
 /* Move up camera function. */
-Camera & Camera::moveUp(float Dist)
+Camera & Camera::moveUp(const float Dist)
 {
   _loc += _up * Dist;
   _lookAt += _up * Dist;
@@ -197,24 +197,33 @@ Camera & Camera::moveUp(float Dist)
 } /* End of 'moveUp' function */
 
 /* Rotate camera around right vector function. */
-Camera & Camera::rotateAroundRight(float Angle)
+Camera & Camera::rotateAroundRight(const float Angle)
 {
   // TODO: just do it!!!
   return *this;
 } /* End of 'rotateAroundRight' function */
 
 /* Rotate camera around direction vector function. */
-Camera & Camera::rotateAroundDir(float Angle)
+Camera & Camera::rotateAroundDir(const float Angle)
 {
   // TODO: just do it!!!
   return *this;
 } /* End of 'rotateAroundDir' function */
 
 /* Rotate camera around up vector function. */
-Camera & Camera::rotateAroundUp(float Angle)
+Camera & Camera::rotateAroundUp(const float Angle)
 {
   // TODO: just do it!!!
   return *this;
 } /* End of 'rotateAroundUp' function */
+
+/* Resize camera by new size of window */
+void Camera::resize(const int NewW, const int NewH)
+{
+  _screenHeight = NewH;
+  _screenWidth = NewW;
+
+  updateViewMatr();
+} /* End of 'resize' function */
 
 /* END OF 'camera.cpp' FILE */
