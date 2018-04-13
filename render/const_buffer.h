@@ -4,15 +4,15 @@
  * FILE: const_buffer.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: constant buffer handle file
  */
 
 #pragma once
 
 #include <d3d11.h>
-#include <directxmath.h>
 
+#include "light_system\light_system.h"
 #include "material.h"
 
 /* Render handle namespace */
@@ -35,8 +35,10 @@ namespace render
 
       Material::Coeffs _mtlCoeffs;
 
-      math::Vec4f _lightPos;
-      math::Vec4f _lightColor;
+      LightSystem::LightSource _lights[LightSystem::MaxLights];
+
+      //math::Vec4f _lightPos;
+      //math::Vec4f _lightColor;
     };
 
     ID3D11Buffer *_buffer;

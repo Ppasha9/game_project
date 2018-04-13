@@ -4,7 +4,7 @@
  * FILE: geometry.h
  * AUTHORS:
  *   Kozlov Ilya
- * LAST UPDATE: 11.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: geometry handle class declaration
  */
 
@@ -47,10 +47,11 @@ namespace geom
     void autoNormal();
 
     /* Interpolate from a to b by t function */
-    float interpolate( float a, float b, float t );
+    inline float interpolate( float a, float b, float t );
 
     /* Create plane geom object by pos, two normilized directions and width, height */
-    void createPlane( const math::Vec3f & Pos, const math::Vec3f & RightNorm, const math::Vec3f & UpNorm, const math::Vec3f & Norm, float W, float H );
+    Geom & createPlane( const math::Vec3f & Pos, const math::Vec3f & RightNorm, const math::Vec3f & UpNorm, const math::Vec3f & Norm, float W, float H );
+
   public:
     /* Default geometry class constructor */
     Geom() = default;
@@ -60,25 +61,25 @@ namespace geom
      */
 
     /* Number of vertices getter */
-    unsigned long getNumOfV()
+    unsigned long getNumOfV() const
     {
       return _nooV;
     } /* End of 'getNumOfV' function */
 
     /* Number of indices getter */
-    unsigned long getNumOfI()
+    unsigned long getNumOfI() const
     {
       return _nooI;
     } /* End of 'getNumOfI' function */
 
     /* Vertices vector getter */
-    std::vector<Vertex> getVertices()
+    std::vector<Vertex> getVertices() const
     {
       return _vertices;
     } /* End of 'getVertices' function */
 
     /* Indices vector getter */
-    std::vector<unsigned long> getIndices()
+    std::vector<unsigned long> getIndices() const
     {
       return _indices;
     } /* End of 'getIndices' function */
@@ -88,39 +89,39 @@ namespace geom
      */
 
     /* Create triangle geom object by vertices and indices vectors */
-    void createTriangle( const std::vector<Vertex> & Vertices, const std::vector<unsigned long> & Indices );
+    Geom & createTriangle( const std::vector<Vertex> & Vertices, const std::vector<unsigned long> & Indices );
 
     /* Create triangle geom object by three vertices */
-    void createTriangle( const Vertex & V1, const Vertex & V2, const Vertex & V3 );
+    Geom & createTriangle( const Vertex & V1, const Vertex & V2, const Vertex & V3 );
 
     /* Create triangle geom object by three vertices positions + autonormal */
-    void createTriangle( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3 );
+    Geom & createTriangle( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3 );
 
     /*
      * Plane
      */
 
     /* Create plane geom object by three vertices */
-    void createPlane( const Vertex & V1, const Vertex & V2, const Vertex & V3, const Vertex & V4 );
+    Geom & createPlane( const Vertex & V1, const Vertex & V2, const Vertex & V3, const Vertex & V4 );
 
     /* Create plane geom object by four vertices positions + autonormal */
-    void createPlane( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3, const math::Vec3f & Pos4 );
+    Geom & createPlane( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3, const math::Vec3f & Pos4 );
 
     /* Create plane geom object by two vertices */
-    void createPlane( const Vertex & LeftBottom, const Vertex & RightTop );
+    Geom & createPlane( const Vertex & LeftBottom, const Vertex & RightTop );
 
     /* Create plane geom object by two vertices positions and normal */
-    void createPlane( const math::Vec3f & LeftBottom, const math::Vec3f & RightTop, const math::Vec3f & Norm );
+    Geom & createPlane( const math::Vec3f & LeftBottom, const math::Vec3f & RightTop, const math::Vec3f & Norm );
 
     /* Create plane geom object by pos, two directions and width, height */
-    void createPlane( const math::Vec3f & Pos, math::Vec3f & Right, math::Vec3f & Up, float W, float H );
+    Geom & createPlane( const math::Vec3f & Pos, math::Vec3f & Right, math::Vec3f & Up, float W, float H );
 
     /*
      * Sphere
      */
 
     /* Create sphere geom object */
-    void createSphere( const math::Vec3f & Center, float R = 1, int W = 5, int H = 4);
+    Geom & createSphere( const math::Vec3f & Center, float R = 1, int W = 5, int H = 4);
 
     /* Geometry class destructor */
     ~Geom()

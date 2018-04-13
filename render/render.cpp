@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 09.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -29,13 +29,15 @@ Render::Render( void ) :
   _depthStencilBuffer(nullptr),
   _depthStencilState(nullptr),
   _depthStencilView(nullptr),
-  _rasterState(nullptr),
+  _rasterStateSolid(nullptr),
+  _rasterStateWireframe(nullptr),
   _samplerState(nullptr),
   _shaders(this, releaseShader),
   _materials(this, releaseMaterial),
   _geometries(this, releaseGeom),
   _textures(this, releaseTexture),
-  _primitives(this, releasePrim)
+  _primitives(this, releasePrim),
+  _splitScreenMode(SplitScreenMode::HALVES)
 {
 } /* End of 'Render::Render' function */
 
@@ -102,7 +104,7 @@ void Render::createDepthStencil( int Width, int Height )
 } /* End of 'Render::createDepthBuffer' function */
 
 /* Set viewport function */
-void Render::setViewport( int Width, int Height )
+void Render::setViewport( float TopLeftX, float TopLeftY, float Width, float Height )
 {
   if (!_deviceContext)
     return;
@@ -110,26 +112,24 @@ void Render::setViewport( int Width, int Height )
   D3D11_VIEWPORT viewport;
 
   // Init viewport information
-  viewport.Width = (float)Width;
-  viewport.Height = (float)Height;
+  viewport.Width = Width;
+  viewport.Height = Height;
   viewport.MinDepth = 0.0f;
   viewport.MaxDepth = 1.0f;
-  viewport.TopLeftX = 0.0f;
-  viewport.TopLeftY = 0.0f;
+  viewport.TopLeftX = TopLeftX;
+  viewport.TopLeftY = TopLeftY;
 
   // Set viewport
   _deviceContext->RSSetViewports(1, &viewport);
 } /* End of 'Render::setViewport' function */
 
 /* Initialize render function */
-void Render::init( void )
+void Render::init( void (*ResponseFunc)( void ) )
 {
   init(_width, _height, _hWnd);
+  LightSystem::init(_constBuffer._data._lights);
   createDefResources();
-
-  //setMaterialTexture(getMaterial("default"), createTexture("mPDezWfq4M8.tga"), 2);
-
-  createPrim("test_prim");
+  _responseFunc = ResponseFunc;
 } /* End of 'Render::init' function */
 
 /* Create default resources function */
@@ -144,9 +144,8 @@ void Render::createDefResources( void )
                                  (unsigned char)(255 * ((i + j) % 2)), 255};
 
   createShader("default");
-  //auto tex = createTexture("default", Image(def_texture, 16, 16));
   auto tex = createTexture("default.tga");
-  auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 1000});
+  auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
   setMaterialTexture(mtl, tex, 0);
   setMaterialTexture(mtl, tex, 1);
   setMaterialTexture(mtl, tex, 2);
@@ -272,18 +271,22 @@ void Render::init( int Width, int Height, HWND hWnd )
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
   raster_desc.FillMode = D3D11_FILL_SOLID;
-  //raster_desc.FillMode = D3D11_FILL_WIREFRAME;
   raster_desc.FrontCounterClockwise = true;
   raster_desc.MultisampleEnable = false;
   raster_desc.ScissorEnable = false;
   raster_desc.SlopeScaledDepthBias = 0.0f;
 
-  // Create rasterizer state
-  result = _device->CreateRasterizerState(&raster_desc, &_rasterState);
+  // Create fill solid rasterizer state
+  result = _device->CreateRasterizerState(&raster_desc, &_rasterStateSolid);
   assert(!FAILED(result));
 
-  // Set active rasterizer state
-  _deviceContext->RSSetState(_rasterState);
+  // Create wireframe rasterizer state
+  raster_desc.FillMode = D3D11_FILL_WIREFRAME;
+  result = _device->CreateRasterizerState(&raster_desc, &_rasterStateWireframe);
+  assert(!FAILED(result));
+
+  // Set active rasterizer state as solid fill
+  _deviceContext->RSSetState(_rasterStateSolid);
 
   /*** Init sampler state ***/
   D3D11_SAMPLER_DESC sampler_desc;
@@ -306,13 +309,16 @@ void Render::init( int Width, int Height, HWND hWnd )
   assert(!FAILED(result));
 
   /*** Setup viewport ***/
-  setViewport(Width, Height);
+  setViewport(0, 0, (float)Width, (float)Height);
 
   /*** Init constant buffer ***/
   initConstBuffer();
 
-  /*** Init camera ***/
-  _camera.setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
+  /*** Init cameras ***/
+  _camera[0].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
+  _camera[1].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
+  _camera[2].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
+  _camera[3].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
 } /* End of 'Render::init' function */
 
 /* Release DirectX function */
@@ -334,7 +340,8 @@ void Render::release( void )
 
   // Release DirectX resources
   releaseRes<ID3D11SamplerState>(_samplerState);
-  releaseRes<ID3D11RasterizerState>(_rasterState);
+  releaseRes<ID3D11RasterizerState>(_rasterStateSolid);
+  releaseRes<ID3D11RasterizerState>(_rasterStateWireframe);
   releaseRes<ID3D11DepthStencilView>(_depthStencilView);
   releaseRes<ID3D11DepthStencilState>(_depthStencilState);
   releaseRes<ID3D11Texture2D>(_depthStencilBuffer);
@@ -378,11 +385,56 @@ void Render::resize( int Width, int Height )
   _deviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
 
   // Reset viewport
-  setViewport(Width, Height);
+  setViewport(0, 0, (float)Width, (float)Height);
 
   // Redraw frame
   render();
 } /* End of 'Render::resize' function */
+
+/* Set split-screen mode function */
+void Render::setSplitScreen( SplitScreenMode Mode )
+{
+  _splitScreenMode = Mode;
+} /* End of 'Render::setSplitScreen' function */
+
+/* Set camera 3d space parameters function */
+void Render::setCamera( int Id, bool IsLookAt,
+  const math::Vec3f &Loc, const math::Vec3f &Dir, const math::Vec3f &Up )
+{
+  if (Id < 0 || Id >= 4)
+    return;
+
+  if (IsLookAt)
+    _camera[Id].setLookAtLocUp(Loc, Dir, Up);
+  else
+    _camera[Id].setDirLocUp(Loc, Dir, Up);
+} /* End of 'Render::setCamera' function */
+
+/* Set camera as active function */
+void Render::applyCamera( int Id )
+{
+  if (Id < 0 || Id >= 4)
+    return;
+
+  _constBuffer._data._view = _camera[Id]._viewMatr;
+  _constBuffer._data._proj = _camera[Id]._projMatr;
+  _constBuffer._data._cameraPos = {_camera[Id]._loc[0], _camera[Id]._loc[1], _camera[Id]._loc[2], 1};
+  _constBuffer._data._cameraDir = {_camera[Id]._dir[0], _camera[Id]._dir[1], _camera[Id]._dir[2], 0};
+} /* End of 'Render::applyCamera' function */
+
+/* Set fill mode function */
+void Render::setFillMode( FillMode Mode )
+{
+  switch (Mode)
+  {
+  case FillMode::SOLID:
+    _deviceContext->RSSetState(_rasterStateSolid);
+    break;
+  case FillMode::WIREFRAME:
+    _deviceContext->RSSetState(_rasterStateWireframe);
+    break;
+  }
+} /* End of 'Render::setFillMode' function */
 
 /* Start frame function */
 void Render::startFrame( void )
@@ -396,25 +448,18 @@ void Render::startFrame( void )
   _deviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 } /* End of 'Render::startFrame' function */
 
+/* Render timer response function */
+void Render::response( void )
+{
+  _responseFunc();
+
+  render();
+} /* End of 'Render::response' function */
+
 /* Render all primitives function */
 void Render::render( void )
 {
   startFrame();
-
-  static float angle = 0;
-  angle += 0.030f;
-
-  _camera.setCamera(true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, 0 }, { 0, 1, 0 }, _width, _height);
-
-  _constBuffer._data._view = _camera._viewMatr;
-  _constBuffer._data._proj = _camera._projMatr;
-
-  _constBuffer._data._lightPos = {sin(angle) * 20, cos(angle) * 20, 20, 1};
-
-  _constBuffer._data._lightColor = {1, 1, 1, 1};
-
-  _constBuffer._data._cameraDir = {_camera._dir[0], _camera._dir[1], _camera._dir[2], 1};
-  _constBuffer._data._cameraPos = {_camera._loc[0], _camera._loc[1], _camera._loc[2], 1};
 
   class dummy
   {
@@ -430,7 +475,36 @@ void Render::render( void )
       _rnd->drawPrim(P);
     }
   };
-  _primitives.iterate<dummy>(dummy(this));
+
+  switch (_splitScreenMode)
+  {
+  case SplitScreenMode::HALVES:
+    applyCamera(0);
+    setViewport(0, 0, (float)_width, _height / 2.0F);
+    _primitives.iterate<dummy>(dummy(this));
+
+    applyCamera(1);
+    setViewport(0, _height / 2.0F, (float)_width, _height / 2.0F);
+    _primitives.iterate<dummy>(dummy(this));
+    break;
+  case SplitScreenMode::QUARTERS:
+    applyCamera(0);
+    setViewport(0, 0, _width / 2.0F, _height / 2.0F);
+    _primitives.iterate<dummy>(dummy(this));
+
+    applyCamera(1);
+    setViewport(_width / 2.0F, 0, _width / 2.0F, _height / 2.0F);
+    _primitives.iterate<dummy>(dummy(this));
+
+    applyCamera(2);
+    setViewport(0, _height / 2.0F, _width / 2.0F, _height / 2.0F);
+    _primitives.iterate<dummy>(dummy(this));
+
+    applyCamera(3);
+    setViewport(_width / 2.0F, _height / 2.0F, _width / 2.0F, _height / 2.0F);
+    _primitives.iterate<dummy>(dummy(this));
+    break;
+  }
 
   endFrame();
 } /* End of 'Render::render' function */

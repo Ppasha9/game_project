@@ -82,6 +82,9 @@
     <Filter Include="Source Files\Geometry">
       <UniqueIdentifier>{f32a2cda-b140-45c5-9e55-f95109508c11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Render support\Light system">
+      <UniqueIdentifier>{9eabee06-2044-45e1-8bda-deedcddb9fcf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -141,11 +144,14 @@
     <ClCompile Include="render\image\image.cpp">
       <Filter>Source Files\Render support\Resources\Texture\Image</Filter>
     </ClCompile>
-    <ClCompile Include="win\win.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
     <ClCompile Include="geometry\geometry.cpp">
       <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="render\light_system\light_system.cpp">
+      <Filter>Source Files\Render support\Light system</Filter>
+    </ClCompile>
+    <ClCompile Include="win\win.cpp">
+      <Filter>Source Files\Window handle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="geometry\geometry.h">
       <Filter>Source Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="render\light_system\light_system.h">
+      <Filter>Source Files\Render support\Light system</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

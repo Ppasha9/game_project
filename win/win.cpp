@@ -4,7 +4,7 @@
  * FILE: win.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 27.03.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: windows handle class implementation file
  */
 
@@ -196,7 +196,7 @@ void Win::onTimer( void )
 {
   HDC hDC = GetDC(_hWnd);
 
-  render();
+  response();
 
   ReleaseDC(_hWnd, hDC);
 } /* End of 'Win::onTimer' function */

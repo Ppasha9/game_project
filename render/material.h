@@ -4,7 +4,7 @@
  * FILE: material.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 06.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: material handle file
  */
 
@@ -28,7 +28,7 @@ namespace render
   public:
     struct Coeffs
     {
-      DirectX::XMFLOAT4 _kA, _kD, _kS;
+      math::Vec4f _kA, _kD, _kS;
       float _kP;
       float _dummy[3];
     };

@@ -4,7 +4,7 @@
  * FILE: win.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 27.03.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: windows handle class declaration file
  */
 
@@ -37,10 +37,10 @@ public:
     _isActive = ActiveState;
   } /* End of 'setActive' function */
 
-  /* Virtual render function */
-  virtual void render( void )
+  /* Virtual response function */
+  virtual void response( void )
   {
-  } /* End of 'render' function */
+  } /* End of 'response' function */
 
   /* Virtual resize for rendering system function */
   virtual void resize( int W, int H )

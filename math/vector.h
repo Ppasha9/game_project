@@ -4,7 +4,7 @@
  * FILE: Vector.h 
  * AUTHORS:
  *   Lebed Pavel
- * LAST UPDATE: 11.04.2018 
+ * LAST UPDATE: 13.04.2018 
  * NOTE: Vector calculation module 
  */
 
@@ -91,15 +91,17 @@ namespace math
     } /* End of 'norm' function */
 
     /* Vector set normalized */
-    inline void normalize( void )
+    inline Vector & normalize( void )
     {
       Type len = length();
 
       if (len == 0)
-        return;
+        return *this;
 
       for (size_t i = 0; i < Metrix; i++)
         _coords[i] /= len;
+
+      return *this;
     } /* End of 'normalize' function */
 
     /* Length calculate */

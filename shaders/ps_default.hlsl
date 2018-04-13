@@ -5,6 +5,12 @@ Texture2D normTex : register(t3);
 
 SamplerState samplerState;
 
+struct LightSource
+{
+  float4 pos;
+  float4 color;
+};
+
 cbuffer ConstBuffer
 {
   matrix world;
@@ -19,8 +25,7 @@ cbuffer ConstBuffer
   float4 kS;
   float4 kP;
 
-  float4 lightPos;
-  float4 lightColor;
+  LightSource lights[5];
 };
 
 struct VsOut
@@ -33,18 +38,59 @@ struct VsOut
 
 float4 main( VsOut input ) : SV_TARGET
 {
-  //input.norm += float4(0, -1, 0, 0) * (1 - normTex.Sample(samplerState, input.tex));
-  input.norm = normalize(input.norm);
+  float4 L, V, R;
+  float4 color = kA;
+  float t;
 
-  return input.norm;
+  // Light 0
+  L = normalize(lights[0].pos - input.w_pos);
+  V = normalize(cameraPos - input.w_pos);
+  R = 2 * dot(L, input.norm) * input.norm - L;
 
-  float4 L = normalize(lightPos - input.w_pos);
-  float4 V = normalize(cameraPos - input.w_pos);
-  float4 R = 2 * dot(L, input.norm) * input.norm - L;
-  
-  float4 color = kA +
-    kD * diffTex.Sample(samplerState, input.tex) * max(0, dot(input.norm, L)) +
-    kS * pow(max(dot(R, V), 0), kP.x);
-  
-  //return float4(color.r, color.g, color.b, 1);
+  t = max(0, 1 - pow(length(lights[0].pos - input.w_pos) / lights[0].color.w, 2));
+
+  color += (kD * diffTex.Sample(samplerState, input.tex) * max(0, dot(input.norm, L)) +
+    kS * pow(max(dot(R, V), 0), kP.x)) * lights[0].color * t;
+
+  // Light 1
+  L = normalize(lights[1].pos - input.w_pos);
+  V = normalize(cameraPos - input.w_pos);
+  R = 2 * dot(L, input.norm) * input.norm - L;
+
+  t = max(0, 1 - pow(length(lights[1].pos - input.w_pos) / lights[1].color.w, 2));
+
+  color += (kD * diffTex.Sample(samplerState, input.tex) * max(0, dot(input.norm, L)) +
+    kS * pow(max(dot(R, V), 0), kP.x)) * lights[1].color * t;
+
+  // Light 2
+  L = normalize(lights[2].pos - input.w_pos);
+  V = normalize(cameraPos - input.w_pos);
+  R = 2 * dot(L, input.norm) * input.norm - L;
+
+  t = max(0, 1 - pow(length(lights[2].pos - input.w_pos) / lights[2].color.w, 2));
+
+  color += (kD * diffTex.Sample(samplerState, input.tex) * max(0, dot(input.norm, L)) +
+    kS * pow(max(dot(R, V), 0), kP.x)) * lights[2].color * t;
+
+  // Light 3
+  L = normalize(lights[3].pos - input.w_pos);
+  V = normalize(cameraPos - input.w_pos);
+  R = 2 * dot(L, input.norm) * input.norm - L;
+
+  t = max(0, 1 - pow(length(lights[3].pos - input.w_pos) / lights[3].color.w, 2));
+
+  color += (kD * diffTex.Sample(samplerState, input.tex) * max(0, dot(input.norm, L)) +
+    kS * pow(max(dot(R, V), 0), kP.x)) * lights[3].color * t;
+
+  // Light 4
+  L = normalize(lights[4].pos - input.w_pos);
+  V = normalize(cameraPos - input.w_pos);
+  R = 2 * dot(L, input.norm) * input.norm - L;
+
+  t = max(0, 1 - pow(length(lights[4].pos - input.w_pos) / lights[4].color.w, 2));
+
+  color += (kD * diffTex.Sample(samplerState, input.tex) * max(0, dot(input.norm, L)) +
+    kS * pow(max(dot(R, V), 0), kP.x)) * lights[4].color * t;
+
+  return float4(color.r, color.g, color.b, 1);
 }

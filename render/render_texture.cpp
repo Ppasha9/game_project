@@ -4,7 +4,7 @@
  * FILE: render_texture.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 09.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: render texture handle implementation file
  */
 
@@ -75,13 +75,13 @@ TexturePtr Render::createTexture( const string &TexName, const Image &Src )
 } /* End of 'Render::createTexture' function */
 
 /* Set texture as active function */
-void Render::setTexture( TexturePtr &Tex, int Id )
+void Render::applyTexture( TexturePtr &Tex, int Id )
 {
   if (Tex._resource == nullptr)
     Tex = getTexture("default");
 
   _deviceContext->PSSetShaderResources(Id, 1, &Tex._resource->_texView);
-} /* End of 'Render::setTexture' function */
+} /* End of 'Render::applyTexture' function */
 
 /* Get texture interface function */
 TexturePtr Render::getTexture( const string &TexName ) const

@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 09.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -13,7 +13,7 @@
 using namespace render;
 
 /* Create primitive function */
-PrimPtr Render::createPrim( const string &PrimName,
+PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
   const string &MtlName, const string &ShName )
 {
   PrimPtr tmp;
@@ -23,7 +23,7 @@ PrimPtr Render::createPrim( const string &PrimName,
 
   Prim *P = new Prim(PrimName);
 
-  P->_geometry = createGeom(PrimName);
+  P->_geometry = createGeom(GeomName);
   P->_material = getMaterial(MtlName);
   P->_shader = getShader(ShName);
 
@@ -33,7 +33,7 @@ PrimPtr Render::createPrim( const string &PrimName,
 } /* End of 'Render::createPrim' function */
 
 /* Create primitive function */
-PrimPtr Render::createPrim( const string &PrimName,
+PrimPtr Render::createPrim( const string &PrimName, const GeomPtr &Geometry,
   const MaterialPtr &Mtl, const ShaderPtr &Sh )
 {
   PrimPtr tmp;
@@ -43,7 +43,7 @@ PrimPtr Render::createPrim( const string &PrimName,
 
   Prim *P = new Prim(PrimName);
 
-  P->_geometry = createGeom(PrimName);
+  P->_geometry = Geometry;
   P->_material = Mtl;
   P->_shader = Sh;
 
@@ -79,10 +79,10 @@ void Render::setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial )
 /* Draw primitive function */
 void Render::drawPrim( Prim *P )
 {
-  setShader(P->_shader);
+  applyShader(P->_shader);
 
   _constBuffer._data._world = P->_world;
-  setMaterial(P->_material);
+  applyMaterial(P->_material);
 
   updateConstBuffer();
   drawGeom(P->_geometry._resource);

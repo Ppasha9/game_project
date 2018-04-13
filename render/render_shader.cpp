@@ -4,7 +4,7 @@
  * FILE: render_shader.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 09.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: render shader resource handle implementation file
  */
 
@@ -167,7 +167,7 @@ void Render::releaseShader( ShaderPtr &Sh )
 } /* End of 'Render::releaseShader' function */
 
 /* Set shader as active function */
-void Render::setShader( ShaderPtr &Sh )
+void Render::applyShader( ShaderPtr &Sh )
 {
   if (Sh._resource == nullptr)
     Sh = getShader("default");
@@ -181,6 +181,6 @@ void Render::setShader( ShaderPtr &Sh )
 
   // Set texture sampler state
   _deviceContext->PSSetSamplers(0, 1, &_samplerState);
-} /* End of 'Render::setShader' function */
+} /* End of 'Render::applyShader' function */
 
 /* END OF 'render_shader.cpp' FILE */

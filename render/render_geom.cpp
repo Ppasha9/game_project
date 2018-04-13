@@ -5,7 +5,7 @@
  * AUTHORS:
  *   Vasilyev Peter,
  *   Kozlov Ilya
- * LAST UPDATE: 11.04.2018
+ * LAST UPDATE: 13.04.2018
  * NOTE: render geometry resource handle implementation file
  */
 
@@ -14,12 +14,17 @@
 
 using namespace render;
 
-/* Create geometry function */
-// Geom * createGeom( const geometry &Geomery, const string &GeomName );
+/* Create geometry render resource from file function */
 GeomPtr Render::createGeom( const string &GeomName )
 {
-  geom::Vertex *v;
-  unsigned long *i;
+  // return createGeom(GeomName, geom::Geom().LoadObj(string("bin\\models\\").append(GeomName)));
+
+  return nullptr;
+} /* End of 'Render::createGeom' function */
+
+/* Create geometry function */
+GeomPtr Render::createGeom( const string &GeomName, const geom::Geom &Geometry )
+{
   D3D11_BUFFER_DESC v_buffer_desc, i_buffer_desc;
   D3D11_SUBRESOURCE_DATA v_data, i_data;
   HRESULT result;
@@ -29,90 +34,9 @@ GeomPtr Render::createGeom( const string &GeomName )
     return tmp;
 
   Geom *G = new Geom(GeomName);
-#if 0
-  // Set the number of vertices in the vertex array.
-  G->_nooV = 4;
 
-  // Set the number of indices in the index array.
-  G->_nooI = 6;
-
-  // Create the vertex array
-  v = new Vertex[G->_nooV];
-  if (!v)
-  {
-    delete G;
-    return nullptr;
-  }
-
-  // Create the index array
-  i = new unsigned long[G->_nooI];
-  if (!i)
-  {
-    delete G;
-    return nullptr;
-  }
-
-  v[0]._pos[0] = -1;
-  v[0]._pos[1] = -1;
-  v[0]._pos[2] = 0;
-
-  v[1]._pos[0] = 1;
-  v[1]._pos[1] = -1;
-  v[1]._pos[2] = 0;
-
-  v[2]._pos[0] = -1;
-  v[2]._pos[1] = 1;
-  v[2]._pos[2] = 0;
-
-  v[3]._pos[0] = 1;
-  v[3]._pos[1] = 1;
-  v[3]._pos[2] = 0;
-
-
-  v[0]._norm[0] = 0;
-  v[0]._norm[1] = 0;
-  v[0]._norm[2] = 1;
-
-  v[1]._norm[0] = 0;
-  v[1]._norm[1] = 0;
-  v[1]._norm[2] = 1;
-
-  v[2]._norm[0] = 0;
-  v[2]._norm[1] = 0;
-  v[2]._norm[2] = 1;
-
-  v[3]._norm[0] = 0;
-  v[3]._norm[1] = 0;
-  v[3]._norm[2] = 1;
-
-  v[0]._tex[0] = 0;
-  v[0]._tex[1] = 1;
-
-  v[1]._tex[0] = 1;
-  v[1]._tex[1] = 1;
-
-  v[2]._tex[0] = 0;
-  v[2]._tex[1] = 0;
-
-  v[3]._tex[0] = 1;
-  v[3]._tex[1] = 0;
-
-  i[0] = 0;
-  i[1] = 1;
-  i[2] = 2;
-
-  i[3] = 2;
-  i[4] = 1;
-  i[5] = 3;
-#endif
-  geom::Geom test;
-
-  //test.createPlane(math::Vec3f({-1, -1, 0}), math::Vec3f({1, 0, 0}), math::Vec3f({0, 1, 0}), 2, 2);
-  //test.createTriangle(math::Vec3f({-1, -1, 0}), math::Vec3f({1, -1, 0}), math::Vec3f({1, 1, 0}));
-  test.createSphere(math::Vec3f({0, 0, 0}), 1, 50, 40);
-
-  G->_nooV = test.getNumOfV();
-  G->_nooI = test.getNumOfI();
+  G->_nooV = Geometry.getNumOfV();
+  G->_nooI = Geometry.getNumOfI();
 
   // Set up vertex buffer description
   v_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -123,7 +47,7 @@ GeomPtr Render::createGeom( const string &GeomName )
   v_buffer_desc.StructureByteStride = 0;
 
   // Give subresource structure pointer to vertex data
-  std::vector<geom::Vertex> vv = test.getVertices();
+  std::vector<geom::Vertex> vv = Geometry.getVertices();
   v_data.pSysMem = vv.data();
   v_data.SysMemPitch = 0;
   v_data.SysMemSlicePitch = 0;
@@ -145,7 +69,7 @@ GeomPtr Render::createGeom( const string &GeomName )
   i_buffer_desc.StructureByteStride = 0;
 
   // Give subresource structure pointer to index data
-  std::vector<unsigned long> iv = test.getIndices();
+  std::vector<unsigned long> iv = Geometry.getIndices();
   i_data.pSysMem = iv.data();
   i_data.SysMemPitch = 0;
   i_data.SysMemSlicePitch = 0;
@@ -157,9 +81,6 @@ GeomPtr Render::createGeom( const string &GeomName )
     delete G;
     return nullptr;
   }
-
-///  delete[] i;
-///  delete[] v;
 
   _geometries.add(GeomName, G);
 

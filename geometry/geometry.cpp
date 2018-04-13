@@ -4,7 +4,7 @@
 * FILE: geometry.cpp
 * AUTHORS:
 *   Kozlov Ilya
-* LAST UPDATE: 11.04.2018
+* LAST UPDATE: 13.04.2018
 * NOTE: geometry handle implementation
 */
 
@@ -36,21 +36,23 @@ void geom::Geom::autoNormal()
 } /* End of 'geom::Geom::autoNormal' function */
 
 /* Interpolate from a to b by t function */
-float geom::Geom::interpolate( float a, float b, float t )
+inline float geom::Geom::interpolate( float a, float b, float t )
 {
   return a * (1 - t) + b * t;
 } /* End of 'geom::Geom::interpolate' function */
 
 /* Create triangle geom object by vertices and indices vectors */
-void geom::Geom::createTriangle( const std::vector<Vertex> & Vertices, const std::vector<unsigned long> & Indices )
+geom::Geom & geom::Geom::createTriangle( const std::vector<Vertex> & Vertices, const std::vector<unsigned long> & Indices )
 {
   _nooV = _nooI = 3;
   _vertices = Vertices;
   _indices = Indices;
+
+  return *this;
 } /* End of 'geom::Geom::createTriangle' function */
 
 /* Create triangle geom object by three vertices */
-void geom::Geom::createTriangle( const Vertex & V1, const Vertex & V2, const Vertex & V3 )
+geom::Geom & geom::Geom::createTriangle( const Vertex & V1, const Vertex & V2, const Vertex & V3 )
 {
   if (!_vertices.empty())
     _vertices.clear();
@@ -66,10 +68,12 @@ void geom::Geom::createTriangle( const Vertex & V1, const Vertex & V2, const Ver
   _indices.push_back(0);
   _indices.push_back(1);
   _indices.push_back(2);
+
+  return *this;
 } /* End of 'geom::Geom::createTriangle' function */
 
 /* Create triangle geom object by three vertices positions */
-void geom::Geom::createTriangle( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3 )
+geom::Geom & geom::Geom::createTriangle( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3 )
 {
   Vertex v1 = Vertex(Pos1);
   Vertex v2 = Vertex(Pos2);
@@ -78,9 +82,11 @@ void geom::Geom::createTriangle( const math::Vec3f & Pos1, const math::Vec3f & P
   createTriangle(v1, v2, v3);
 
   autoNormal();
+
+  return *this;
 } /* End of 'geom::Geom::createTriangle' function */
 
-void geom::Geom::createPlane( const Vertex & V1, const Vertex & V2, const Vertex & V3, const Vertex & V4 )
+geom::Geom & geom::Geom::createPlane( const Vertex & V1, const Vertex & V2, const Vertex & V3, const Vertex & V4 )
 {
   if (!_vertices.empty())
     _vertices.clear();
@@ -103,9 +109,11 @@ void geom::Geom::createPlane( const Vertex & V1, const Vertex & V2, const Vertex
   _indices.push_back(0);
   _indices.push_back(2);
   _indices.push_back(3);
+
+  return *this;
 } /* End of 'geom::Geom::createPlane' function */
 
-void geom::Geom::createPlane( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3, const math::Vec3f & Pos4 )
+geom::Geom & geom::Geom::createPlane( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3, const math::Vec3f & Pos4 )
 {
   Vertex v1 = Vertex(Pos1);
   Vertex v2 = Vertex(Pos2);
@@ -115,10 +123,12 @@ void geom::Geom::createPlane( const math::Vec3f & Pos1, const math::Vec3f & Pos2
   createPlane(v1, v2, v3, v4);
 
   autoNormal();
+
+  return *this;
 } /* End of 'geom::Geom::createPlane' function */
 
 /* Create plane geom object by two vertices */
-void geom::Geom::createPlane( const Vertex & LeftBottom, const Vertex & RightTop )
+geom::Geom & geom::Geom::createPlane( const Vertex & LeftBottom, const Vertex & RightTop )
 {
   Vertex v2(LeftBottom);
   Vertex v4(RightTop);
@@ -132,20 +142,20 @@ void geom::Geom::createPlane( const Vertex & LeftBottom, const Vertex & RightTop
   v4._pos = LeftBottom._pos + tmp + (diag - tmp) * 0.5;
   v4._tex = {0, 0};
 
-  createPlane(LeftBottom, v2, RightTop, v4);
+  return createPlane(LeftBottom, v2, RightTop, v4);
 } /* End of 'geom::Geom::createPlane' function */
 
 /* Create plane geom object by two vertices positions and normal */
-void geom::Geom::createPlane( const math::Vec3f & LeftBottom, const math::Vec3f & RightTop, const math::Vec3f & Norm )
+geom::Geom & geom::Geom::createPlane( const math::Vec3f & LeftBottom, const math::Vec3f & RightTop, const math::Vec3f & Norm )
 {
   Vertex v1(LeftBottom, Norm, {1, 0});
   Vertex v3(RightTop, Norm, {0, 1});
 
-  createPlane(v1, v3);
+  return createPlane(v1, v3);
 } /* End of 'geom::Geom::createPlane' function */
 
 /* Create plane geom object by pos, two directions and width, height */
-void geom::Geom::createPlane( const math::Vec3f & Pos, math::Vec3f & Right, math::Vec3f & Up, float W, float H )
+geom::Geom & geom::Geom::createPlane( const math::Vec3f & Pos, math::Vec3f & Right, math::Vec3f & Up, float W, float H )
 {
   Right.normalize();
   Up.normalize();
@@ -153,22 +163,22 @@ void geom::Geom::createPlane( const math::Vec3f & Pos, math::Vec3f & Right, math
   math::Vec3f norm = Right & Up;
   norm.normalize();
 
-  createPlane(Pos, Right, Up, norm, W, H);
+  return createPlane(Pos, Right, Up, norm, W, H);
 } /* End of 'geom::Geom::createPlane' function */
 
   /* Create plane geom object by pos, two normilized directions and width, height */
-void geom::Geom::createPlane( const math::Vec3f & Pos, const math::Vec3f & RightNorm, const math::Vec3f & UpNorm, const math::Vec3f & Norm, float W, float H )
+geom::Geom & geom::Geom::createPlane( const math::Vec3f & Pos, const math::Vec3f & RightNorm, const math::Vec3f & UpNorm, const math::Vec3f & Norm, float W, float H )
 {
   Vertex lb(Pos, Norm, {1, 0});
   Vertex rb(Pos + RightNorm * W, Norm, {1, 1});
   Vertex rt(rb._pos + UpNorm * H, Norm, {0, 1});
   Vertex lt(Pos + UpNorm * H, Norm, {0, 0});
 
-  createPlane(lb, rb, rt, lt);
+  return createPlane(lb, rb, rt, lt);
 } /* End of 'geom::Geom::createPlane' function */
 
 /* Create sphere geom object */
-void geom::Geom::createSphere( const math::Vec3f & Center, float R, int W, int H )
+geom::Geom & geom::Geom::createSphere( const math::Vec3f & Center, float R, int W, int H )
 {
   /* Evaluate data count */
   _nooV = (H + 1) * (W + 1);
@@ -180,7 +190,7 @@ void geom::Geom::createSphere( const math::Vec3f & Center, float R, int W, int H
   /* Settint vertices texture coordinates */
   for (int i = 0; i <= H; i++)
     for (int j = 0; j <= W ; j++)
-      _vertices[i * (W + 1) + j]._tex = {1.0f * i / H, 1.0f * j / W};
+      _vertices[i * (W + 1) + j]._tex = {1.0f * j / W, 1.0f * i / H};
 
   /* Setting indices */
   for (int i = 0; i < H; i++)
@@ -213,10 +223,13 @@ void geom::Geom::createSphere( const math::Vec3f & Center, float R, int W, int H
       Vec3f v = {sin(theta) * sin(phi), cos(theta), sin(theta) * cos(phi)};
 
       _vertices[i * (W + 1) + j]._pos = v * R + Center;
+      _vertices[i * (W + 1) + j]._norm = v.normalize();
     }
   }
 
-  autoNormal();
+  //autoNormal();
+
+  return *this;
 } /* End of 'geom::Geom::createSphere' function */
 
 /* END OF 'geometry.cpp' FILE */

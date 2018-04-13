@@ -18,6 +18,7 @@
 #include "prim.h"
 #include "image\image.h"
 #include "camera\camera.h"
+#include "..\geometry\geometry.h"
 
 /* Render handle namespace */
 namespace render
@@ -29,8 +30,21 @@ namespace render
   using PrimMap = ResMap<Prim>;
 
   /* Render handle class */
-  class Render : public Win
+  class Render : public Win, public LightSystem
   {
+  public:
+    enum struct SplitScreenMode
+    {
+      HALVES,
+      QUARTERS
+    };
+
+    enum struct FillMode
+    {
+      SOLID,
+      WIREFRAME
+    };
+
   private:
     PrimMap _primitives;    // Registered primitives map
     MaterialMap _materials; // Registered materials map
@@ -46,11 +60,16 @@ namespace render
     ID3D11Texture2D         *_depthStencilBuffer;
     ID3D11DepthStencilState *_depthStencilState;
     ID3D11DepthStencilView  *_depthStencilView;
-    ID3D11RasterizerState   *_rasterState;
+    ID3D11RasterizerState   *_rasterStateSolid;
+    ID3D11RasterizerState   *_rasterStateWireframe;
     ID3D11SamplerState      *_samplerState;
 
     ConstBuffer _constBuffer;
-    Camera _camera;
+
+    void (*_responseFunc)( void );
+
+    SplitScreenMode _splitScreenMode;
+    Camera _camera[4];
 
     /* Create render function */
     Render( void );
@@ -59,7 +78,7 @@ namespace render
     void createDepthStencil( int Width, int Height );
 
     /* Set viewport function */
-    void setViewport( int Width, int Height );
+    void setViewport( float TopLeftX, float TopLeftY, float Width, float Height );
 
     /* Release resource function */
     template<typename Resource>
@@ -78,6 +97,9 @@ namespace render
     /* Create default resources function */
     void createDefResources( void );
 
+    /* Render timer response function */
+    void response( void );
+
     /* Start frame function */
     void startFrame( void );
 
@@ -90,14 +112,17 @@ namespace render
     /* Resize render system function */
     void resize( int Width, int Height );
 
+    /* Set camera as active function */
+    void applyCamera( int Id );
+
     /* Set shader as active function */
-    void setShader( ShaderPtr &Sh );
+    void applyShader( ShaderPtr &Sh );
 
     /* Set texture as active function */
-    void setTexture( TexturePtr &Tex, int Id );
+    void applyTexture( TexturePtr &Tex, int Id );
 
     /* Set material as active function */
-    void setMaterial( MaterialPtr &Mtl );
+    void applyMaterial( MaterialPtr &Mtl );
 
     /* Draw geometry function */
     void drawGeom( Geom *G );
@@ -141,10 +166,20 @@ namespace render
     static Render & getInstance( void );
 
     /* Initialize render function */
-    void init( void );
+    void init( void (*ResponseFunc)( void ) );
 
     /* Release DirectX function */
     void release( void );
+
+    /* Set fill mode function */
+    void setFillMode( FillMode Mode );
+
+    /* Set split-screen mode function */
+    void setSplitScreen( SplitScreenMode Mode );
+
+    /* Set camera 3d space parameters function */
+    void setCamera( int Id, bool IsLookAt,
+      const math::Vec3f &Loc, const math::Vec3f &Dir, const math::Vec3f &Up );
 
 
     /***
@@ -199,8 +234,10 @@ namespace render
      * Geometry resource handle
      ***/
 
-    /* Create geometry function */
-    // Geom * createGeom( const geometry &Geomery, const string &GeomName );
+    /* Create geometry render resource function */
+     GeomPtr createGeom( const string &GeomName, const geom::Geom &Geometry );
+
+    /* Create geometry render resource from file function */
     GeomPtr createGeom( const string &GeomName );
 
     /* Get geometry interface function */
@@ -215,12 +252,12 @@ namespace render
      ***/
 
     /* Create primitive function */
-    PrimPtr createPrim( const string &PrimName,
+    PrimPtr createPrim( const string &PrimName, const string &GeomName,
       const string &MtlName = "default", const string &ShName = "default" );
 
     /* Create primitive function */
-    PrimPtr createPrim( const string &PrimName,
-      const MaterialPtr &Mtl, const ShaderPtr &Sh );
+    PrimPtr createPrim( const string &PrimName, const GeomPtr &Geometry,
+      const MaterialPtr &Mtl = nullptr, const ShaderPtr &Sh = nullptr );
 
     /* Get primitive interface function */
     PrimPtr getPrim( const string &PrimName ) const;
