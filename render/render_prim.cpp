@@ -46,6 +46,7 @@ PrimPtr Render::createPrim( const string &PrimName, const GeomPtr &Geometry,
   P->_geometry = Geometry;
   P->_material = Mtl;
   P->_shader = Sh;
+  P->_world = math::Matr4f().setIdentity();
 
   _primitives.add(PrimName, P);
 

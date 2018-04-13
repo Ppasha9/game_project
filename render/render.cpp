@@ -438,10 +438,30 @@ void Render::applyCamera( int Id )
   if (Id < 0 || Id >= 4)
     return;
 
-  _constBuffer._data._view = _camera[Id]._viewMatr;
-  _constBuffer._data._proj = _camera[Id]._projMatr;
   _constBuffer._data._cameraPos = {_camera[Id]._loc[0], _camera[Id]._loc[1], _camera[Id]._loc[2], 1};
   _constBuffer._data._cameraDir = {_camera[Id]._dir[0], _camera[Id]._dir[1], _camera[Id]._dir[2], 0};
+
+  switch (_projMethod)
+  {
+  case ProjMethod::FRUSTUM:
+    _constBuffer._data._view = _camera[Id]._viewMatr;
+    _constBuffer._data._proj = _camera[Id]._projMatr;
+    break;
+  case ProjMethod::SCREENSPACE_PIXEL:
+    _constBuffer._data._view = math::Matr4f().setIdentity();
+    _constBuffer._data._proj = { 2.0F / _width,               0, 0, 0,
+                                             0, -2.0F / _height, 0, 0,
+                                             0,               0, 0, 0,
+                                            -1,               1, 0, 1};
+    break;
+  case ProjMethod::SCREENSPACE_UNORM:
+    _constBuffer._data._view = math::Matr4f().setIdentity();
+    _constBuffer._data._proj = { 2,  0, 0, 0,
+                                 0, -2, 0, 0,
+                                 0,  0, 0, 0,
+                                -1,  1, 0, 1};
+    break;
+  }
 } /* End of 'Render::applyCamera' function */
 
 /* Set fill mode function */
@@ -457,6 +477,12 @@ void Render::setFillMode( FillMode Mode )
     break;
   }
 } /* End of 'Render::setFillMode' function */
+
+/* Set projection method function */
+void Render::setProjMethod( ProjMethod Method )
+{
+  _projMethod = Method;
+} /* End of 'Render::setProjMethod' function */
 
 /* Start frame function */
 void Render::startFrame( void )
@@ -493,7 +519,6 @@ void Render::render( void )
 
     void operator()( Prim *P )
     {
-      P->_world = math::Matr4f().setIdentity(1);
       _rnd->drawPrim(P);
     }
   };

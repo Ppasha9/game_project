@@ -46,6 +46,13 @@ namespace render
       WIREFRAME
     };
 
+    enum struct ProjMethod
+    {
+      FRUSTUM,
+      SCREENSPACE_PIXEL,
+      SCREENSPACE_UNORM
+    };
+
   private:
     PrimMap _primitives;    // Registered primitives map
     MaterialMap _materials; // Registered materials map
@@ -71,6 +78,8 @@ namespace render
 
     SplitScreenMode _splitScreenMode;
     Camera _camera[4];
+
+    ProjMethod _projMethod;
 
     /* Create render function */
     Render( void );
@@ -180,6 +189,9 @@ namespace render
 
     /* Set split-screen mode function */
     void setSplitScreen( SplitScreenMode Mode );
+
+    /* Set projection method function */
+    void setProjMethod( ProjMethod Method );
 
     /* Set camera 3d space parameters function */
     void setCamera( int Id, bool IsLookAt,

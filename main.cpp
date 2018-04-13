@@ -22,6 +22,10 @@ void dummyResponse( void )
   static float angle = 0;
   angle += 0.030f;
 
+  static render::PrimPtr prim = rnd.createPrim("test_prim", rnd.createGeom("sphere", geom::Geom().createSphere({0, 0, 0}, 1, 300, 300)));
+
+  rnd.setPrimMatrix(prim, math::Matr4f().setIdentity());
+
   rnd.setCamera(0, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
   rnd.setCamera(1, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
   rnd.setCamera(2, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
@@ -43,8 +47,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   rnd.init(dummyResponse);
 
   // init other stuff here
-  rnd.createPrim("test_prim",
-    rnd.createGeom("sphere", geom::Geom().createSphere({0, 0, 0}, 1, 300, 300)));
 
   rnd.run();
 

@@ -48,13 +48,15 @@ namespace math
     } /* End of 'Matrix' function */
 
     /* Set matrix as diagonal */
-    inline void setDiag( Type DiagValue )
+    inline Matrix & setDiag( Type DiagValue )
     {
       setZero();
 
       size_t max = MAX(Rows, Columns);
       for (size_t i = 0; i < max; i++)
         _values[i][i] = DiagValue;
+
+      return *this;
     } /* End of 'setDiag' function */
 
     inline void setZero( void )
@@ -64,7 +66,7 @@ namespace math
     } /* End of 'setZero' function */
 
     /* Set matrix as identity */
-    inline Matrix & setIdentity( Type DiagValue )
+    inline Matrix & setIdentity( void )
     {
       setDiag(1);
 
