@@ -5,7 +5,7 @@
  * AUTHORS:
  *   Vasilyev Peter,
  *   Kozlov Ilya
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 16.04.2018
  * NOTE: render geometry resource handle implementation file
  */
 
@@ -17,6 +17,10 @@ using namespace render;
 /* Create geometry render resource from file function */
 GeomPtr Render::createGeom( const string &GeomName )
 {
+  GeomPtr tmp;
+  if ((tmp = getGeom(GeomName))._resource != nullptr)
+    return tmp;
+
   // return createGeom(GeomName, geom::Geom().LoadObj(string("bin\\models\\").append(GeomName)));
 
   return nullptr;
