@@ -7,7 +7,7 @@
  *   Denisov Pavel,
  *   Kozlov Ilya,
  *   Lebed Pavel
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 17.04.2018
  * NOTE: main project file
  */
 
@@ -22,14 +22,14 @@ void dummyResponse( void )
   static float angle = 0;
   angle += 0.030f;
 
-  static render::PrimPtr prim = rnd.createPrim("test_prim", rnd.createGeom("sphere", geom::Geom().createSphere({0, 0, 0}, 1, 300, 300)));
+  static render::PrimPtr prim = rnd.getPrim("test_prim");
 
   rnd.setPrimMatrix(prim, math::Matr4f().setIdentity());
 
-  rnd.setCamera(0, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
-  rnd.setCamera(1, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
-  rnd.setCamera(2, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
-  rnd.setCamera(3, true, { 5 * (sin(angle / 3) + cos(angle / 3)), 0, 5 }, { 0, 0, -1 }, { 0, 1, 0 });
+  rnd.setCamera(0, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
+  rnd.setCamera(1, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
+  rnd.setCamera(2, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
+  rnd.setCamera(3, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
 
   rnd.setLight(0, render::LightSystem::LightSource({sin(angle) * 20, cos(angle) * 20, 20}, 300, {0.30F, 0.30F, 0.30F}));
   rnd.setLight(1, render::LightSystem::LightSource({sin(angle + 2) * 20, 0, 20}, 300, {0.30F, 0.30F, 0}));
@@ -47,6 +47,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   rnd.init(dummyResponse);
 
   // init other stuff here
+  auto tex = rnd.createTexture("model_1.tga");
+  auto mtl = rnd.createMaterial("mtl", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
+  rnd.setMaterialTexture(mtl, tex, 0);
+  rnd.setMaterialTexture(mtl, tex, 1);
+  rnd.setMaterialTexture(mtl, tex, 2);
+  rnd.setMaterialTexture(mtl, tex, 3);
+  //rnd.createGeom("obj", geom::Geom().loadObj("remade"));
+  rnd.createGeom("obj", geom::Geom().createBox({0, 0, 0}, 3));
+  rnd.createPrim("test_prim", "obj"/*, "mtl"*/);
 
   rnd.run();
 

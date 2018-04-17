@@ -4,7 +4,7 @@
  * FILE: geometry.h
  * AUTHORS:
  *   Kozlov Ilya
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 17.04.2018
  * NOTE: geometry handle class declaration
  */
 
@@ -52,6 +52,8 @@ namespace geom
     /* Create plane geom object by pos, two normilized directions and width, height */
     Geom & createPlane( const math::Vec3f & Pos, const math::Vec3f & RightNorm, const math::Vec3f & UpNorm, const math::Vec3f & Norm, float W, float H );
 
+    /* Check if vertex is already added in array */
+    bool find( Vertex &v );
   public:
     /* Default geometry class constructor */
     Geom() = default;
@@ -121,7 +123,21 @@ namespace geom
      */
 
     /* Create sphere geom object */
-    Geom & createSphere( const math::Vec3f & Center, float R = 1, int W = 5, int H = 4);
+    Geom & createSphere( const math::Vec3f & Center, float R = 1, int W = 5, int H = 4 );
+
+    /*
+     * Box
+     */
+
+    /* Create box geom object */
+    Geom & createBox( const math::Vec3f & Center, float L );
+
+    /*
+     * Object
+     */
+
+    /* Load geom object from .obj file */
+    Geom & loadObj( const string & name );
 
     /* Geometry class destructor */
     ~Geom()

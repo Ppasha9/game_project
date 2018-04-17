@@ -74,6 +74,15 @@ namespace math
       return *this;
     } /* End of 'operator-=' function */
 
+    /* Equal operator */
+    inline bool operator==( const Vector &Vec )
+    {
+      for (size_t i = 0; i < Metrix; i++)
+        if (_coords[i] != Vec._coords[i])
+          return false;
+      return true;
+    } /* End of 'operator==' function */
+
     /* Negate Vector */
     inline Vector operator!( void ) const
     {
