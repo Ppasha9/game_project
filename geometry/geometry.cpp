@@ -180,16 +180,6 @@ geom::Geom & geom::Geom::createPlane( const math::Vec3f & Pos, const math::Vec3f
   return createPlane(lb, rb, rt, lt);
 } /* End of 'geom::Geom::createPlane' function */
 
-/* Check if vertex is already added in array */
-bool geom::Geom::find( Vertex & v )
-{
-  for (auto vert : _vertices)
-    if (vert == v)
-      return true;
-
-  return false;
-} /* End of 'geom::Geom::find' function */
-
 /* Create sphere geom object */
 geom::Geom & geom::Geom::createSphere( const math::Vec3f & Center, float R, int W, int H )
 {

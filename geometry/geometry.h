@@ -51,9 +51,6 @@ namespace geom
 
     /* Create plane geom object by pos, two normilized directions and width, height */
     Geom & createPlane( const math::Vec3f & Pos, const math::Vec3f & RightNorm, const math::Vec3f & UpNorm, const math::Vec3f & Norm, float W, float H );
-
-    /* Check if vertex is already added in array */
-    bool find( Vertex &v );
   public:
     /* Default geometry class constructor */
     Geom() = default;
