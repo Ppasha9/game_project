@@ -57,7 +57,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   rnd.setMaterialTexture(mtl, tex, 3);
   rnd.createGeom("obj", geom::Geom().loadObj("bike"));
   //rnd.createGeom("obj", geom::Geom().createBox({0, 0, 0}, 3));
-  rnd.createPrim("test_prim", "obj", "mtl");
+  rnd.createPrim("test_prim", "obj", "mtl", "default", render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME);
 
   rnd.run();
 

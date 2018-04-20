@@ -282,6 +282,7 @@ void Render::init( int Width, int Height, HWND hWnd )
 
   // Create wireframe rasterizer state
   raster_desc.FillMode = D3D11_FILL_WIREFRAME;
+  raster_desc.CullMode = D3D11_CULL_NONE;
   result = _device->CreateRasterizerState(&raster_desc, &_rasterStateWireframe);
   assert(!FAILED(result));
 
