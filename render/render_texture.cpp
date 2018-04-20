@@ -4,7 +4,7 @@
  * FILE: render_texture.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 20.04.2018
  * NOTE: render texture handle implementation file
  */
 
@@ -15,6 +15,10 @@ using namespace render;
 /* Create texture from Image buffer function */
 TexturePtr Render::createTexture( const string &TexName )
 {
+  TexturePtr tmp;
+  if ((tmp = getTexture(TexName))._resource != nullptr)
+    return tmp;
+
   return createTexture(TexName, Image().loadTGA(string("bin\\textures\\").append(TexName)));
 } /* End of 'Render::createTexture' function */
 
@@ -78,7 +82,7 @@ TexturePtr Render::createTexture( const string &TexName, const Image &Src )
 void Render::applyTexture( TexturePtr &Tex, int Id )
 {
   if (Tex._resource == nullptr)
-    Tex = getTexture("default");
+    Tex = getTexture("default.tga");
 
   _deviceContext->PSSetShaderResources(Id, 1, &Tex._resource->_texView);
 } /* End of 'Render::applyTexture' function */

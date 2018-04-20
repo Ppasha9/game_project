@@ -7,7 +7,7 @@
  *   Denisov Pavel,
  *   Kozlov Ilya,
  *   Lebed Pavel
- * LAST UPDATE: 17.04.2018
+ * LAST UPDATE: 20.04.2018
  * NOTE: main project file
  */
 
@@ -23,6 +23,8 @@ void dummyResponse( void )
   angle += 0.030f;
 
   static render::PrimPtr prim = rnd.getPrim("test_prim");
+
+  rnd.drawPrim(prim);
 
   rnd.setPrimMatrix(prim, math::Matr4f().setIdentity());
 
@@ -47,15 +49,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   rnd.init(dummyResponse);
 
   // init other stuff here
-  auto tex = rnd.createTexture("model_1.tga");
+  auto tex = rnd.createTexture("default");
   auto mtl = rnd.createMaterial("mtl", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
   rnd.setMaterialTexture(mtl, tex, 0);
   rnd.setMaterialTexture(mtl, tex, 1);
   rnd.setMaterialTexture(mtl, tex, 2);
   rnd.setMaterialTexture(mtl, tex, 3);
-  //rnd.createGeom("obj", geom::Geom().loadObj("remade"));
-  rnd.createGeom("obj", geom::Geom().createBox({0, 0, 0}, 3));
-  rnd.createPrim("test_prim", "obj"/*, "mtl"*/);
+  rnd.createGeom("obj", geom::Geom().loadObj("bike"));
+  //rnd.createGeom("obj", geom::Geom().createBox({0, 0, 0}, 3));
+  rnd.createPrim("test_prim", "obj", "mtl");
 
   rnd.run();
 

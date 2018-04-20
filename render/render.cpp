@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 20.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -441,20 +441,37 @@ void Render::applyCamera( int Id )
   _constBuffer._data._cameraPos = {_camera[Id]._loc[0], _camera[Id]._loc[1], _camera[Id]._loc[2], 1};
   _constBuffer._data._cameraDir = {_camera[Id]._dir[0], _camera[Id]._dir[1], _camera[Id]._dir[2], 0};
 
-  switch (_projMethod)
+  _constBuffer._data._view = _camera[Id]._viewMatr;
+  _constBuffer._data._proj = _camera[Id]._projMatr;
+} /* End of 'Render::applyCamera' function */
+
+/* Set fill mode function */
+void Render::setFillMode( Prim::FillMode Mode )
+{
+  switch (Mode)
   {
-  case ProjMethod::FRUSTUM:
-    _constBuffer._data._view = _camera[Id]._viewMatr;
-    _constBuffer._data._proj = _camera[Id]._projMatr;
+  case Prim::FillMode::SOLID:
+    _deviceContext->RSSetState(_rasterStateSolid);
     break;
-  case ProjMethod::SCREENSPACE_PIXEL:
+  case Prim::FillMode::WIREFRAME:
+    _deviceContext->RSSetState(_rasterStateWireframe);
+    break;
+  }
+} /* End of 'Render::setFillMode' function */
+
+/* Set projection method function */
+void Render::setProjMode( Prim::ProjMode Method )
+{
+  switch (Method)
+  {
+  case Prim::ProjMode::SCREENSPACE_PIXEL:
     _constBuffer._data._view = math::Matr4f().setIdentity();
     _constBuffer._data._proj = { 2.0F / _width,               0, 0, 0,
                                              0, -2.0F / _height, 0, 0,
                                              0,               0, 0, 0,
                                             -1,               1, 0, 1};
     break;
-  case ProjMethod::SCREENSPACE_UNORM:
+  case Prim::ProjMode::SCREENSPACE_UNORM:
     _constBuffer._data._view = math::Matr4f().setIdentity();
     _constBuffer._data._proj = { 2,  0, 0, 0,
                                  0, -2, 0, 0,
@@ -462,27 +479,7 @@ void Render::applyCamera( int Id )
                                 -1,  1, 0, 1};
     break;
   }
-} /* End of 'Render::applyCamera' function */
-
-/* Set fill mode function */
-void Render::setFillMode( FillMode Mode )
-{
-  switch (Mode)
-  {
-  case FillMode::SOLID:
-    _deviceContext->RSSetState(_rasterStateSolid);
-    break;
-  case FillMode::WIREFRAME:
-    _deviceContext->RSSetState(_rasterStateWireframe);
-    break;
-  }
-} /* End of 'Render::setFillMode' function */
-
-/* Set projection method function */
-void Render::setProjMethod( ProjMethod Method )
-{
-  _projMethod = Method;
-} /* End of 'Render::setProjMethod' function */
+} /* End of 'Render::setProjMode' function */
 
 /* Start frame function */
 void Render::startFrame( void )
@@ -509,54 +506,58 @@ void Render::render( void )
 {
   startFrame();
 
-  class dummy
-  {
-  private:
-    Render *_rnd;
-
-  public:
-    dummy( Render *Rnd ) : _rnd(Rnd) {}
-
-    void operator()( Prim *P )
-    {
-      _rnd->drawPrim(P);
-    }
-  };
-
+  // Render frustum primitives
+  setProjMode(Prim::ProjMode::FRUSTUM);
   switch (_splitScreenMode)
   {
   case SplitScreenMode::FULL:
     applyCamera(0);
     setViewport(0, 0, (float)_width, (float)_height);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
     break;
   case SplitScreenMode::HALVES:
     applyCamera(0);
     setViewport(0, 0, (float)_width, _height / 2.0F);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
 
     applyCamera(1);
     setViewport(0, _height / 2.0F, (float)_width, _height / 2.0F);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
     break;
   case SplitScreenMode::QUARTERS:
     applyCamera(0);
     setViewport(0, 0, _width / 2.0F, _height / 2.0F);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
 
     applyCamera(1);
     setViewport(_width / 2.0F, 0, _width / 2.0F, _height / 2.0F);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
 
     applyCamera(2);
     setViewport(0, _height / 2.0F, _width / 2.0F, _height / 2.0F);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
 
     applyCamera(3);
     setViewport(_width / 2.0F, _height / 2.0F, _width / 2.0F, _height / 2.0F);
-    _primitives.iterate<dummy>(dummy(this));
+    for (auto &p : _frustumPrims)
+      drawPrim(p);
     break;
   }
+
+  // Render pixel screen-space primitives
+  setProjMode(Prim::ProjMode::SCREENSPACE_PIXEL);
+  for (auto &p : _pixelPrims)
+    drawPrim(p);
+  // Render unsigned normalized screen-space primitives
+  setProjMode(Prim::ProjMode::SCREENSPACE_UNORM);
+  for (auto &p : _unormPrims)
+    drawPrim(p);
 
   endFrame();
 } /* End of 'Render::render' function */
@@ -565,6 +566,10 @@ void Render::render( void )
 void Render::endFrame( void )
 {
   _swapChain->Present(1, 0);
+
+  _frustumPrims.clear();
+  _pixelPrims.clear();
+  _unormPrims.clear();
 } /* End of 'Render::endFrame' function */
 
 /* END OF 'render.cpp' FILE */

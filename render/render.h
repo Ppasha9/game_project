@@ -4,7 +4,7 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 09.04.2018
+ * LAST UPDATE: 20.04.2018
  * NOTE: render handle declaration file
  */
 
@@ -40,25 +40,17 @@ namespace render
       QUARTERS
     };
 
-    enum struct FillMode
-    {
-      SOLID,
-      WIREFRAME
-    };
-
-    enum struct ProjMethod
-    {
-      FRUSTUM,
-      SCREENSPACE_PIXEL,
-      SCREENSPACE_UNORM
-    };
-
   private:
     PrimMap _primitives;    // Registered primitives map
     MaterialMap _materials; // Registered materials map
     ShaderMap _shaders;     // Registered shaders map
     TextureMap _textures;   // Registered textures map
     GeomMap _geometries;    // Registered geometry map
+
+    using PrimVector = std::vector<Prim *>;
+    PrimVector _frustumPrims;
+    PrimVector _pixelPrims;
+    PrimVector _unormPrims;
 
     /* DirectX resources */
     IDXGISwapChain          *_swapChain;
@@ -78,8 +70,6 @@ namespace render
 
     SplitScreenMode _splitScreenMode;
     Camera _camera[4];
-
-    ProjMethod _projMethod;
 
     /* Create render function */
     Render( void );
@@ -137,6 +127,12 @@ namespace render
     /* Set material as active function */
     void applyMaterial( MaterialPtr &Mtl );
 
+    /* Set fill mode function */
+    void setFillMode( Prim::FillMode Mode );
+
+    /* Set projection method function */
+    void setProjMode( Prim::ProjMode Method );
+
     /* Draw geometry function */
     void drawGeom( Geom *G );
 
@@ -184,14 +180,8 @@ namespace render
     /* Release DirectX function */
     void release( void );
 
-    /* Set fill mode function */
-    void setFillMode( FillMode Mode );
-
     /* Set split-screen mode function */
     void setSplitScreen( SplitScreenMode Mode );
-
-    /* Set projection method function */
-    void setProjMethod( ProjMethod Method );
 
     /* Set camera 3d space parameters function */
     void setCamera( int Id, bool IsLookAt,
@@ -269,11 +259,15 @@ namespace render
 
     /* Create primitive function */
     PrimPtr createPrim( const string &PrimName, const string &GeomName,
-      const string &MtlName = "default", const string &ShName = "default" );
+      const string &MtlName = "default", const string &ShName = "default",
+      Prim::ProjMode ProjM = Prim::ProjMode::FRUSTUM,
+      Prim::FillMode FillM = Prim::FillMode::SOLID );
 
     /* Create primitive function */
     PrimPtr createPrim( const string &PrimName, const GeomPtr &Geometry,
-      const MaterialPtr &Mtl = nullptr, const ShaderPtr &Sh = nullptr );
+      const MaterialPtr &Mtl = nullptr, const ShaderPtr &Sh = nullptr,
+      Prim::ProjMode ProjM = Prim::ProjMode::FRUSTUM,
+      Prim::FillMode FillM = Prim::FillMode::SOLID );
 
     /* Get primitive interface function */
     PrimPtr getPrim( const string &PrimName ) const;
@@ -286,6 +280,12 @@ namespace render
 
     /* Set primitive material function */
     void setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial );
+
+    /* Set primitive fill mode function */
+    void setPrimFillMode( PrimPtr &P, Prim::FillMode NewFillMode );
+
+    /* Register primitive for rendering on this frame function */
+    void drawPrim( PrimPtr &P );
 
     /* Realease primitive function */
     void releasePrim( PrimPtr &P );

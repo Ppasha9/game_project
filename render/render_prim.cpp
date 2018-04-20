@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 20.04.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -14,7 +14,7 @@ using namespace render;
 
 /* Create primitive function */
 PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
-  const string &MtlName, const string &ShName )
+  const string &MtlName, const string &ShName, Prim::ProjMode ProjM, Prim::FillMode FillM )
 {
   PrimPtr tmp;
 
@@ -26,6 +26,9 @@ PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
   P->_geometry = createGeom(GeomName);
   P->_material = getMaterial(MtlName);
   P->_shader = getShader(ShName);
+  P->_fillMode = FillM;
+  P->_projMode = ProjM;
+  P->_world = math::Matr4f().setIdentity();
 
   _primitives.add(PrimName, P);
 
@@ -34,7 +37,7 @@ PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
 
 /* Create primitive function */
 PrimPtr Render::createPrim( const string &PrimName, const GeomPtr &Geometry,
-  const MaterialPtr &Mtl, const ShaderPtr &Sh )
+  const MaterialPtr &Mtl, const ShaderPtr &Sh, Prim::ProjMode ProjM, Prim::FillMode FillM )
 {
   PrimPtr tmp;
 
@@ -46,6 +49,8 @@ PrimPtr Render::createPrim( const string &PrimName, const GeomPtr &Geometry,
   P->_geometry = Geometry;
   P->_material = Mtl;
   P->_shader = Sh;
+  P->_fillMode = FillM;
+  P->_projMode = ProjM;
   P->_world = math::Matr4f().setIdentity();
 
   _primitives.add(PrimName, P);
@@ -81,12 +86,39 @@ void Render::setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial )
 void Render::drawPrim( Prim *P )
 {
   applyShader(P->_shader);
-
   _constBuffer._data._world = P->_world;
   applyMaterial(P->_material);
 
+  setFillMode(P->_fillMode);
+
   updateConstBuffer();
   drawGeom(P->_geometry._resource);
+} /* End of 'Render::drawPrim' function */
+
+/* Set primitive fill mode function */
+void Render::setPrimFillMode( PrimPtr &P, Prim::FillMode NewFillMode )
+{
+  P._resource->_fillMode = NewFillMode;
+} /* End of 'Render::setPrimFillMode' function */
+
+/* Register primitive for rendering on this frame function */
+void Render::drawPrim( PrimPtr &P )
+{
+  if (P._resource == nullptr)
+    return;
+
+  switch (P._resource->_projMode)
+  {
+  case Prim::ProjMode::FRUSTUM:
+    _frustumPrims.push_back(P._resource);
+    break;
+  case Prim::ProjMode::SCREENSPACE_PIXEL:
+    _pixelPrims.push_back(P._resource);
+    break;
+  case Prim::ProjMode::SCREENSPACE_UNORM:
+    _unormPrims.push_back(P._resource);
+    break;
+  }
 } /* End of 'Render::drawPrim' function */
 
 /* Realease primitive function */

@@ -4,7 +4,7 @@
  * FILE: prim.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 20.04.2018
  * NOTE: geometry primitive handle file
  */
 
@@ -25,12 +25,29 @@ namespace render
     friend class Render;
     friend class ResPtr<Prim>;
 
+  public:
+    enum struct FillMode
+    {
+      SOLID,
+      WIREFRAME
+    };
+
+    enum struct ProjMode
+    {
+      FRUSTUM,
+      SCREENSPACE_PIXEL,
+      SCREENSPACE_UNORM
+    };
+
   private:
     GeomPtr _geometry;
     ShaderPtr _shader;
     MaterialPtr _material;
 
     math::Matr4f _world;
+
+    FillMode _fillMode;
+    ProjMode _projMode;
 
     /* Create primitive function */
     Prim( const string &PrimName ) : Resource(PrimName) {}
