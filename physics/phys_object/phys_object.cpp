@@ -4,34 +4,16 @@
  * FILE: phys_object.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 27.03.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: physics object handle definition file
  */
 
+#include <iostream>
 #include <exception>
 #include "phys_object.h"
+#include "../forces/force.h"
 
 using namespace phys;
-
-/*
- * Inline function that creates the transform matrix
- * from position and orientation.
- */
-static inline void s_calculateTransformMatrix(math::Matr4f &TransformMatr, const math::Vec3f &Pos, const math::Quatf &Orientation)
-{
-  TransformMatr._values[0][0] = 1 - 2 * Orientation._j * Orientation._j - 2 * Orientation._k * Orientation._k;
-  TransformMatr._values[0][1] = 2 * Orientation._i * Orientation._j - 2 * Orientation._r * Orientation._k;
-  TransformMatr._values[0][2] = 2 * Orientation._i * Orientation._k + 2 * Orientation._r * Orientation._j;
-  TransformMatr._values[0][3] = Pos[0];
-  TransformMatr._values[1][0] = 2 * Orientation._i * Orientation._j + 2 * Orientation._r * Orientation._k;
-  TransformMatr._values[1][1] = 1 - 2 * Orientation._i * Orientation._i - 2 * Orientation._k * Orientation._k;
-  TransformMatr._values[1][2] = 2 * Orientation._j * Orientation._k - 2 * Orientation._r * Orientation._i;
-  TransformMatr._values[1][3] = Pos[1];
-  TransformMatr._values[2][0] = 2 * Orientation._i * Orientation._k - 2 * Orientation._r * Orientation._j;
-  TransformMatr._values[2][1] = 2 * Orientation._j * Orientation._k + 2 * Orientation._r * Orientation._i;
-  TransformMatr._values[2][2] = 1 - 2 * Orientation._i * Orientation._i - 2 * Orientation._j * Orientation._j;
-  TransformMatr._values[2][3] = Pos[2];
-} /* End of 's_calculateTransformMatrix' function */
 
 /* Internal function to do an inertia tensor transform by a quaternion. */
 static inline void s_transformInertiaTensor(math::Matr3f &IITWorld, const math::Matr3f &IITBody, const math::Matr4f &RotMat)
@@ -58,18 +40,16 @@ static inline void s_transformInertiaTensor(math::Matr3f &IITWorld, const math::
 } /* End of 's_transformInertiaTensor' function */
 
 /* Class constructor */
-PhysObject::PhysObject(int Id, const math::Vec3f &Pos, const float InverseMass, const float LinDamping, const float AngDamping) : _position(Pos), _inverseMass(InverseMass),
-  _orientation(), _velocity(0), _acceleration(0), _rotation(0), _forceAccum(0), _torqueAccum(0), _angularDamping(AngDamping), _linearDamping(LinDamping), _id(Id)
+PhysObject::PhysObject(const math::Vec3f &Pos, const float InverseMass, const float LinDamping, const float AngDamping) : _position(Pos), _inverseMass(InverseMass),
+  _orientation(), _velocity(0), _acceleration(0), _rotation(0), _forceAccum(0), _torqueAccum(0), _angularDamping(AngDamping), _linearDamping(LinDamping),
+  _inverseInertiaTensor(1), _iitWorld(1)
 {
 } /* End of constructor */
 
 /* Calculating internal data from state data function */
 void PhysObject::calculateDerivedData(void)
 {
-  /* Calculate the transform matrix */
-  s_calculateTransformMatrix(_transformMatrix, _position, _orientation);
-  /* Calculate inverse inertia tensor in world space */
-  s_transformInertiaTensor(_iitWorld, _inverseInertiaTensor, _transformMatrix);
+  s_transformInertiaTensor(_iitWorld, _inverseInertiaTensor, _orientation.toMatr4x4());
 } /* End of 'calculateDerivedData' function */
 
 /* Setting inverse inertia tensor function */
@@ -87,15 +67,16 @@ void PhysObject::addForce(const math::Vec3f &Force)
 /* Adding force to a point of object function */
 void PhysObject::addForceAtPoint(const math::Vec3f &Force, const math::Vec3f &Point)
 {
-  addTorque(Point & Force);
+  addTorque(-Point & Force);
   addForce(Force);
 } /* End of 'addForceAtPoint' function */
 
 /* Getting point of body in world space function */
 math::Vec3f PhysObject::getPointInWorldSpace(const math::Vec3f &Point) const
 {
+  math::Matr4f transformMatrix = getTransormMatrix();
   math::Vec4f point4f = { Point[0], Point[1], Point[2], 1.0f };
-  math::Vec4f res = _transformMatrix * point4f;
+  math::Vec4f res = transformMatrix * point4f;
   math::Vec3f r = { res[0], res[1], res[2] };
   return r;
 } /* End of 'getPointInWorldSpace' function */
@@ -117,6 +98,12 @@ void PhysObject::addTorque(const math::Vec3f &Torque)
 {
   _torqueAccum += Torque;
 } /* End of 'addTorque' function */
+
+/* Adding impulse function */
+void PhysObject::addImpulse(const math::Vec3f &Impulse)
+{
+  _velocity += Impulse * _inverseMass;
+} /* End of 'addImpulse' function */
 
 /* Clear accumulators function */
 void PhysObject::clearAccums(void)
@@ -141,6 +128,54 @@ float PhysObject::getInverseMass(void) const
 {
   return _inverseMass;
 } /* End of 'getInverseMass' function */
+
+/* Getting object position function */
+math::Vec3f PhysObject::getPos(void) const
+{
+  return _position;
+} /* End of 'getPos' function */
+
+/* Getting inverse inertia tensor in world coordinates function */
+math::Matr3f PhysObject::getIITWorld(void) const
+{
+  return _iitWorld;
+} /* End of 'getIITWorld' function */
+
+/* Getting inverse inertia tensor in local coordinates function */
+math::Matr3f PhysObject::getInverseInertia(void) const
+{
+  return _inverseInertiaTensor;
+} /* End of 'getInverseInertia' function */
+
+/* Getting rotation vector function */
+math::Vec3f PhysObject::getRotation(void) const
+{
+  return _rotation;
+} /* End of 'getRotation' function */
+
+/* Getting velocity vector function */
+math::Vec3f PhysObject::getVelocity(void) const
+{
+  return _velocity;
+} /* End of 'getVelocity' function */
+
+/* Adding to velocity function */
+void PhysObject::addVelocity(const math::Vec3f &AddVel)
+{
+  _velocity += AddVel;
+} /* End of 'addVelocity' function */
+
+/* Adding to position function */
+void PhysObject::addPosition(const math::Vec3f &AddPos)
+{
+  _position += AddPos;
+} /* End of 'addPosition' function */
+
+/* Adding to rotation function */
+void PhysObject::addRotation(const math::Vec3f &AddRot)
+{
+  _rotation += AddRot;
+} /* End of 'addRotation' function */
 
 /* Setting linear damping function */
 void PhysObject::setLinearDamping(const float LinearDamping)
@@ -167,14 +202,20 @@ void PhysObject::setInverseMass(const float InverseMass)
 /* Getting transformation matrix of object for rendering function */
 math::Matr4f PhysObject::getTransormMatrix(void) const
 {
-  return _transformMatrix;
+  math::Matr4f res(1);
+
+  res *= _orientation.toMatr4x4();
+  res *= math::Matr4f::getTranslate(_position);
+  //res._values[0][0] = res._values[1][1] = res._values[2][2] = 1;
+
+  return res;
 } /* End of 'getTransormMatrix' function */
 
-/* Getting object id function */
-int PhysObject::getId(void) const
+/* Applying new force function */
+void PhysObject::applyForce(const Force *Force, const float Duration)
 {
-  return _id;
-} /* End of 'getId' function */
+  Force->applyForce(*this, Duration);
+} /* End of 'applyForce' function */
 
 /* Integration function */
 void PhysObject::integrate(float Duration)
@@ -183,7 +224,7 @@ void PhysObject::integrate(float Duration)
   _acceleration += _forceAccum * _inverseMass;
 
   // Calculate angular acceleration from torque inputs.
-  math::Vec3f angularAcceleration = _iitWorld * _torqueAccum;
+  math::Vec3f angularAcceleration = _inverseInertiaTensor * _torqueAccum;
 
   // Adjust velocities
   // Update linear velocity from both acceleration and impulse.
@@ -194,14 +235,17 @@ void PhysObject::integrate(float Duration)
 
   // Impose drag.
   _velocity *= pow(_linearDamping, Duration);
-  _rotation *= pow(_angularDamping, Duration);
+  //_rotation *= pow(_angularDamping, Duration);
 
   // Adjust positions
   // Update linear position.
   _position += _velocity * Duration;
 
   // Update angular position.
-  _orientation.addScaledVector(_rotation, Duration);
+  //_orientation *= math::Quatf(_rotation * Duration, 1);
+
+  if (hasFiniteMass())
+    _orientation.addScaledVector(_rotation, Duration);
 
   // Impose drag.
   //_velocity *= pow(_linearDamping, Duration);

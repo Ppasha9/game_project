@@ -4,7 +4,7 @@
  * FILE: matrix.h 
  * AUTHORS:
  *   Lebed Pavel
- * LAST UPDATE: 27.03.2018 
+ * LAST UPDATE: 22.04.2018 
  * NOTE: matrix calculation module 
  */
 
@@ -208,6 +208,28 @@ namespace math
           res._values[i][j] = _values[j][i];
       return res;
     } /* End of 'getTranspose' function */
+
+    /* Setting a translate matrix by vector function */
+    inline static Matrix<4, 4, Type> getTranslate(const Vector<3, Type> &Vec)
+    {
+      Matrix<4, 4, Type> res(1);
+      res.setDiag(1);
+      res._values[3][0] = Vec[0];
+      res._values[3][1] = Vec[1];
+      res._values[3][2] = Vec[2];
+      return res;
+    } /* End of 'getTranslate' function */
+
+    /* Setting a translate matrix by components function */
+    inline static Matrix<4, 4, Type> getTranslate(const Type Dx, const Type Dy, const Type Dz)
+    {
+      Matrix<4, 4, Type> res(1);
+      res.setDiag(1);
+      res._values[3][0] = Dx;
+      res._values[3][1] = Dy;
+      res._values[3][2] = Dz;
+      return res;
+    } /* End of 'getTranslate' function */
   }; /* End of 'Matrix' class */
 
   /// Determinant realizations

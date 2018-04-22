@@ -4,7 +4,7 @@
  * FILE: phys_system.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 18.03.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: physics system simulation declaration file
  */
 
@@ -13,24 +13,45 @@
 #pragma once
 
 #include "collision\resolution\collision_resolver.h"
+#include "forces\force.h"
 
  /* Physics namespace */
 namespace phys
 {
   /* Physics system class */
-  class PhysicsSystem : public ContactDetector, public ContactGenerator, public ContactResolver
+  class PhysicsSystem
   {
   private:
+    /* Three main classes of collision system */
+    ContactDetector _detector;
+    ContactGenerator _generator;
+    ContactResolver _resolver;
 
-  public:
     /* Default class constructor */
     PhysicsSystem(void) = default;
 
+  public:
+    /* Getting instance to class function */
+    static PhysicsSystem & getInstance(void);
+
     /* Register new object function */
-    void registerObject(int Id, const bounding_volume_type VolumeType);
+    void registerObject(const std::string &Name, const math::Vec3f &Pos, const float InverseMass, const float LinDamping,
+      const float AngDamping, const bounding_volume_type VolumeType, void *Params);
+
+    /* Register new object function */
+    void registerObject(const std::string &Name, PhysObject *Obj, const bounding_volume_type VolumeType, void *Params);
 
     /* Response function */
-    void response(float Duration) const;
+    void response(void);
+
+    /* Getting physics object transformation matrix for rendering function */
+    const math::Matr4f getObjectMatrix(const std::string &Name) const;
+
+    /* Apply force function */
+    void applyForceToObj(const std::string &ObjName, const Force *Force);
+
+    /* Getting the pointer to physics object function */
+    PhysObject * getObject(const std::string &Name);
 
     /* Class destructor */
     ~PhysicsSystem(void);

@@ -4,7 +4,7 @@
  * FILE: bounding_volume_def.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: bounding volumes default declaration file
  */
 

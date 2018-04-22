@@ -17,38 +17,29 @@
 /* Physics namespace */
 namespace phys
 {
-  /* Contact data class */
-  class Contact
-  {
-  public:
-    /* Position of the contact */
-    math::Vec3f _position;
-    /* Normal of point of the contact */
-    math::Vec3f _normal;
-    /* Value of penetration */
-    float _penetration;
-
-    /* Default class constructor */
-    Contact(void) = default;
-
-    /* Class constructor */
-    Contact(const math::Vec3f &Pos, const math::Vec3f &Normal, const float Penetration);
-  }; /* End of 'Contact' class */
-
   /* Physics objects pair */
-  using PhysicsObjectsPair = std::pair<PhysObject &, PhysObject &>;
+  using PhysicsObjectsPair = std::pair<BoundingVolume *, BoundingVolume *>;
+  /* Object contacts pair */
+  using ObjectContactsPair = std::pair<std::vector<Contact>, PhysicsObjectsPair>;
   /* Result of contact generator response function */
-  using ObjectContactsVector = std::vector<std::pair<std::vector<Contact>, PhysicsObjectsPair>>;
+  using ObjectContactsVector = std::vector<ObjectContactsPair>;
 
   /* Contact generator class */
   class ContactGenerator
   {
+  private:
+    /* Does the pairs are equivalent or not */
+    bool isEqual(const PhysicsObjectsPair &FPair, const PhysicsObjectsPair &SPair) const;
+
+    /* Does the vector contain certain pair */
+    bool contain(const ObjectContactsVector &Vector, const ObjectContactsPair &Pair) const;
+
   public:
     /* Default class constructor */
     ContactGenerator(void) = default;
 
     /* Response function */
-    ObjectContactsVector response(const CollidingObjectsVector &objectsVector) const;
+    ObjectContactsVector response(const CollidingObjectsVector &ObjectsVector) const;
   }; /* End of 'ContactGenerator' class */
 }; /* End of 'phys' namespace */
 

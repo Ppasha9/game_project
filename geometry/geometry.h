@@ -4,7 +4,7 @@
  * FILE: geometry.h
  * AUTHORS:
  *   Kozlov Ilya
- * LAST UPDATE: 17.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: geometry handle class declaration
  */
 
@@ -19,20 +19,18 @@
 /* Geometry namespace */
 namespace geom
 {
-  /* 3D-space vertex structure */
+  /* 3D-space vertex struct */
   struct Vertex
   {
     math::Vec3f _pos;
     math::Vec3f _norm;
     math::Vec2f _tex;
 
-    /* Vertex constructor */
-    Vertex( const math::Vec3f & Pos = {0, 0, 0}, const math::Vec3f & Norm = {0, 0, 0},
-            const math::Vec2f & Tex = {0, 0} ) : _pos(Pos), _norm(Norm), _tex(Tex)
+    /* Class constructor */
+    Vertex( const math::Vec3f &Pos = {0, 0, 0}, const math::Vec3f &Norm = {0, 0, 0}, const math::Vec2f &Tex = { 0, 0 }) : _pos(Pos), _norm(Norm), _tex(Tex)
     {
-    } /* End of 'Vertex' function */
-
-  }; /* End of 'Vertex' struct */
+    } /* End of constructor */
+  }; /* End of 'Vertex' structure */
 
   /* Geometry class */
   class Geom
@@ -95,6 +93,16 @@ namespace geom
 
     /* Create triangle geom object by three vertices positions + autonormal */
     Geom & createTriangle( const math::Vec3f & Pos1, const math::Vec3f & Pos2, const math::Vec3f & Pos3 );
+
+    /*
+     * Trimesh
+     */
+
+    /* Creating the triemsh geometry by array of vetrices and indices */
+    Geom & createTrimesh(const std::vector<Vertex> &Vertices, const std::vector<unsigned long> &Indices);
+
+    /* Creating the triemsh geometry by array of vetrices and indices */
+    Geom & createTrimesh(const int NumV, const int NumI, const Vertex *Vertices, const unsigned long *Indices);
 
     /*
      * Plane

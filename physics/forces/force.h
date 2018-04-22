@@ -25,7 +25,7 @@ namespace phys
     Force(void) = default;
 
     /* Virtual function for applying force to object */
-    virtual void applyForce(PhysObject *Obj, float Duration)
+    virtual void applyForce(PhysObject &Obj, const float Duration) const
     {}
 
     /* Virtual destructor */

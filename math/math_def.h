@@ -5,7 +5,7 @@
  * AUTHORS:
  *   Lebed Pavel,
  *   Denisov Pavel
- * LAST UPDATE: 11.04.2018 
+ * LAST UPDATE: 22.04.2018 
  * NOTE: math definitions module 
  */
 
@@ -22,8 +22,12 @@
 namespace math
 {
   /// Some useful constants
-  const double PI = 3.141592653589793;
-  const double PI_2 = 1.57079632679;
+  const double PI            = 3.141592653589793;
+  const double PI_2          = 1.57079632679;
+  const double E             = 2.718281828459045;
+  const double Degree2Radian = 0.01745329251994329576;
+  const double Radian2Degree = 57.29577951308232087684;
+  const double Threshold     = 1e-6;
 
   /// Some Types predefinition
   // Vector predifinitions
@@ -41,6 +45,9 @@ namespace math
   // Quaternion predefinitions
   using Quatf = Quat<float>;
   using Quatd = Quat<double>;
+  // Color predefinitions
+  using Colorf = Vector<4, float>;
+  using Colord = Vector<4, double>;
 
   /// Some useful functions
   /* Integer power during link function */
@@ -48,6 +55,18 @@ namespace math
   {
     return K == 0 ? 1 : X * PowI(X, K - 1);
   } /* End of 'PowI' function */
+
+  /* Convert degrees to radians function. */
+  template<typename Type> Type Deg2Rad(Type AngleInDegree)
+  {
+    return (Type)(AngleInDegree * Degree2Radian);
+  } /* End of 'Deg2Rad' function */
+
+  /* Convert radians to degrees function. */
+  template<typename Type> Type Rad2Deg(Type AngleInRadian)
+  {
+    return (Type)(AngleInRadian * Radian2Degree);
+  } /* End of 'Rad2Deg' function */
 }; /* End of 'math' namespace */
 
 #endif /* _MATH_DEF_H_INCLUDED__ */

@@ -4,7 +4,7 @@
  * FILE: bounding_plane.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: plane bounding volume declaration file
  */
 
@@ -35,7 +35,7 @@ namespace phys
     BoundingPlane(void) = default;
 
     /* Class constructor */
-    BoundingPlane(PhysObject &Obj, const math::Vec3f &Normal, const float Offset);
+    BoundingPlane(PhysObject *Obj, const math::Vec3f &Normal, const float Offset);
 
     /* Getting plane normal function */
     math::Vec3f getNormal(void) const;
@@ -43,11 +43,37 @@ namespace phys
     /* Getting plane offset function */
     float getOffset(void) const;
 
+    /*
+     * Collision functions.
+     */
+
+    /* Virtual function of colliding to bounding volumes */
+    virtual bool isCollide(const BoundingVolume *Volume) const;
+
     /* Collide plane with sphere function */
-    virtual bool isCollide(const BoundingSphere *Sph) const;
+    bool isCollide(const BoundingSphere *Sph) const;
 
     /* Colliding plane with box function */
-    virtual bool isCollide(const BoundingBox *Box) const;
+    bool isCollide(const BoundingBox *Box) const;
+
+    /* Colliding plane with box function */
+    bool isCollide(const BoundingPlane *Plane) const;
+
+    /*
+     * Contact functions.
+     */
+
+    /* Colliding sphere with sphere function */
+    std::vector<Contact> getContactData(const BoundingSphere *Sph) const;
+
+    /* Colliding sphere with plane function */
+    std::vector<Contact> getContactData(const BoundingPlane *Plane) const;
+
+    /* Colliding sphere with box function */
+    std::vector<Contact> getContactData(const BoundingBox *Box) const;
+
+    /* Virtual function of getting the colliding data */
+    virtual std::vector<Contact> getContactData(const BoundingVolume *Volume) const;
   }; /* End of 'BoundingPlane' class */
 }; /* End of 'phys' namespace */
 

@@ -4,7 +4,7 @@
  * FILE: Vector.h 
  * AUTHORS:
  *   Lebed Pavel
- * LAST UPDATE: 13.04.2018 
+ * LAST UPDATE: 22.04.2018 
  * NOTE: Vector calculation module 
  */
 
@@ -112,6 +112,14 @@ namespace math
 
       return *this;
     } /* End of 'normalize' function */
+
+    /* Getting normalize vector */
+    inline Vector getNormalized(void) const
+    {
+      Vector vec = *this;
+      vec.normalize();
+      return vec;
+    } /* End of 'getNormalized' function */
 
     /* Length calculate */
     inline Type length( void ) const

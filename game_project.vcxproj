@@ -151,6 +151,7 @@
     <ClCompile Include="physics\collision\bounding volumes\bounding_box.cpp" />
     <ClCompile Include="physics\collision\bounding volumes\bounding_plane.cpp" />
     <ClCompile Include="physics\collision\bounding volumes\bounding_sphere.cpp" />
+    <ClCompile Include="physics\collision\bounding volumes\contact.cpp" />
     <ClCompile Include="physics\collision\detection\collision_detector.cpp" />
     <ClCompile Include="physics\collision\generation\contact_generator.cpp" />
     <ClCompile Include="physics\collision\resolution\collision_resolver.cpp" />
@@ -167,6 +168,8 @@
     <ClCompile Include="render\render_prim.cpp" />
     <ClCompile Include="render\render_shader.cpp" />
     <ClCompile Include="render\render_texture.cpp" />
+    <ClCompile Include="render\text\text.cpp" />
+    <ClCompile Include="render\timer\timer.cpp" />
     <ClCompile Include="win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +204,8 @@
     <ClInclude Include="render\res_ptr.h" />
     <ClInclude Include="render\shader.h" />
     <ClInclude Include="render\texture.h" />
+    <ClInclude Include="render\text\text.h" />
+    <ClInclude Include="render\timer\timer.h" />
     <ClInclude Include="win\win.h" />
   </ItemGroup>
   <ItemGroup>
@@ -210,11 +215,19 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="shaders\ps_text.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="shaders\vs_default.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shaders\vs_text.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

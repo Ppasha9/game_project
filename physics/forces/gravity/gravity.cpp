@@ -26,12 +26,12 @@ Gravity::Gravity(const math::Vec3f &Vec) : _gravity(Vec)
 } /* End of constructor */
 
 /* Virtual function for applying force to object */
-void Gravity::applyForce(PhysObject *Obj, float Duration)
+void Gravity::applyForce(PhysObject &Obj, const float Duration) const
 {
-  if (!Obj->hasFiniteMass())
+  if (!Obj.hasFiniteMass())
     return;
 
-  Obj->addForce(_gravity * Obj->getMass());
+  Obj.addForce(_gravity * Obj.getMass());
 } /* End of 'applyForce' function */
 
 /* Virtual destructor */

@@ -12,15 +12,36 @@
 
 using namespace phys;
 
-/* Class constructor */
-Contact::Contact(const math::Vec3f &Pos, const math::Vec3f &Normal, const float Penetration) : _position(Pos), _normal(Normal), _penetration(Penetration)
+/* Does the pairs are equivalent or not */
+bool ContactGenerator::isEqual(const PhysicsObjectsPair &FPair, const PhysicsObjectsPair &SPair) const
 {
-} /* End of constructor */
+  return (FPair.first == SPair.first && FPair.second == SPair.second) ||
+    (FPair.second == SPair.first && FPair.first == SPair.second);
+} /* End of 'isEqual' function */
+
+/* Does the vector contain certain pair */
+bool ContactGenerator::contain(const ObjectContactsVector &Vector, const ObjectContactsPair &Pair) const
+{
+  for (auto elem : Vector)
+    if (isEqual(elem.second, Pair.second) || isEqual(elem.second, PhysicsObjectsPair(Pair.second.second, Pair.second.first)))
+      return true;
+
+  return false;
+} /* End of 'contain' function */
 
 /* Response function */
-ObjectContactsVector ContactGenerator::response(const CollidingObjectsVector &objectsVector) const
+ObjectContactsVector ContactGenerator::response(const CollidingObjectsVector &ObjectsVector) const
 {
-  return ObjectContactsVector();
+  ObjectContactsVector vector;
+
+  for (auto &it : ObjectsVector)
+  {
+    ObjectContactsPair objCPair = ObjectContactsPair(it.first->getContactData(it.second), PhysicsObjectsPair(it.first, it.second));
+    if (!contain(vector, objCPair))
+      vector.push_back(objCPair);
+  }
+
+  return vector;
 } /* End of 'response' function */
 
 /* END OF 'collision_generator.cpp' FILE */

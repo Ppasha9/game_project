@@ -4,7 +4,7 @@
  * FILE: phys_object.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 20.03.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: physics object handle declaration file
  */
 
@@ -17,6 +17,9 @@
 /* Physics namespace */
 namespace phys
 {
+  /* Forward declaration */
+  class Force;
+
   /* Physics object class */
   class PhysObject
   {
@@ -46,13 +49,6 @@ namespace phys
     math::Vec3f _rotation;
 
     /*
-     * Holds a transform matrix for converting body space into world
-     * space and vice versa. This can be achieved by calling the
-     * getPointIn*Space functions.
-     */
-    math::Matr4f _transformMatrix;
-
-    /*
      * Holds the inverse of the body’s inertia tensor.
      * As long as the tensor is finite, it will be invertible.
      * The inverse tensor is used for similar reasons as those
@@ -78,9 +74,6 @@ namespace phys
     /* Holds the amount of damping applied to linear motion. */
     float _linearDamping;
 
-    /* Holds the id of current object in project global space */
-    int _id;
-
   private:
     /* Calculating internal data from state data function */
     void calculateDerivedData(void);
@@ -90,7 +83,7 @@ namespace phys
 
   public:
     /* Class constructor */
-    PhysObject(int Id, const math::Vec3f &Pos, const float InverseMass, const float LinDamping, const float AngDamping);
+    PhysObject(const math::Vec3f &Pos, const float InverseMass, const float LinDamping, const float AngDamping);
 
     /* Setting inverse inertia tensor function */
     void setInertiaTensor(const math::Matr3f &InertiaTensor);
@@ -108,6 +101,9 @@ namespace phys
 
     /* Adding torque to body function. */
     void addTorque(const math::Vec3f &Torque);
+
+    /* Adding impulse function */
+    void addImpulse(const math::Vec3f &Impulse);
 
     /* Clear accumulators function */
     void clearAccums(void);
@@ -127,9 +123,33 @@ namespace phys
     /* Getting object inverse mass function */
     float getInverseMass(void) const;
 
+    /* Getting object position function */
+    math::Vec3f getPos(void) const;
+
+    /* Getting inverse inertia tensor in world coordinates function */
+    math::Matr3f getIITWorld(void) const;
+
+    /* Getting inverse inertia tensor in local coordinates function */
+    math::Matr3f getInverseInertia(void) const;
+
+    /* Getting rotation vector function */
+    math::Vec3f getRotation(void) const;
+
+    /* Getting velocity vector function */
+    math::Vec3f getVelocity(void) const;
+
+    /* Adding to velocity function */
+    void addVelocity(const math::Vec3f &AddVel);
+
+    /* Adding to rotation function */
+    void addRotation(const math::Vec3f &AddRot);
+
+    /* Adding to position function */
+    void addPosition(const math::Vec3f &AddPos);
+
     /* Setting object inverse mass function */
     /* NOTE: it can throw an exception */
-    void PhysObject::setInverseMass(const float InverseMass);
+    void setInverseMass(const float InverseMass);
 
     /* Setting linear damping function */
     void setLinearDamping(const float LinearDamping);
@@ -140,8 +160,8 @@ namespace phys
     /* Getting transformation matrix of object for rendering function */
     math::Matr4f getTransormMatrix(void) const;
 
-    /* Getting object id function */
-    int getId(void) const;
+    /* Applying new force function */
+    void applyForce(const Force *Force, const float Duration);
   }; /* End of 'PhysObject' class */
 }; /* End of 'phys' namespace */
 

@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 20.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -120,6 +120,21 @@ void Render::drawPrim( PrimPtr &P )
     break;
   }
 } /* End of 'Render::drawPrim' function */
+
+/* Set primitive geometry function */
+void Render::setPrimGeom( PrimPtr &P, const GeomPtr &NewGeom )
+{
+  releasePrimGeom(P);
+  P._resource->_geometry = NewGeom;
+} /* End of 'Render::setPrimGeom' function */
+
+/* Releasing primitive geometry function */
+void Render::releasePrimGeom( PrimPtr &P )
+{
+  GeomPtr oldGeom = P._resource->_geometry;
+  P._resource->_geometry = nullptr;
+  releaseGeom(oldGeom);
+} /* End of 'Render::releasePrimGeom' function */
 
 /* Realease primitive function */
 void Render::releasePrim( PrimPtr &P )

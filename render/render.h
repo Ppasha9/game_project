@@ -4,7 +4,7 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 20.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: render handle declaration file
  */
 
@@ -33,12 +33,27 @@ namespace render
   class Render : public Win, public LightSystem
   {
   public:
+    /* Zwrite mode enum */
+    enum struct ZWriteMode
+    {
+      ON,    // all write zclipping mode
+      OFF   // zero write zclipping mode
+    }; /* End of 'ZWriteMode' enum */
+
+    /* Spliting the screen mode */
     enum struct SplitScreenMode
     {
       FULL,
       HALVES,
       QUARTERS
-    };
+    }; /* End of 'SplitScreenMode' enum */
+
+    /* Alpha blending mode */
+    enum struct BlendMode
+    {
+      OFF,
+      ON
+    }; /* End of 'BlendMode' enum */
 
   private:
     PrimMap _primitives;    // Registered primitives map
@@ -59,10 +74,13 @@ namespace render
     ID3D11RenderTargetView  *_renderTargetView;
     ID3D11Texture2D         *_depthStencilBuffer;
     ID3D11DepthStencilState *_depthStencilState;
+    ID3D11DepthStencilState *_depthStencilStateZeroWriting;
     ID3D11DepthStencilView  *_depthStencilView;
     ID3D11RasterizerState   *_rasterStateSolid;
     ID3D11RasterizerState   *_rasterStateWireframe;
     ID3D11SamplerState      *_samplerState;
+    ID3D11BlendState        *_blendStateOff;
+    ID3D11BlendState        *_blendStateOn;
 
     ConstBuffer _constBuffer;
 
@@ -93,6 +111,9 @@ namespace render
 
     /* Initialize DirectX function */
     void init( int Width, int Height, HWND hWnd );
+
+    /* Initing blend states function */
+    void initBlendStates(void);
 
     /* Create default resources function */
     void createDefResources( void );
@@ -187,6 +208,17 @@ namespace render
     void setCamera( int Id, bool IsLookAt,
       const math::Vec3f &Loc, const math::Vec3f &Dir, const math::Vec3f &Up );
 
+    /* Getting screen width function */
+    int getScreenWidth(void) const;
+
+    /* Getting screen height function */
+    int getScreenHeight(void) const;
+
+    /* Setting z-write mode function */
+    void setZWriteMode(const ZWriteMode Mode);
+
+    /* Setting blending mode function */
+    void setBlendMode(const BlendMode Mode);
 
     /***
      * Texture handle
@@ -231,6 +263,9 @@ namespace render
 
     /* Set material texture function */
     void setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo );
+
+    /* Setting material coefficients */
+    void setMaterialCoeffs(MaterialPtr &Mtl, const Material::Coeffs &Coeffs);
 
     /* Realease material function */
     void releaseMaterial( MaterialPtr &Mtl );
@@ -283,6 +318,12 @@ namespace render
 
     /* Set primitive fill mode function */
     void setPrimFillMode( PrimPtr &P, Prim::FillMode NewFillMode );
+
+    /* Set primitive geometry function */
+    void setPrimGeom( PrimPtr &P, const GeomPtr &NewGeom );
+
+    /* Releasing primitive geometry function */
+    void releasePrimGeom( PrimPtr &P );
 
     /* Register primitive for rendering on this frame function */
     void drawPrim( PrimPtr &P );

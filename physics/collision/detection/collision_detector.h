@@ -28,18 +28,39 @@ namespace phys
   class ContactDetector
   {
   private:
+    /* Bounding volume map definition */
+    using BoundingVolumeMap = std::map<std::string, BoundingVolume *>;
+
     /* Vector of bounding volumes */
-    std::vector<BoundingVolume *> _boundingVolumes;
+    BoundingVolumeMap _boundingVolumes;
+
+    /* Does the pairs are equivalent or not */
+    bool isEqual(const BoundingVolumePair &FPair, const BoundingVolumePair &SPair) const;
+
+    /* Does the vector contain certain pair */
+    bool contain(const CollidingObjectsVector &Vector, const BoundingVolumePair &Pair) const;
 
   public:
     /* Default class constructor */
     ContactDetector(void) = default;
 
     /* Adding new bounding volume function */
-    void addVolume(BoundingVolume *Volume);
+    void addVolume(const std::string &Name, BoundingVolume *Volume);
 
     /* Response function */
     CollidingObjectsVector response(void) const;
+
+    /* Getting physics object transformation matrix for rendering function */
+    const math::Matr4f getObjectMatrix(const std::string &Name) const;
+
+    /* Apply force function */
+    void applyForceToObj(const std::string &ObjName, const Force *Force);
+
+    /* Getting the pointer to physics object function */
+    PhysObject * getObject(const std::string &Name);
+
+    /* Integrate function */
+    void integrate(void);
 
     /* Class destructor */
     ~ContactDetector(void);

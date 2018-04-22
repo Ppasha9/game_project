@@ -4,7 +4,7 @@
 * FILE: geometry.cpp
 * AUTHORS:
 *   Kozlov Ilya
-* LAST UPDATE: 17.04.2018
+* LAST UPDATE: 22.04.2018
 * NOTE: geometry handle implementation
 */
 
@@ -88,6 +88,36 @@ geom::Geom & geom::Geom::createTriangle( const math::Vec3f & Pos1, const math::V
 
   return *this;
 } /* End of 'geom::Geom::createTriangle' function */
+
+/* Creating the triemsh geometry by array of vetrices and indices */
+geom::Geom & geom::Geom::createTrimesh(const std::vector<Vertex> &Vertices, const std::vector<unsigned long> &Indices)
+{
+  _vertices = Vertices;
+  _indices = Indices;
+  _nooI = Indices.size();
+  _nooV = Vertices.size();
+
+  return *this;
+} /* End of 'geom::Geom::createTrimesh' function */
+
+/* Creating the triemsh geometry by array of vetrices and indices */
+geom::Geom & geom::Geom::createTrimesh(const int NumV, const int NumI, const Vertex *Vertices, const unsigned long *Indices)
+{
+  if (!_vertices.empty())
+    _vertices.clear();
+  if (!_indices.empty())
+    _indices.clear();
+
+  _nooI = NumI;
+  _nooV = NumV;
+
+  for (int i(0); i < NumV; i++)
+    _vertices.push_back(Vertices[i]);
+  for (int i(0); i < NumI; i++)
+    _indices.push_back(Indices[i]);
+
+  return *this;
+} /* End of 'geom::Geom::createTrimesh' function */
 
 geom::Geom & geom::Geom::createPlane( const Vertex & V1, const Vertex & V2, const Vertex & V3, const Vertex & V4 )
 {

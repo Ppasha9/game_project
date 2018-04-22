@@ -20,12 +20,19 @@ namespace phys
   /* Collisions resolver function */
   class ContactResolver
   {
+  private:
+    /* Resolve the pair of objects function */
+    void resolve(ObjectContactsPair &Pair) const;
+
+    /* Adding the change of velocity by impulse function */
+    void addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, const math::Vec3f RelContactPos[2]) const;
+
   public:
     /* Default class constructor */
     ContactResolver(void) = default;
 
     /* Response function */
-    void response(ObjectContactsVector &objContacts, float Duration) const;
+    void response(ObjectContactsVector &ObjContacts) const;
   }; /* End of 'ContactResolver' class */
 }; /* End of 'phys' namespace */
 

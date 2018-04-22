@@ -4,7 +4,7 @@
  * FILE: bounding_sphere.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 01.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: sphere bounding volume declaration file
  */
 
@@ -33,19 +33,48 @@ namespace phys
     BoundingSphere(void) = default;
 
     /* Class constructor */
-    BoundingSphere(PhysObject &Obj, const float Radius);
+    BoundingSphere(PhysObject *Obj, const float Radius);
 
     /* Getting radius of the sphere function */
     float getRadius(void) const;
 
+    /* Getting position of the sphere function */
+    math::Vec3f getPos(void) const;
+
+    /*
+     * Collision functions.
+     */
+
     /* Colliding sphere with sphere function */
-    virtual bool isCollide(const BoundingSphere *Sph) const;
+    bool isCollide(const BoundingSphere *Sph) const;
 
     /* Colliding sphere with plane function */
-    virtual bool isCollide(const BoundingPlane *Plane) const;
+    bool isCollide(const BoundingPlane *Plane) const;
 
     /* Colliding sphere with box function */
-    virtual bool isCollide(const BoundingBox *Box) const;
+    bool isCollide(const BoundingBox *Box) const;
+
+    /* Virtual function of colliding to bounding volumes */
+    virtual bool isCollide(const BoundingVolume *Volume) const;
+
+    /*
+     * Contact functions.
+     */
+
+     /* Colliding sphere with sphere function */
+    std::vector<Contact> getContactData(const BoundingSphere *Sph) const;
+
+    /* Colliding sphere with plane function */
+    std::vector<Contact> getContactData(const BoundingPlane *Plane) const;
+
+    /* Colliding sphere with box function */
+    std::vector<Contact> getContactData(const BoundingBox *Box) const;
+
+    /* Virtual function of getting the colliding data */
+    virtual std::vector<Contact> getContactData(const BoundingVolume *Volume) const;
+
+    /* Debug function for setting primitive */
+    //virtual void setPrimitive(const std::string &Name, const render::Geom &Geom);
   }; /* End of 'BoundingSphere' class */
 }; /* End of 'phys' namespace */
 

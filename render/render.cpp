@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 20.04.2018
+ * LAST UPDATE: 22.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -17,6 +17,8 @@
 #include <d3d11.h>
 
 #include "render.h"
+#include "..\physics\phys_system.h"
+#include "text\text.h"
 
 using namespace render;
 
@@ -28,10 +30,13 @@ Render::Render( void ) :
   _renderTargetView(nullptr),
   _depthStencilBuffer(nullptr),
   _depthStencilState(nullptr),
+  _depthStencilStateZeroWriting(nullptr),
   _depthStencilView(nullptr),
   _rasterStateSolid(nullptr),
   _rasterStateWireframe(nullptr),
   _samplerState(nullptr),
+  _blendStateOn(nullptr),
+  _blendStateOff(nullptr),
   _shaders(this, releaseShader),
   _materials(this, releaseMaterial),
   _geometries(this, releaseGeom),
@@ -144,6 +149,8 @@ void Render::createDefResources( void )
                                  (unsigned char)(255 * ((i + j) % 2)), 255};
 
   createShader("default");
+  createShader("text");
+
   auto tex = createTexture("default.tga");
   auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
   setMaterialTexture(mtl, tex, 0);
@@ -249,8 +256,13 @@ void Render::init( int Width, int Height, HWND hWnd )
   depth_stencil_desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
   depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-  // Create depth stencil state
+  // Create default depth stencil state
   result = _device->CreateDepthStencilState(&depth_stencil_desc, &_depthStencilState);
+  assert(!FAILED(result));
+
+  // Create depth stencil state
+  depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+  result = _device->CreateDepthStencilState(&depth_stencil_desc, &_depthStencilStateZeroWriting);
   assert(!FAILED(result));
 
   // Set depth stencil state as active
@@ -309,6 +321,10 @@ void Render::init( int Width, int Height, HWND hWnd )
   result = _device->CreateSamplerState(&sampler_desc, &_samplerState);
   assert(!FAILED(result));
 
+  /*** Init blend states ***/
+  initBlendStates();
+  setBlendMode(BlendMode::OFF);
+
   /*** Setup viewport ***/
   setViewport(0, 0, (float)Width, (float)Height);
 
@@ -321,6 +337,33 @@ void Render::init( int Width, int Height, HWND hWnd )
   _camera[2].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
   _camera[3].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
 } /* End of 'Render::init' function */
+
+/* Initing blend states function */
+void Render::initBlendStates(void)
+{
+  D3D11_BLEND_DESC blend_desc;
+
+  /* Set default blending parametres */
+  blend_desc.AlphaToCoverageEnable = false;
+  blend_desc.IndependentBlendEnable = false;
+
+  /* Set the render target setting */
+  blend_desc.RenderTarget[0].BlendEnable = true;
+  blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+  blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+  blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+  blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+  blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+  blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+  blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+  /* Create the off blend state */
+  _device->CreateBlendState(&blend_desc, &_blendStateOff);
+
+  /* Create the on blend state */
+  blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+  _device->CreateBlendState(&blend_desc, &_blendStateOn);
+} /* End of 'initBlendStates' function */
 
 /* Release DirectX function */
 void Render::release( void )
@@ -345,6 +388,9 @@ void Render::release( void )
   releaseRes<ID3D11RasterizerState>(_rasterStateWireframe);
   releaseRes<ID3D11DepthStencilView>(_depthStencilView);
   releaseRes<ID3D11DepthStencilState>(_depthStencilState);
+  releaseRes<ID3D11DepthStencilState>(_depthStencilStateZeroWriting);
+  releaseRes<ID3D11BlendState>(_blendStateOn);
+  releaseRes<ID3D11BlendState>(_blendStateOff);
   releaseRes<ID3D11Texture2D>(_depthStencilBuffer);
   releaseRes<ID3D11RenderTargetView>(_renderTargetView);
   releaseRes<ID3D11DeviceContext>(_deviceContext);
@@ -460,6 +506,36 @@ void Render::setFillMode( Prim::FillMode Mode )
   }
 } /* End of 'Render::setFillMode' function */
 
+/* Setting z-write mode function */
+void Render::setZWriteMode(const ZWriteMode Mode)
+{
+  switch (Mode)
+  {
+  case ZWriteMode::ON:
+    _deviceContext->OMSetDepthStencilState(_depthStencilState, 1);
+    break;
+  case ZWriteMode::OFF:
+    _deviceContext->OMSetDepthStencilState(_depthStencilStateZeroWriting, 1);
+    break;
+  }
+} /* End of 'Render::setZWriteMode' function */
+
+/* Setting blending mode function */
+void Render::setBlendMode(const BlendMode Mode)
+{
+  float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+  switch (Mode)
+  {
+  case BlendMode::OFF:
+    _deviceContext->OMSetBlendState(_blendStateOff, blendFactor, 0xFFFFFF);
+    break;
+  case BlendMode::ON:
+    _deviceContext->OMSetBlendState(_blendStateOn, blendFactor, 0xFFFFFF);
+    break;
+  }
+} /* End of 'setBlendMode' function */
+
 /* Set projection method function */
 void Render::setProjMode( Prim::ProjMode Method )
 {
@@ -497,64 +573,117 @@ void Render::startFrame( void )
 /* Render timer response function */
 void Render::response( void )
 {
+  Timer &timer = Timer::getInstance();
+  timer.response();
   _responseFunc();
 
+  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
+  physSys.response();
+
   render();
+
+  timer.incrFrame();
 } /* End of 'Render::response' function */
 
 /* Render all primitives function */
 void Render::render( void )
 {
+  /* Temporary code !!! */
+  /* Until the scene class will be appeared !!! */
+  Timer &timer = Timer::getInstance();
+  static Text fpsText = Text("fps", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::SANS, 30, { 1, 0, 0, 1 });
+  static float oldfps = 0;
+
+  if (oldfps != timer._fps)
+  {
+    char txt[300];
+    sprintf(txt, "FPS: %f", timer._fps);
+    fpsText.setOutText(txt).setPrim();
+    oldfps = timer._fps;
+  }
+
+  fpsText.draw();
+
+  /* -------------- */
+
   startFrame();
+
+  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
   // Render frustum primitives
   setProjMode(Prim::ProjMode::FRUSTUM);
+  setZWriteMode(ZWriteMode::ON);
   switch (_splitScreenMode)
   {
   case SplitScreenMode::FULL:
     applyCamera(0);
     setViewport(0, 0, (float)_width, (float)_height);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
     break;
   case SplitScreenMode::HALVES:
     applyCamera(0);
     setViewport(0, 0, (float)_width, _height / 2.0F);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
 
     applyCamera(1);
     setViewport(0, _height / 2.0F, (float)_width, _height / 2.0F);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
     break;
   case SplitScreenMode::QUARTERS:
     applyCamera(0);
     setViewport(0, 0, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
 
     applyCamera(1);
     setViewport(_width / 2.0F, 0, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
 
     applyCamera(2);
     setViewport(0, _height / 2.0F, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
 
     applyCamera(3);
     setViewport(_width / 2.0F, _height / 2.0F, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
+    {
+      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
+    }
     break;
   }
 
   // Render pixel screen-space primitives
   setProjMode(Prim::ProjMode::SCREENSPACE_PIXEL);
+  setZWriteMode(ZWriteMode::OFF);
+  setBlendMode(BlendMode::ON);
   for (auto &p : _pixelPrims)
     drawPrim(p);
+  setBlendMode(BlendMode::OFF);
+
   // Render unsigned normalized screen-space primitives
   setProjMode(Prim::ProjMode::SCREENSPACE_UNORM);
   for (auto &p : _unormPrims)
@@ -572,5 +701,17 @@ void Render::endFrame( void )
   _pixelPrims.clear();
   _unormPrims.clear();
 } /* End of 'Render::endFrame' function */
+
+/* Getting screen width function */
+int Render::getScreenWidth(void) const
+{
+  return Win::_width;
+} /* End of 'Render::getScreenWidth' function */
+
+/* Getting screen height function */
+int Render::getScreenHeight(void) const
+{
+  return Win::_height;
+} /* End of 'Render::getScreenHeight' function */
 
 /* END OF 'render.cpp' FILE */
