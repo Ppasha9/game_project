@@ -4,7 +4,7 @@
  * FILE: render_material.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 28.04.2018
  * NOTE: render material handle implementation file
  */
 
@@ -59,10 +59,11 @@ void Render::releaseMaterial( MaterialPtr &Mtl )
   _materials.release(Mtl);
 } /* End of 'Render::releaseMaterial' function */
 
-/* Setting material coefficients */
+/* Set material coefficients */
 void Render::setMaterialCoeffs(MaterialPtr &Mtl, const Material::Coeffs &Coeffs)
 {
-  Mtl._resource->_coeffs = Coeffs;
+  if (Mtl._resource != nullptr)
+    Mtl._resource->_coeffs = Coeffs;
 } /* End of 'Render::setMaterialCoeffs' function */
 
 /* END OF 'render_material.cpp' FILE */

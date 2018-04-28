@@ -38,6 +38,5 @@ struct VsOut
 
 float4 main(VsOut input) : SV_TARGET
 {
-  //return float4(1, 0, 0, 1);
-  return float4((kA * ambiTex.Sample(samplerState, input.tex)).xyz, 1);
+  return float4(kA * ambiTex.Sample(samplerState, input.tex));
 }

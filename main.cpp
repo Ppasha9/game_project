@@ -36,10 +36,8 @@ void dummyResponse( void )
 
   static phys::PhysObject *sphere = physSys.getObject("test_prim");
   static phys::PhysObject *sphere1 = physSys.getObject("test_prim1");
-  sphere->addTorque({ 30, 69, 30 });
-  sphere1->addTorque({ 30, 69, 30 });
-
-  rnd.setPrimMatrix(prim, math::Matr4f().setIdentity());
+  //sphere->addTorque({ 30, 69, 30 });
+  //sphere1->addTorque({ 30, 69, 30 });
 
   //rnd.setCamera(0, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
   rnd.setCamera(0, true, { -60, 10, 60 }, { 0, 1, 0 }, { 0, 1, 0 });

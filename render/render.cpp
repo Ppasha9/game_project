@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 28.04.2018
  * NOTE: render handle implementation file
  */
 
@@ -149,9 +149,9 @@ void Render::createDefResources( void )
                                  (unsigned char)(255 * ((i + j) % 2)), 255};
 
   createShader("default");
-  createShader("text");
 
   auto tex = createTexture("default.tga");
+  //auto tex = createTexture("default.tga", Image(def_texture, 16, 16));
   auto mtl = createMaterial("default", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
   setMaterialTexture(mtl, tex, 0);
   setMaterialTexture(mtl, tex, 1);
@@ -338,8 +338,8 @@ void Render::init( int Width, int Height, HWND hWnd )
   _camera[3].setCamera(true, { 10, 10, 10 }, { 0, 0, 0 }, { 0, 1, 0 }, Width, Height);
 } /* End of 'Render::init' function */
 
-/* Initing blend states function */
-void Render::initBlendStates(void)
+/* Initialize blend states function */
+void Render::initBlendStates( void )
 {
   D3D11_BLEND_DESC blend_desc;
 
@@ -361,7 +361,7 @@ void Render::initBlendStates(void)
   _device->CreateBlendState(&blend_desc, &_blendStateOff);
 
   /* Create the on blend state */
-  blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+  blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
   _device->CreateBlendState(&blend_desc, &_blendStateOn);
 } /* End of 'initBlendStates' function */
 
@@ -599,7 +599,7 @@ void Render::render( void )
     char txt[300];
     sprintf(txt, "FPS: %f", timer._fps);
     fpsText.setOutText(txt).setPrim();
-    oldfps = timer._fps;
+    oldfps = (float)timer._fps;
   }
 
   fpsText.draw();
@@ -701,17 +701,5 @@ void Render::endFrame( void )
   _pixelPrims.clear();
   _unormPrims.clear();
 } /* End of 'Render::endFrame' function */
-
-/* Getting screen width function */
-int Render::getScreenWidth(void) const
-{
-  return Win::_width;
-} /* End of 'Render::getScreenWidth' function */
-
-/* Getting screen height function */
-int Render::getScreenHeight(void) const
-{
-  return Win::_height;
-} /* End of 'Render::getScreenHeight' function */
 
 /* END OF 'render.cpp' FILE */

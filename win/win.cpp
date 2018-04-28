@@ -4,7 +4,7 @@
  * FILE: win.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 28.04.2018
  * NOTE: windows handle class implementation file
  */
 
@@ -131,16 +131,28 @@ WPARAM Win::run( VOID )
 } /* End of 'Win::run' function */
 
 /* Get window handler function */
-HWND Win::getHWnd( void )
+HWND Win::getHWnd( void ) const
 {
   return _hWnd;
 } /* End of 'Win::getHWnd' function */
 
 /* Get window handler function */
-HINSTANCE Win::getHInstanse( void )
+HINSTANCE Win::getHInstanse( void ) const
 {
   return _hInstance;
 } /* End of 'Win::getHInstanse' function */
+
+/* Get window width function */
+int Win::getWidth(void) const
+{
+  return _width;
+} /* End of 'Win::getWidth' function */
+
+/* Get window height function */
+int Win::getHeight(void) const
+{
+  return _height;
+} /* End of 'Win::getHeight' function */
 
 /* WM_CREATE window message handle function */
 bool Win::onCreate( CREATESTRUCT *CS )

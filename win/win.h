@@ -4,7 +4,7 @@
  * FILE: win.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 13.04.2018
+ * LAST UPDATE: 28.04.2018
  * NOTE: windows handle class declaration file
  */
 
@@ -48,10 +48,16 @@ public:
   } /* End of 'resize' function */
 
   /* Get window handler function */
-  HWND getHWnd( void );
+  HWND getHWnd( void ) const;
 
   /* Get window handler function */
-  HINSTANCE getHInstanse( void );
+  HINSTANCE getHInstanse( void ) const;
+
+    /* Get window width function */
+  int getWidth(void) const;
+
+  /* Get window height function */
+  int getHeight(void) const;
 
   /* WM_CREATE window message handle function */
    bool onCreate( CREATESTRUCT *CS );

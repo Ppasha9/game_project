@@ -4,7 +4,7 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 28.04.2018
  * NOTE: render handle declaration file
  */
 
@@ -36,8 +36,8 @@ namespace render
     /* Zwrite mode enum */
     enum struct ZWriteMode
     {
-      ON,    // all write zclipping mode
-      OFF   // zero write zclipping mode
+      ON,
+      OFF
     }; /* End of 'ZWriteMode' enum */
 
     /* Spliting the screen mode */
@@ -56,11 +56,11 @@ namespace render
     }; /* End of 'BlendMode' enum */
 
   private:
-    PrimMap _primitives;    // Registered primitives map
-    MaterialMap _materials; // Registered materials map
-    ShaderMap _shaders;     // Registered shaders map
-    TextureMap _textures;   // Registered textures map
-    GeomMap _geometries;    // Registered geometry map
+    PrimMap _primitives;
+    MaterialMap _materials;
+    ShaderMap _shaders;
+    TextureMap _textures;
+    GeomMap _geometries;
 
     using PrimVector = std::vector<Prim *>;
     PrimVector _frustumPrims;
@@ -112,7 +112,7 @@ namespace render
     /* Initialize DirectX function */
     void init( int Width, int Height, HWND hWnd );
 
-    /* Initing blend states function */
+    /* Initialize blend states function */
     void initBlendStates(void);
 
     /* Create default resources function */
@@ -208,16 +208,10 @@ namespace render
     void setCamera( int Id, bool IsLookAt,
       const math::Vec3f &Loc, const math::Vec3f &Dir, const math::Vec3f &Up );
 
-    /* Getting screen width function */
-    int getScreenWidth(void) const;
-
-    /* Getting screen height function */
-    int getScreenHeight(void) const;
-
-    /* Setting z-write mode function */
+    /* Set z-write mode function */
     void setZWriteMode(const ZWriteMode Mode);
 
-    /* Setting blending mode function */
+    /* Set blending mode function */
     void setBlendMode(const BlendMode Mode);
 
     /***
@@ -264,7 +258,7 @@ namespace render
     /* Set material texture function */
     void setMaterialTexture( MaterialPtr &Mtl, TexturePtr &NewTexture, int TexNo );
 
-    /* Setting material coefficients */
+    /* Set material coefficients function */
     void setMaterialCoeffs(MaterialPtr &Mtl, const Material::Coeffs &Coeffs);
 
     /* Realease material function */

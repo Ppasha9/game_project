@@ -85,14 +85,14 @@
     <Filter Include="Source Files\Render support\Light system">
       <UniqueIdentifier>{9eabee06-2044-45e1-8bda-deedcddb9fcf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Render support\Timer">
-      <UniqueIdentifier>{972caea8-6af7-423e-a22d-36aed0788bb4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Render support\Resources\Text">
       <UniqueIdentifier>{91fd3073-d5e7-4b39-b7d1-77df1203d725}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Shaders\Text">
       <UniqueIdentifier>{9ed18ee0-440a-4198-8aa2-34dec7fbf615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Timer">
+      <UniqueIdentifier>{972caea8-6af7-423e-a22d-36aed0788bb4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +163,7 @@
       <Filter>Source Files\Window handle</Filter>
     </ClCompile>
     <ClCompile Include="render\timer\timer.cpp">
-      <Filter>Source Files\Render support\Timer</Filter>
+      <Filter>Source Files\Timer</Filter>
     </ClCompile>
     <ClCompile Include="physics\collision\bounding volumes\contact.cpp">
       <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
@@ -270,7 +270,7 @@
       <Filter>Source Files\Render support\Light system</Filter>
     </ClInclude>
     <ClInclude Include="render\timer\timer.h">
-      <Filter>Source Files\Render support\Timer</Filter>
+      <Filter>Source Files\Timer</Filter>
     </ClInclude>
     <ClInclude Include="render\text\text.h">
       <Filter>Source Files\Render support\Resources\Text</Filter>

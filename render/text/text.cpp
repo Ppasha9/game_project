@@ -4,7 +4,7 @@
  * FILE: text.cpp
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 28.04.2018
  * NOTE: text class definition module
  */
 
@@ -140,7 +140,7 @@ void Text::getPrimSize(void)
   _maxLetterWidth = _font._fntChars[_outStr[0]]._width;
   _maxYOffset = _font._fntChars[_outStr[0]]._yOffset;
 
-  for (int i(1); i < _outStr.size(); i++)
+  for (unsigned int i = 1; i < _outStr.size(); i++)
   {
     if (_font._fntChars[_outStr[i]]._height > _maxLetterHeight)
       _maxLetterHeight = _font._fntChars[_outStr[i]]._height;
@@ -178,7 +178,7 @@ Text & Text::setPrim(void)
     size = _fontSize;   /* Font size */
 
   float maxx = 0, maxy = 0;
-  int
+  unsigned int
     shiftX = 0,                       /* Current letters count */
     shift = 0,                        /* Shift in vertex array */
     vertexCount = 4 * _outStr.size(), /* Vertex points count */
@@ -189,7 +189,7 @@ Text & Text::setPrim(void)
   std::vector<unsigned long> indices(indexCount);
 
   /* While there is text to convert */
-  for (int i = 0; i < _outStr.size(); i++)
+  for (unsigned int i = 0; i < _outStr.size(); i++)
   {
     /* Character information pointer */
     Text::Font::CHAR_INFO *cd = &_font._fntChars[_outStr[i]];
@@ -253,8 +253,8 @@ Text & Text::setPrim(void)
   render.releasePrimGeom(_prim);
   render.setPrimGeom(_prim, render.createGeom(_name + "_geom", geom::Geom().createTrimesh(vertices, indices)));
 
-  _width = maxx;
-  _height = maxy;
+  _width = (int)maxx;
+  _height = (int)maxy;
 
   return *this;
 } /* End of 'setPrim' function */
@@ -264,7 +264,7 @@ void Text::createDefPrim(void)
 {
   render::Render &render = render::Render::getInstance();
   render.releasePrim(_prim);
-  _prim = render.createPrim(_name, render.createGeom(_name + "_geom", geom::Geom()), nullptr, render.getShader("text"), Prim::ProjMode::SCREENSPACE_PIXEL);
+  _prim = render.createPrim(_name, render.createGeom(_name + "_geom", geom::Geom()), nullptr, render.createShader("text"), Prim::ProjMode::SCREENSPACE_PIXEL);
   render.setMaterialCoeffs(_font._material, { _color });
   render.setPrimMaterial(_prim, _font._material);
 } /* End of 'createDefPrim' function */
@@ -350,28 +350,32 @@ void Text::draw(void)
     render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, 0, 0));
     break;
   case PLACEMENT::LEFT_CENTER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, ((float)render.getScreenHeight() - _height) / 2, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, ((float)render.getHeight() - _height) / 2, 0));
     break;
   case PLACEMENT::LEFT_DOWN:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, (float)render.getScreenHeight() - _height, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, (float)render.getHeight() - _height, 0));
     break;
   case PLACEMENT::RIGHT_UP:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getScreenWidth() - _width, 0, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getWidth() - _width, 0, 0));
     break;
   case PLACEMENT::RIGHT_CENTER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getScreenWidth() - _width, ((float)render.getScreenHeight() - _height) / 2, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getWidth() - _width,
+      ((float)render.getHeight() - _height) / 2, 0));
     break;
   case PLACEMENT::RIGHT_DOWN:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getScreenWidth() - _width, (float)render.getScreenHeight() - _height, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getWidth() - _width,
+      (float)render.getHeight() - _height, 0));
     break;
   case PLACEMENT::CENTER_UP:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getScreenWidth() - _width) / 2, 0, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2, 0, 0));
     break;
   case PLACEMENT::CENTER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getScreenWidth() - _width) / 2, ((float)render.getScreenHeight() - _height) / 2, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2,
+      ((float)render.getHeight() - _height) / 2, 0));
     break;
   case PLACEMENT::CENTER_DOWN:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getScreenWidth() - _width) / 2, (float)render.getScreenHeight() - _height, 0));
+    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2,
+      (float)render.getHeight() - _height, 0));
     break;
   }
 
