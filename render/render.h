@@ -4,7 +4,7 @@
  * FILE: render.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 28.04.2018
+ * LAST UPDATE: 12.05.2018
  * NOTE: render handle declaration file
  */
 
@@ -62,7 +62,13 @@ namespace render
     TextureMap _textures;
     GeomMap _geometries;
 
-    using PrimVector = std::vector<Prim *>;
+    struct PrimMatr
+    {
+      Prim *_prim;
+      math::Matr4f _matr;
+    };
+
+    using PrimVector = std::vector<PrimMatr>;
     PrimVector _frustumPrims;
     PrimVector _pixelPrims;
     PrimVector _unormPrims;
@@ -158,7 +164,7 @@ namespace render
     void drawGeom( Geom *G );
 
     /* Draw primitive function */
-    void drawPrim( Prim *P );
+    void drawPrim( const PrimMatr &P );
 
     /* Release texture function */
     static void releaseTexture( Render *Rnd, Texture *Tex );
@@ -301,9 +307,6 @@ namespace render
     /* Get primitive interface function */
     PrimPtr getPrim( const string &PrimName ) const;
 
-    /* Set primitive world matrix function */
-    void setPrimMatrix( PrimPtr &P, const math::Matr4f &World );
-
     /* Set primitive shader function */
     void setPrimShader( PrimPtr &P, ShaderPtr &NewShader );
 
@@ -320,7 +323,7 @@ namespace render
     void releasePrimGeom( PrimPtr &P );
 
     /* Register primitive for rendering on this frame function */
-    void drawPrim( PrimPtr &P );
+    void drawPrim( PrimPtr &P, const math::Matr4f &World );
 
     /* Realease primitive function */
     void releasePrim( PrimPtr &P );

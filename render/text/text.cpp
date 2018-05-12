@@ -4,7 +4,7 @@
  * FILE: text.cpp
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 28.04.2018
+ * LAST UPDATE: 12.05.2018
  * NOTE: text class definition module
  */
 
@@ -340,46 +340,48 @@ Text & Text::setPlacement(const PLACEMENT NewPlacement)
 void Text::draw(void)
 {
   render::Render &render = render::Render::getInstance();
+  math::Matr4f world;
+
 
   switch (_placement)
   {
   case PLACEMENT::USER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)_x, (float)_y, 0));
+    world = math::Matr4f::getTranslate((float)_x, (float)_y, 0);
     break;
   case PLACEMENT::LEFT_UP:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, 0, 0));
+    world = math::Matr4f::getTranslate(0, 0, 0);
     break;
   case PLACEMENT::LEFT_CENTER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, ((float)render.getHeight() - _height) / 2, 0));
+    world = math::Matr4f::getTranslate(0, ((float)render.getHeight() - _height) / 2, 0);
     break;
   case PLACEMENT::LEFT_DOWN:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(0, (float)render.getHeight() - _height, 0));
+    world = math::Matr4f::getTranslate(0, (float)render.getHeight() - _height, 0);
     break;
   case PLACEMENT::RIGHT_UP:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getWidth() - _width, 0, 0));
+    world = math::Matr4f::getTranslate((float)render.getWidth() - _width, 0, 0);
     break;
   case PLACEMENT::RIGHT_CENTER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getWidth() - _width,
-      ((float)render.getHeight() - _height) / 2, 0));
+    world = math::Matr4f::getTranslate((float)render.getWidth() - _width,
+      ((float)render.getHeight() - _height) / 2, 0);
     break;
   case PLACEMENT::RIGHT_DOWN:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate((float)render.getWidth() - _width,
-      (float)render.getHeight() - _height, 0));
+    world = math::Matr4f::getTranslate((float)render.getWidth() - _width,
+      (float)render.getHeight() - _height, 0);
     break;
   case PLACEMENT::CENTER_UP:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2, 0, 0));
+    world = math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2, 0, 0);
     break;
   case PLACEMENT::CENTER:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2,
-      ((float)render.getHeight() - _height) / 2, 0));
+    world = math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2,
+      ((float)render.getHeight() - _height) / 2, 0);
     break;
   case PLACEMENT::CENTER_DOWN:
-    render.setPrimMatrix(_prim, math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2,
-      (float)render.getHeight() - _height, 0));
+    world = math::Matr4f::getTranslate(((float)render.getWidth() - _width) / 2,
+      (float)render.getHeight() - _height, 0);
     break;
   }
 
-  render.drawPrim(_prim);
+  render.drawPrim(_prim, world);
 } /* End of 'draw' function */
 
 /* END OF 'text.cpp' FILE */

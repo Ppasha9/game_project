@@ -4,7 +4,7 @@
  * FILE: render_prim.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 12.05.2018
  * NOTE: render primitive resource handle implementation file
  */
 
@@ -28,7 +28,6 @@ PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
   P->_shader = getShader(ShName);
   P->_fillMode = FillM;
   P->_projMode = ProjM;
-  P->_world = math::Matr4f().setIdentity();
 
   _primitives.add(PrimName, P);
 
@@ -51,7 +50,6 @@ PrimPtr Render::createPrim( const string &PrimName, const GeomPtr &Geometry,
   P->_shader = Sh;
   P->_fillMode = FillM;
   P->_projMode = ProjM;
-  P->_world = math::Matr4f().setIdentity();
 
   _primitives.add(PrimName, P);
 
@@ -63,12 +61,6 @@ PrimPtr Render::getPrim( const string &PrimName ) const
 {
   return _primitives.get(PrimName);
 } /* End of 'Render::getPrim' function */
-
-/* Set primitive world matrix function */
-void Render::setPrimMatrix( PrimPtr &P, const math::Matr4f &World )
-{
-  P._resource->_world = World;
-} /* End of 'setPrimMatrix' function */
 
 /* Set primitive shader function */
 void Render::setPrimShader( PrimPtr &P, ShaderPtr &NewShader )
@@ -83,16 +75,16 @@ void Render::setPrimMaterial( PrimPtr &P, MaterialPtr &NewMaterial )
 } /* End of 'Render::setPrimMaterial' function */
 
 /* Draw primitive function */
-void Render::drawPrim( Prim *P )
+void Render::drawPrim( const PrimMatr &P )
 {
-  applyShader(P->_shader);
-  _constBuffer._data._world = P->_world;
-  applyMaterial(P->_material);
+  applyShader(P._prim->_shader);
+  _constBuffer._data._world = P._matr;
+  applyMaterial(P._prim->_material);
 
-  setFillMode(P->_fillMode);
+  setFillMode(P._prim->_fillMode);
 
   updateConstBuffer();
-  drawGeom(P->_geometry._resource);
+  drawGeom(P._prim->_geometry._resource);
 } /* End of 'Render::drawPrim' function */
 
 /* Set primitive fill mode function */
@@ -102,7 +94,7 @@ void Render::setPrimFillMode( PrimPtr &P, Prim::FillMode NewFillMode )
 } /* End of 'Render::setPrimFillMode' function */
 
 /* Register primitive for rendering on this frame function */
-void Render::drawPrim( PrimPtr &P )
+void Render::drawPrim( PrimPtr &P, const math::Matr4f &World )
 {
   if (P._resource == nullptr)
     return;
@@ -110,13 +102,13 @@ void Render::drawPrim( PrimPtr &P )
   switch (P._resource->_projMode)
   {
   case Prim::ProjMode::FRUSTUM:
-    _frustumPrims.push_back(P._resource);
+    _frustumPrims.push_back({P._resource, World});
     break;
   case Prim::ProjMode::SCREENSPACE_PIXEL:
-    _pixelPrims.push_back(P._resource);
+    _pixelPrims.push_back({P._resource, World});
     break;
   case Prim::ProjMode::SCREENSPACE_UNORM:
-    _unormPrims.push_back(P._resource);
+    _unormPrims.push_back({P._resource, World});
     break;
   }
 } /* End of 'Render::drawPrim' function */

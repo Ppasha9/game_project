@@ -7,7 +7,7 @@
  *   Denisov Pavel,
  *   Kozlov Ilya,
  *   Lebed Pavel
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 12.05.2018
  * NOTE: main project file
  */
 
@@ -23,6 +23,8 @@ void dummyResponse( void )
 
   rnd.setSplitScreen(render::Render::SplitScreenMode::FULL);
 
+  physSys.response();
+
   static float angle = 0;
   angle += 0.030f;
 
@@ -30,9 +32,9 @@ void dummyResponse( void )
   static render::PrimPtr prim1 = rnd.getPrim("test_prim1");
   static render::PrimPtr primPlane = rnd.getPrim("plane");
 
-  rnd.drawPrim(prim);
-  rnd.drawPrim(prim1);
-  rnd.drawPrim(primPlane);
+  rnd.drawPrim(prim, physSys.getObjectMatrix("test_prim"));
+  rnd.drawPrim(prim1, physSys.getObjectMatrix("test_prim1"));
+  rnd.drawPrim(primPlane, physSys.getObjectMatrix("plane"));
 
   static phys::PhysObject *sphere = physSys.getObject("test_prim");
   static phys::PhysObject *sphere1 = physSys.getObject("test_prim1");
