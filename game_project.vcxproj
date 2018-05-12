@@ -171,6 +171,7 @@
     <ClCompile Include="render\render_texture.cpp" />
     <ClCompile Include="render\text\text.cpp" />
     <ClCompile Include="render\timer\timer.cpp" />
+    <ClCompile Include="scene\scene.cpp" />
     <ClCompile Include="win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +209,7 @@
     <ClInclude Include="render\texture.h" />
     <ClInclude Include="render\text\text.h" />
     <ClInclude Include="render\timer\timer.h" />
+    <ClInclude Include="scene\scene.h" />
     <ClInclude Include="win\win.h" />
   </ItemGroup>
   <ItemGroup>

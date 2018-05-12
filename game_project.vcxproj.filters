@@ -85,14 +85,20 @@
     <Filter Include="Source Files\Render support\Light system">
       <UniqueIdentifier>{9eabee06-2044-45e1-8bda-deedcddb9fcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Render support\Timer">
+      <UniqueIdentifier>{972caea8-6af7-423e-a22d-36aed0788bb4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Render support\Resources\Text">
       <UniqueIdentifier>{91fd3073-d5e7-4b39-b7d1-77df1203d725}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Shaders\Text">
       <UniqueIdentifier>{9ed18ee0-440a-4198-8aa2-34dec7fbf615}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Timer">
-      <UniqueIdentifier>{972caea8-6af7-423e-a22d-36aed0788bb4}</UniqueIdentifier>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{cce063d3-a628-4c88-9169-7bc2c827b585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{36d3331e-c348-4db6-bbdb-8e7c44be3b7a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,13 +169,19 @@
       <Filter>Source Files\Window handle</Filter>
     </ClCompile>
     <ClCompile Include="render\timer\timer.cpp">
-      <Filter>Source Files\Timer</Filter>
+      <Filter>Source Files\Render support\Timer</Filter>
     </ClCompile>
     <ClCompile Include="physics\collision\bounding volumes\contact.cpp">
       <Filter>Source Files\Physics system\Collision system\Bounding volumes</Filter>
     </ClCompile>
     <ClCompile Include="render\text\text.cpp">
       <Filter>Source Files\Render support\Resources\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="input\input.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\scene.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -270,10 +282,16 @@
       <Filter>Source Files\Render support\Light system</Filter>
     </ClInclude>
     <ClInclude Include="render\timer\timer.h">
-      <Filter>Source Files\Timer</Filter>
+      <Filter>Source Files\Render support\Timer</Filter>
     </ClInclude>
     <ClInclude Include="render\text\text.h">
       <Filter>Source Files\Render support\Resources\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="input\input.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\scene.h">
+      <Filter>Source Files\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
