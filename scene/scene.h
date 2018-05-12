@@ -1,7 +1,7 @@
 /*
  * Game project
  *
- * FILE: main.cpp
+ * FILE: scene.h
  * AUTHORS:
  *   Vasilyev Peter
  *   Denisov Pavel,

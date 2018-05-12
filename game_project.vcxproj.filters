@@ -100,6 +100,12 @@
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{36d3331e-c348-4db6-bbdb-8e7c44be3b7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scene\Player">
+      <UniqueIdentifier>{4cda0a01-b349-41ec-a286-a864297f6960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene\Ball">
+      <UniqueIdentifier>{38a65e44-d3f2-4d7d-ad33-d5b58c10b576}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -182,6 +188,12 @@
     </ClCompile>
     <ClCompile Include="scene\scene.cpp">
       <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\player\player.cpp">
+      <Filter>Source Files\Scene\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\ball\ball.cpp">
+      <Filter>Source Files\Scene\Ball</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +304,12 @@
     </ClInclude>
     <ClInclude Include="scene\scene.h">
       <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\player\player.h">
+      <Filter>Source Files\Scene\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\ball\ball.h">
+      <Filter>Source Files\Scene\Ball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
