@@ -7,7 +7,7 @@
  *   Denisov Pavel,
  *   Kozlov Ilya,
  *   Lebed Pavel
- * LAST UPDATE: 12.05.2018
+ * LAST UPDATE: 02.05.2018
  * NOTE: main project file
  */
 
@@ -31,18 +31,19 @@ void dummyResponse( void )
   static render::PrimPtr prim = rnd.getPrim("test_prim");
   static render::PrimPtr prim1 = rnd.getPrim("test_prim1");
   static render::PrimPtr primPlane = rnd.getPrim("plane");
+  static render::PrimPtr primBox = rnd.getPrim("test_box");
+  static render::PrimPtr primBox1 = rnd.getPrim("test_box1");
+
+  physSys.debugDraw();
 
   rnd.drawPrim(prim, physSys.getObjectMatrix("test_prim"));
   rnd.drawPrim(prim1, physSys.getObjectMatrix("test_prim1"));
   rnd.drawPrim(primPlane, physSys.getObjectMatrix("plane"));
-
-  static phys::PhysObject *sphere = physSys.getObject("test_prim");
-  static phys::PhysObject *sphere1 = physSys.getObject("test_prim1");
-  //sphere->addTorque({ 30, 69, 30 });
-  //sphere1->addTorque({ 30, 69, 30 });
+  rnd.drawPrim(primBox, physSys.getObjectMatrix("test_box"));
+  rnd.drawPrim(primBox1, physSys.getObjectMatrix("test_box1"));
 
   //rnd.setCamera(0, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
-  rnd.setCamera(0, true, { -60, 10, 60 }, { 0, 1, 0 }, { 0, 1, 0 });
+  rnd.setCamera(0, true, { -60, 20, 60 }, { 0, 1, 0 }, { 0, 1, 0 });
 
   rnd.setCamera(1, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
   rnd.setCamera(2, true, { 15 * (sin(angle / 3) + cos(angle / 3)), 10, 15 }, { 0, 0, -1 }, { 0, 1, 0 });
@@ -66,15 +67,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
   // init other stuff here
   auto tex = rnd.createTexture("default");
-  auto mtl = rnd.createMaterial("mtl", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
+  auto mtl = rnd.createMaterial("mtl", {{0.01f, 0.01f, 0.01f, 1}, {0.79f, 0.79f, 0.79f, 1}, {0.8f, 0.8f, 0.8f, 1}, 100});
   rnd.setMaterialTexture(mtl, tex, 0);
   rnd.setMaterialTexture(mtl, tex, 1);
   rnd.setMaterialTexture(mtl, tex, 2);
   rnd.setMaterialTexture(mtl, tex, 3);
   rnd.createGeom("obj", geom::Geom().loadObj("remade"));
   rnd.createGeom("sphere", geom::Geom().createSphere({ 0, 0, 0 }, 5, 300, 300));
-  //rnd.createGeom("obj", geom::Geom().createBox({0, 0, 0}, 3));
-  rnd.createPrim("test_prim", "sphere", "mtl", "default", render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::SOLID);
+  rnd.createGeom("sphere2", geom::Geom().createSphere({ 0, 0, 0 }, 2.5f, 300, 300));
+  rnd.createGeom("box", geom::Geom().createBox({ 0, 0, 0 }, 5));
+
+  rnd.createPrim("test_prim", "sphere", "mtl", "default");
 
   float rad = 5;
   math::Vec3f pos = { 0, 40, 0 };
@@ -82,23 +85,51 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   phys::PhysObject *sphere = new phys::PhysObject(pos, 1.0F / 50.0F, 0.9F, 0.9F);
   physSys.registerObject("test_prim", sphere, phys::bounding_volume_type::SPHERE, &rad);
   physSys.applyForceToObj("test_prim", &Grav);
+  //sphere->addRotation({ 0, 3, 0 });
 
   rnd.createPrim("plane", rnd.createGeom("plane", geom::Geom().createPlane({ -180, 0, -180 }, { 180, 0, 180 }, { 0, 1, 0 })));
   struct dummy
   {
     math::Vec3f _normal;
-    float _offset;
+    math::Vec3f _fPoint;
+    math::Vec3f _sPoint;
   } dumStruct;
   dumStruct._normal = { 0, 1, 0 };
-  dumStruct._offset = -2;
+  dumStruct._fPoint = { -180, -2, -180 };
+  dumStruct._sPoint = { 180, -2, 180 };
   physSys.registerObject("plane", { 0, -2, 0 }, 0, 1, 1, phys::bounding_volume_type::PLANE, &dumStruct);
 
   pos = { -40, 30, 0 };
-  rnd.createPrim("test_prim1", "sphere", "mtl", "default", render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME);
+  rnd.createPrim("test_prim1", "sphere", "mtl", "default");
   phys::PhysObject *sphere1 = new phys::PhysObject(pos, 1.0F / 50.0F, 0.9F, 0.9F);
   physSys.registerObject("test_prim1", sphere1, phys::bounding_volume_type::SPHERE, &rad);
   physSys.applyForceToObj("test_prim1", &Grav);
-  sphere1->addImpulse({ 360, 0, 0 });
+  sphere1->addImpulse({ 480, 0, 0 });
+  //sphere1->addRotation({ 0, 3, 0 });
+
+  pos = { 40, 20, 0 };
+  struct dummyBox
+  {
+    math::Vec3f _dirVec;
+    math::Vec3f _rightVec;
+    float _halfHeight;
+  } boxStruct;
+  rnd.createPrim("test_box", "box", "mtl", "default");
+  boxStruct._dirVec = { 0, 0, -2.5F };
+  boxStruct._rightVec = { 2.5F, 0, 0 };
+  boxStruct._halfHeight = 2.5F;
+  phys::PhysObject *box = new phys::PhysObject(pos, 1.0F / 30.0F, 0.9F, 0.9F);
+  physSys.registerObject("test_box", box, phys::bounding_volume_type::BOX, &boxStruct);
+  physSys.applyForceToObj("test_box", &Grav);
+  box->addImpulse({ -400, 0, 0 });
+  //box->addRotation({ 0, 3, 0 });
+
+  pos = { 0, 35, 40 };
+  rnd.createPrim("test_box1", "box", "mtl", "default");
+  box = new phys::PhysObject(pos, 1.0F / 30.0F, 0.9F, 0.9F);
+  physSys.registerObject("test_box1", box, phys::bounding_volume_type::BOX, &boxStruct);
+  physSys.applyForceToObj("test_box1", &Grav);
+  box->addImpulse({ 0, 0, -420 });
 
   rnd.run();
 

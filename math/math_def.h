@@ -31,6 +31,7 @@ namespace math
 
   /// Some Types predefinition
   // Vector predifinitions
+  using Vec2i = Vector<2, int>;
   using Vec2f = Vector<2, float>;
   using Vec3f = Vector<3, float>;
   using Vec3d = Vector<3, double>;

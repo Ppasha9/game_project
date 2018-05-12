@@ -62,6 +62,9 @@ namespace phys
     /* Integrate function */
     void integrate(void);
 
+    /* Drawing debug primitives function */
+    void debugDraw(void) const;
+
     /* Class destructor */
     ~ContactDetector(void);
   }; /* End of 'ContactDetector' class */

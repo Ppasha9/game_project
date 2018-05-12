@@ -296,13 +296,13 @@ namespace render
     PrimPtr createPrim( const string &PrimName, const string &GeomName,
       const string &MtlName = "default", const string &ShName = "default",
       Prim::ProjMode ProjM = Prim::ProjMode::FRUSTUM,
-      Prim::FillMode FillM = Prim::FillMode::SOLID );
+      Prim::FillMode FillM = Prim::FillMode::SOLID, bool IsPhys = true );
 
     /* Create primitive function */
     PrimPtr createPrim( const string &PrimName, const GeomPtr &Geometry,
       const MaterialPtr &Mtl = nullptr, const ShaderPtr &Sh = nullptr,
       Prim::ProjMode ProjM = Prim::ProjMode::FRUSTUM,
-      Prim::FillMode FillM = Prim::FillMode::SOLID );
+      Prim::FillMode FillM = Prim::FillMode::SOLID, bool IsPhys = true );
 
     /* Get primitive interface function */
     PrimPtr getPrim( const string &PrimName ) const;

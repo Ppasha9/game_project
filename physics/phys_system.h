@@ -53,6 +53,9 @@ namespace phys
     /* Getting the pointer to physics object function */
     PhysObject * getObject(const std::string &Name);
 
+    /* Drawing debug primitives function */
+    void debugDraw(void) const;
+
     /* Class destructor */
     ~PhysicsSystem(void);
   }; /* End of 'PhysicsSystem' class */

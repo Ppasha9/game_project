@@ -55,7 +55,7 @@ void PhysObject::calculateDerivedData(void)
 /* Setting inverse inertia tensor function */
 void PhysObject::setInertiaTensor(const math::Matr3f &InertiaTensor)
 {
-  _inverseInertiaTensor = math::Matr3f(InertiaTensor.getInverse());
+  _inverseInertiaTensor = InertiaTensor.getInverse();
 } /* End of 'setInertiaTensor' function */
 
 /* Adding force to center mass of object function */
@@ -235,21 +235,19 @@ void PhysObject::integrate(float Duration)
 
   // Impose drag.
   _velocity *= pow(_linearDamping, Duration);
-  //_rotation *= pow(_angularDamping, Duration);
+  _rotation *= pow(_angularDamping, Duration);
 
   // Adjust positions
   // Update linear position.
   _position += _velocity * Duration;
 
   // Update angular position.
-  //_orientation *= math::Quatf(_rotation * Duration, 1);
-
   if (hasFiniteMass())
     _orientation.addScaledVector(_rotation, Duration);
 
   // Impose drag.
-  //_velocity *= pow(_linearDamping, Duration);
-  //_rotation *= pow(_angularDamping, Duration);
+  _velocity *= pow(_linearDamping, Duration);
+  _rotation *= pow(_angularDamping, Duration);
 
   // Normalize the orientation, and update the matrices with the new position and orientation.
   calculateDerivedData();

@@ -4,7 +4,7 @@
  * FILE: bounding_plane.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 02.05.2018
  * NOTE: plane bounding volume declaration file
  */
 
@@ -27,7 +27,12 @@ namespace phys
   private:
     /* Plane's normal vector */
     math::Vec3f _normal;
-    /* Offset of the plane */
+    /* Two boundary points of the plane */
+    math::Vec3f _fPoint;
+    math::Vec3f _sPoint;
+    /* Offset of the plane.
+     * Distance to a (0, 0, 0) point
+     */
     float _offset;
 
   public:
@@ -35,10 +40,16 @@ namespace phys
     BoundingPlane(void) = default;
 
     /* Class constructor */
-    BoundingPlane(PhysObject *Obj, const math::Vec3f &Normal, const float Offset);
+    BoundingPlane(PhysObject *Obj, const math::Vec3f &Normal, const math::Vec3f &FPoint, const math::Vec3f &SPoint, const std::string &ObjName);
 
     /* Getting plane normal function */
     math::Vec3f getNormal(void) const;
+
+    /* Getting plane offset function */
+    math::Vec3f getFPoint(void) const;
+
+    /* Getting plane offset function */
+    math::Vec3f getSPoint(void) const;
 
     /* Getting plane offset function */
     float getOffset(void) const;

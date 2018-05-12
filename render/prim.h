@@ -47,6 +47,8 @@ namespace render
     FillMode _fillMode;
     ProjMode _projMode;
 
+    bool _isPhys;
+
     /* Create primitive function */
     Prim( const string &PrimName ) : Resource(PrimName) {}
   }; /* End of 'Prim' class */

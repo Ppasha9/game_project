@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="geometry\geometry.cpp" />
+    <ClCompile Include="input\input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="physics\collision\bounding volumes\bounding_box.cpp" />
     <ClCompile Include="physics\collision\bounding volumes\bounding_plane.cpp" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="def.h" />
     <ClInclude Include="geometry\geometry.h" />
+    <ClInclude Include="input\input.h" />
     <ClInclude Include="math\math_def.h" />
     <ClInclude Include="math\matrix.h" />
     <ClInclude Include="math\quat.h" />

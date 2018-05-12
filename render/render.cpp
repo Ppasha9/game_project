@@ -19,6 +19,7 @@
 #include "render.h"
 #include "..\\render\timer\timer.h"
 #include "text\text.h"
+#include "../physics/phys_system.h"
 
 using namespace render;
 
@@ -602,6 +603,7 @@ void Render::render( void )
   fpsText.draw();
 
   /* -------------- */
+  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
   startFrame();
 
