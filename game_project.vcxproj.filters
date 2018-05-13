@@ -115,6 +115,9 @@
     <Filter Include="Source Files\Menu system\Button\Button Click">
       <UniqueIdentifier>{1cd6c26a-1c2b-4c7d-ab85-df2b78cb2d55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sound">
+      <UniqueIdentifier>{e773e4e7-3df3-48bd-817b-f36aed15028f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -206,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="scene\ball\ball.cpp">
       <Filter>Source Files\Scene\Ball</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\sound.cpp">
+      <Filter>Source Files\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +337,12 @@
     </ClInclude>
     <ClInclude Include="scene\ball\ball.h">
       <Filter>Source Files\Scene\Ball</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\sound.h">
+      <Filter>Source Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\wave.h">
+      <Filter>Source Files\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
