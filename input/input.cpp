@@ -178,18 +178,29 @@ bool Input::MouseUpdate( void )
 {
   if (!IsMouseAvailable())
     return false;
+  
+  // Copy last state
+  std::memcpy(&_mouseLastState, &_mouseState, sizeof(DIMOUSESTATE2));
+
+
   // Acquire device
   HRESULT hr;
 
   // Read the mouse device.
-  hr = _mouseDevice->GetDeviceState(sizeof(DIMOUSESTATE), &_mouseState);
+  hr = _mouseDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &_mouseState);
 
   if (FAILED(hr))
-    // If the mouse lost focus or was not acquired then try to get control back.
+  {  // If the mouse lost focus or was not acquired then try to get control back.
     if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
       hr = _mouseDevice->Acquire();
-  if (FAILED(hr))
-    return false;
+    if (FAILED(hr))
+      return false;
+    // Read the mouse device.
+    hr = _mouseDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &_mouseState);
+    if (FAILED(hr))
+      return false;
+  }
+
   // Clump mouse position
   Render &render = Render::getInstance();
   int width = render.getWidth();
@@ -204,9 +215,6 @@ bool Input::MouseUpdate( void )
     _mouseState.lY = 0;
   else if (_mouseState.lY > height)
     _mouseState.lY = height;
-
-  // Copy last state
-  std::memcpy(&_mouseLastState, &_mouseState, sizeof(DIMOUSESTATE2));
 
   return true;
 } /* End of 'Input::MouseUpdate' function */
