@@ -20,7 +20,7 @@ BoundingPlane::BoundingPlane(PhysObject *Obj, const math::Vec3f &Normal, const m
 {
   render::Render &rnd = render::Render::getInstance();
   rnd.createPrim(_primName, rnd.createGeom(ObjName + "_plane", geom::Geom().createPlane(FPoint, SPoint, Normal)), rnd.getMaterial("mtl"), rnd.getShader("default"),
-    render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME, false);
+    render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME);
 } /* End of constructor */
 
 /* Getting plane normal function */

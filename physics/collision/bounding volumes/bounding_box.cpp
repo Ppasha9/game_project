@@ -38,7 +38,7 @@ BoundingBox::BoundingBox(PhysObject *Obj, const math::Vec3f &DirHalfVec, const m
 
   render::Render &rnd = render::Render::getInstance();
   rnd.createPrim(_primName, rnd.createGeom(ObjName + "_box", geom::Geom().createBox({ 0, 0, 0 }, 2.0f * HalfHeight)), rnd.getMaterial("mtl"), rnd.getShader("default"),
-    render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME, false);
+    render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME);
 } /* End of constructor */
 
 /* Update current vertices position function */

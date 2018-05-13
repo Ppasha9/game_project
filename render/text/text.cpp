@@ -50,8 +50,6 @@ Text::Font::Font(FONT_ID Id)
     _fonts[6].load("sans");
     _fonts[6]._id = FONT_ID::SANS;
   }
-    else
-      return;
 
   *this = _fonts[(int)Id - 1];
 } /* End of constructor */
@@ -340,8 +338,7 @@ Text & Text::setPlacement(const PLACEMENT NewPlacement)
 void Text::draw(void)
 {
   render::Render &render = render::Render::getInstance();
-  math::Matr4f world;
-
+  math::Matr4f world; 
 
   switch (_placement)
   {

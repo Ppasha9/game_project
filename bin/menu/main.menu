@@ -1,0 +1,15 @@
+button_click_begin
+	name "start"
+	rect 0.5 0.4 0.1 0.1
+	coldef 200 235 134
+	colhover 220 255 154
+	coltext 0 0 0
+button_click_end
+
+button_click_begin
+	name "exit"
+	rect 0.5 0.6 0.1 0.1
+	coldef 200 235 134
+	colhover 220 255 154
+	coltext 0 0 0
+button_click_end

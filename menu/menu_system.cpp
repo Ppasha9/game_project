@@ -50,7 +50,10 @@ MenuSystem::MenuSystem( std::ifstream & In )
   string name = "main", text;
 
   render::Render &inst = render::Render::getInstance();
-  inst.createGeom("button_plane", geom::Geom().createPlane({0, 1, 0}, {1, 0, 0}, {0, 0, 0}));
+  inst.createGeom("button_plane", geom::Geom().createPlane({0, 0, 0}, {1, 1, 0}, {0, 0, 1}));
+
+  if (!In.is_open())
+    return;
 
   while (!In.eof())
   {
@@ -77,12 +80,10 @@ MenuSystem::MenuSystem( std::ifstream & In )
 
       string mtlName = name;
       mtlName.append("_mtl");
-
-      string geomName = name;
-      mtlName.append("_mtl");
       inst.createMaterial(mtlName, {colorDef, {0, 0, 0, 1}, {0, 0, 0, 1}, 1});
+      inst.setMaterialTexture(inst.getMaterial(mtlName), inst.createTexture("flat_color.tga"), 0);
 
-      render::PrimPtr bp = inst.createPrim(name, "button_plane", mtlName);
+      render::PrimPtr bp = inst.createPrim(name, inst.getGeom("button_plane"), inst.getMaterial(mtlName), inst.createShader("text"), render::Prim::ProjMode::SCREENSPACE_PIXEL);
       ButtonPrims.push_back(bp);
     }
     else if (params[0] == "name")
@@ -152,12 +153,12 @@ void MenuSystem::render()
   {
     math::Matr4f scale(1);
     Rect r = Buttons[i]->getRect();
-    scale._values[0][0] *= 1 / r._w;
-    scale._values[1][1] *= 1 / r._h;
-
+    scale = math::Matr4f().getScale(math::Vec4f{r._w * inst.getWidth(), r._h * inst.getHeight(), 1, 1});
     math::Matr4f tran(1);
-    tran.getTranslate(r._x0, r._y0, 0);
+    tran = math::Matr4f().getTranslate(r._x0 * inst.getWidth(), r._y0 * inst.getHeight(), 0);
 
     inst.drawPrim(ButtonPrims[i], scale * tran);
+
+    //render::Text mousePosText = render::Text("mouse_pos_text", "Mouse Pos: 0 0", 100, 200, render::Text::Font::FONT_ID::ARIAL, 30, {1, 1, 1, 1});
   }
 } /* End of 'MenuSystem::render' function */

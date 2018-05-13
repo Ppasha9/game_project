@@ -278,8 +278,8 @@ void Render::init( int Width, int Height, HWND hWnd )
 
   // Setup the raster description
   raster_desc.AntialiasedLineEnable = false;
-  raster_desc.CullMode = D3D11_CULL_BACK;
-  //raster_desc.CullMode = D3D11_CULL_NONE;
+  //raster_desc.CullMode = D3D11_CULL_BACK;
+  raster_desc.CullMode = D3D11_CULL_NONE;
   raster_desc.DepthBias = 0;
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
@@ -589,7 +589,7 @@ void Render::render( void )
   /* Temporary code !!! */
   /* Until the scene class will be appeared !!! */
   Timer &timer = Timer::getInstance();
-  static Text fpsText = Text("fps", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::SANS, 30, { 1, 0, 0, 1 });
+  static Text fpsText = Text("fps_text", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::SANS, 30, { 1, 0, 0, 1 });
   static float oldfps = 0;
 
   if (oldfps != timer._fps)
