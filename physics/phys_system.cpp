@@ -111,4 +111,10 @@ void PhysicsSystem::debugDraw(void) const
   _detector.debugDraw();
 } /* End of 'debugDraw' function */
 
+/* Removing physic object function */
+void PhysicsSystem::removeObject(const std::string &Name)
+{
+  _detector.remove(Name);
+} /* End of 'removeObject' function */
+
 /* END OF 'phys_system.cpp' FILE */

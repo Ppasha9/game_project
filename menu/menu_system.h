@@ -40,7 +40,7 @@ public:
   MenuSystem( std::ifstream & In );
 
   /* Response function */
-  std::string response( bool Pressed, int X, int Y );
+  std::string response( bool Pressed, float X, float Y );
   /* Render function */
   void render();
 }; /* End of 'MenuSystem' class */

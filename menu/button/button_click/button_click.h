@@ -26,7 +26,7 @@ public:
   } /* End of constructor */
 
   /* Class constructor by "rect" */
-  ButtonClick( const string & Name = "click", const Rect & R = Rect(0.3, 0.3, 0.07, 0.03),
+  ButtonClick( const string & Name = "click", const Rect & R = Rect(0.3f, 0.3f, 0.07f, 0.03f),
                const math::Vec4f & ColDef = math::Vec4f({20, 235, 134, 1}), const math::Vec4f & ColHover = math::Vec4f({220, 255, 154, 1}),
                const math::Vec4f & ColText = math::Vec4f({0, 0, 0, 1}) ) : Button(Name, R, ColDef, ColHover, ColText)
   {

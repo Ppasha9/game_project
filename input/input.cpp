@@ -136,6 +136,13 @@ bool Input::KeyboardUpdate( void )
 
 bool Input::MouseInit( void )
 {
+  // Set start mouse pos
+  POINT p;
+  GetCursorPos(&p);
+  ScreenToClient(Render::getInstance().getHWnd(), &p);
+
+  _mousePos = {p.x, p.y};
+
   // Create keyboard device
   HRESULT hr = _inputObj->CreateDevice(GUID_SysMouse, &_mouseDevice, 0);
   if (FAILED(hr))
@@ -201,20 +208,27 @@ bool Input::MouseUpdate( void )
       return false;
   }
 
+  // Update mouse position
+  POINT p;
+  GetCursorPos(&p);
+  ScreenToClient(Render::getInstance().getHWnd(), &p);
+
+  _mousePos = {p.x, p.y};
+
   // Clump mouse position
   Render &render = Render::getInstance();
   int width = render.getWidth();
   int height = render.getHeight();
   // Clump X
-  if (_mouseState.lX < 0)
-    _mouseState.lX = 0;
-  else if (_mouseState.lX > width)
-    _mouseState.lX = width;
+  if (_mousePos._coords[0] < 0)
+    _mousePos._coords[0] = 0;
+  else if (_mousePos._coords[0] > width)
+    _mousePos._coords[0] = width;
   // Clump Y
-  if (_mouseState.lY < 0)
-    _mouseState.lY = 0;
-  else if (_mouseState.lY > height)
-    _mouseState.lY = height;
+  if (_mousePos._coords[1] < 0)
+    _mousePos._coords[1] = 0;
+  else if (_mousePos._coords[1] > height)
+    _mousePos._coords[1] = height;
 
   return true;
 } /* End of 'Input::MouseUpdate' function */
@@ -306,8 +320,18 @@ Vec3f Input::MouseSpeed( float Dt ) const
 
 Vec2i Input::MousePos( void ) const
 {
-  return Vec2i{_mouseState.lX, _mouseState.lY};
+  return Vec2i{_mousePos[0], _mousePos[1]};
 } /* End of 'Input::MousePos' function */
+
+Vec2f input::Input::MousePosf( void ) const
+{
+  Render &render = Render::getInstance();
+
+  float width = (float)render.getWidth();
+  float height = (float)render.getHeight();
+
+  return Vec2f{_mousePos[0] / width, _mousePos[1] / height};
+} /* End of 'input::Input::MousePosf' function */
 
 bool Input::MouseKeyHit( size_t Key ) const
 {

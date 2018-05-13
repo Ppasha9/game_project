@@ -31,6 +31,7 @@ namespace input
   using namespace math;
   using uvec = std::vector<UINT>;
 
+  const size_t MOUSE_LEFT = 0;
 
   // Defualt keyboard buttons count
   const size_t KEYBOARD_SIZE = 256;
@@ -48,8 +49,8 @@ namespace input
     DIMOUSESTATE2 _mouseState;                  // Real time mouse state
     DIMOUSESTATE2 _mouseLastState;              // Keyboard new hit state
 
+    Vec2i _mousePos;
     /// Joysticks
-
 
     Input( void );
 
@@ -110,6 +111,8 @@ namespace input
     Vec3f MouseSpeed( float Dt = 1.0f ) const; 
 
     Vec2i MousePos( void ) const;
+
+    Vec2f MousePosf( void ) const;
 
     bool MouseKeyHit( size_t Key ) const;
 

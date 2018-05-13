@@ -95,6 +95,13 @@ PhysObject * ContactDetector::getObject(const std::string &Name)
   return _boundingVolumes[Name]->getPhysObjectPointer();
 } /* End of 'getObject' function */
 
+void phys::ContactDetector::remove(const string & Name)
+{
+  auto &obj = _boundingVolumes.find(Name);
+  if (obj != _boundingVolumes.end())
+    _boundingVolumes.erase(obj);
+} /* End of 'phys::ContactDetector::remove' function */
+
 /* Drawing debug primitives function */
 void ContactDetector::debugDraw(void) const
 {

@@ -12,10 +12,12 @@
 
 #include "../../physics/phys_system.h"
 #include "../../render/render.h"
+#include "../../math/math_def.h"
 
 /* Scene namespace */
 namespace scene
 {
+  using namespace math;
   /* Player class */
   class Player
   {
@@ -46,8 +48,8 @@ namespace scene
     /* Primitive name */
     std::string _name;
 
-    /* Damping coeff */
-
+    /* The rotation vector on previous frame */
+    math::Vec3f _oldRot;
 
   public:
     /* Default class constructor */
@@ -59,8 +61,17 @@ namespace scene
     /* Action function */
     void action(const COMMAND_TYPE ComType);
 
+    Vec3f GetPos(void);
+
+    void SetPos(const Vec3f &Pos);
+
+    void AddForce(const Vec3f &Forse);
+
     /* Draw function */
     void draw(void);
+
+    /* Updating function */
+    void update(void);
 
     /* Class destructor */
     ~Player(void);

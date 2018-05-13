@@ -42,7 +42,7 @@ public:
   } /* End of constructor */
 
   /* Class constructor by "rect" */
-  Button( const string & Name = "test", const Rect & R = Rect(0.3, 0.3, 0.07, 0.03),
+  Button( const string & Name = "test", const Rect & R = Rect(0.3f, 0.3f, 0.07f, 0.03f),
           const math::Vec4f & ColDef = math::Vec4f({200, 235, 134, 1}), const math::Vec4f & ColHover = math::Vec4f({220, 255, 154, 1}),
           const math::Vec4f & ColText = math::Vec4f({0, 0, 0, 1}) ) : _name(Name), _r(R), _colDef(ColDef), _colCur(ColDef), _colHover(ColHover), _colText(ColText)
   {
@@ -51,7 +51,7 @@ public:
   /* Intersect mouse with button rectangle function */
   bool isInside( float X, float Y )
   {
-    return X > _r._x0 + _r._w || X < _r._x0 || Y > _r._y0 + _r._h || Y < _r._y0 == false;
+    return (X > _r._x0 + _r._w || X < _r._x0 || Y > _r._y0 + _r._h || Y < _r._y0) == false;
   } /* End of 'isInside' function */
 
   /* Getting button name */
@@ -70,6 +70,12 @@ public:
   math::Vec4f getColor()
   {
     return _colCur;
+  } /* End of 'getName' function */
+
+  /* Getting button current color */
+  math::Vec4f getTextColor()
+  {
+    return _colText;
   } /* End of 'getName' function */
 
   virtual void onHover()

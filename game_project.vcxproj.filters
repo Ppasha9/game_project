@@ -341,14 +341,14 @@
     <ClInclude Include="scene\player\player.h">
       <Filter>Source Files\Scene\Player</Filter>
     </ClInclude>
-    <ClInclude Include="scene\ball\ball.h">
-      <Filter>Source Files\Scene\Ball</Filter>
-    </ClInclude>
     <ClInclude Include="sound\sound.h">
       <Filter>Source Files\Sound</Filter>
     </ClInclude>
     <ClInclude Include="sound\wave.h">
       <Filter>Source Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\ball\ball.h">
+      <Filter>Source Files\Scene\Ball</Filter>
     </ClInclude>
     <ClInclude Include="scene\environment\environment.h">
       <Filter>Source Files\Scene\Environment</Filter>

@@ -9,6 +9,7 @@
  */
 
 #include "player.h"
+#include "../../physics/forces/gravity/gravity.h"
 using namespace scene;
 
 /* Impulse coefficient */
@@ -18,13 +19,14 @@ const float Player::RotationCoeff = 0.005f;
 
 /* Class constructor */
 Player::Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec, const std::string &Name) :
-  _obj(Obj), _dirVec(DirVec), _prim(Prim), _name(Name), _upVec({ 0, 1, 0 })
+  _obj(Obj), _dirVec(DirVec), _prim(Prim), _name(Name), _upVec({ 0, 1, 0 }), _oldRot({0, 0, 0})
 {
 } /* End of constructor */
 
 /* Class destructor */
 Player::~Player(void)
 {
+  phys::PhysicsSystem::getInstance().removeObject(_name);
   delete _obj;
 } /* End of destructor */
 
@@ -53,13 +55,35 @@ void Player::action(const COMMAND_TYPE ComType)
     _obj->addImpulse(-dirV3 * ImpulseCoeff);
     break;
   case COMMAND_TYPE::MoveLeft:
+    _obj->addRotation(-_oldRot);
     _obj->addRotation(upV3 * RotationCoeff);
+    _oldRot = upV3 * RotationCoeff;
     break;
   case COMMAND_TYPE::MoveRight:
+    _obj->addRotation(-_oldRot);
     _obj->addRotation(-upV3 * RotationCoeff);
+    _oldRot = -upV3 * RotationCoeff;
     break;
   }
 } /* End of 'action' function */
+
+Vec3f Player::GetPos(void)
+{
+  return _obj->getPos();
+} /* End of 'Player::GetPos' function */
+
+void Player::SetPos(const Vec3f &Pos)
+{
+  _obj->reset(Pos);
+  phys::Gravity Grav;
+  auto &instP = phys::PhysicsSystem::getInstance();
+  instP.applyForceToObj(_name, &Grav);
+} /* End of 'Player::SetPos' function */
+
+void Player::AddForce(const Vec3f &Force)
+{
+  _obj->addForce(Force);
+} /* End of 'Player::AddForce' function */
 
 /* Draw function */
 void Player::draw(void)
@@ -69,5 +93,13 @@ void Player::draw(void)
 
   rnd.drawPrim(_prim, physSys.getObjectMatrix(_name));
 } /* End of 'draw' function */
+
+/* Updating function */
+void Player::update(void)
+{
+  render::Timer &timer = render::Timer::getInstance();
+  float damp = _obj->getAngDamping();
+  _oldRot *= (float)pow(damp, timer._deltaTime);
+} /* End of 'update' function */
 
 /* END OF 'player.cpp' FILE */

@@ -225,7 +225,7 @@ namespace math
       double rad = Angle;
 
       if (IsDegree)
-        rad = Degree2Radian * Angle;
+        rad = Deg2Rad(Angle);
       Type cosa = (Type)cos(rad), sina = (Type)sin(rad);
 
       res._values[1][1] = cosa;
@@ -241,7 +241,7 @@ namespace math
       double rad = Angle;
 
       if (IsDegree)
-        rad = Degree2Radian * Angle;
+        rad = Deg2Rad(Angle);
       Type cosa = (Type)cos(rad), sina = (Type)sin(rad);
 
       res._values[0][0] = cosa;
@@ -257,7 +257,7 @@ namespace math
       double rad = Angle;
 
       if (IsDegree)
-        rad = Degree2Radian * Angle;
+        rad = Deg2Rad(Angle);
       Type cosa = (Type)cos(rad), sina = (Type)sin(rad);
 
       res._values[0][0] = cosa;
