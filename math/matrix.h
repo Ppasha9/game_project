@@ -209,6 +209,64 @@ namespace math
       return res;
     } /* End of 'getTranspose' function */
 
+    inline static Matrix<Rows, Columns, Type> getScale(const Vector<Rows, Type> &Svec)
+    {
+      Matrix<Columns, Rows, Type> res;                
+      res.setZero();
+
+      for (size_t j = 0; j < Rows; j++)
+          res._values[j][j] = Svec[j];
+      return res;
+    } /* End of 'getTranspose' function */
+
+    inline static Matrix<4, 4, Type> getRotateX(double Angle, bool IsDegree = true)
+    {
+      Matrix<4, 4, Type> res(1);
+      double rad = Angle;
+
+      if (IsDegree)
+        rad = Degree2Radian(Angle);
+      double cosa = cos(rad), sina = sin(rad);
+
+      res._values[1][1] = cosa;
+      res._values[1][2] = -sina;
+      res._values[2][1] = sina;
+      res._values[2][2] = cosa;
+      return res;
+    } /* End of 'getRotateX' function */
+
+    inline static Matrix<4, 4, Type> getRotateY(double Angle, bool IsDegree = true)
+    {
+      Matrix<4, 4, Type> res(1);
+      double rad = Angle;
+
+      if (IsDegree)
+        rad = Degree2Radian(Angle);
+      double cosa = cos(rad), sina = sin(rad);
+
+      res._values[0][0] = cosa;
+      res._values[0][2] = sina;
+      res._values[2][0] = -sina;
+      res._values[2][2] = cosa;
+      return res;
+    } /* End of 'getRotateY' function */
+
+    inline static Matrix<4, 4, Type> getRotateZ(double Angle, bool IsDegree = true)
+    {
+      Matrix<4, 4, Type> res(1);
+      double rad = Angle;
+
+      if (IsDegree)
+        rad = Degree2Radian(Angle);
+      double cosa = cos(rad), sina = sin(rad);
+
+      res._values[0][0] = cosa;
+      res._values[0][1] = -sina;
+      res._values[1][0] = sina;
+      res._values[1][1] = cosa;
+      return res;
+    } /* End of 'getRotateZ' function */
+
     /* Setting a translate matrix by vector function */
     inline static Matrix<4, 4, Type> getTranslate(const Vector<3, Type> &Vec)
     {
