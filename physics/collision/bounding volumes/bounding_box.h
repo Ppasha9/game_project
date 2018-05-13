@@ -73,6 +73,9 @@ namespace phys
     /* Getting boundary vertex position function */
     math::Vec3f getVertexPos(const int Index) const;
 
+    /* Drawing debug primitive function */
+    virtual void debugDraw(void) const;
+
     /*
      * Collision functions.
      */

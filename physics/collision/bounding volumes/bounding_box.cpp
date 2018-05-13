@@ -37,7 +37,7 @@ BoundingBox::BoundingBox(PhysObject *Obj, const math::Vec3f &DirHalfVec, const m
   updateVertices();
 
   render::Render &rnd = render::Render::getInstance();
-  rnd.createPrim(_primName, rnd.createGeom(ObjName + "_box", geom::Geom().createBox({ 0, 0, 0 }, 2.0f * HalfHeight)), rnd.getMaterial("mtl"), rnd.getShader("default"),
+  rnd.createPrim(_primName, rnd.createGeom(ObjName + "_box", geom::Geom().createBox({ 0, 0, 0 }, 1.0f)), rnd.getMaterial("mtl"), rnd.getShader("default"),
     render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME, false);
 } /* End of constructor */
 
@@ -357,5 +357,13 @@ std::vector<Contact> BoundingBox::getContactData(const BoundingVolume *Volume) c
     return getContactData((BoundingPlane *)Volume);
   return std::vector<Contact>();
 } /* End of 'getContactData' function */
+
+/* Drawing debug primitive function */
+void BoundingBox::debugDraw(void) const
+{
+  math::Matr4f scale = math::Matr4f().getScale({_rightHalfVec.length() * 2.0f, _halfHeight * 2.0f, _dirHalfVec.length() * 2.0f, 1});
+  render::Render &rnd = render::Render::getInstance();
+  rnd.drawPrim(rnd.getPrim(_primName), scale * _body->getTransormMatrix());
+} /* End of 'debugDraw' function */
 
 /* END OF 'bounding_box.cpp' FILE */

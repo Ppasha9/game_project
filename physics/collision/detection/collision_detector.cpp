@@ -98,9 +98,8 @@ PhysObject * ContactDetector::getObject(const std::string &Name)
 /* Drawing debug primitives function */
 void ContactDetector::debugDraw(void) const
 {
-  render::Render &rnd = render::Render::getInstance();
   for (BoundingVolumeMap::const_iterator it = _boundingVolumes.begin(); it != _boundingVolumes.end(); it++)
-    rnd.drawPrim(rnd.getPrim(it->second->getPrimName()), getObjectMatrix(it->first));
+    it->second->debugDraw();
 } /* End of 'debugDraw' function */
 
 /* END OF 'collision_detector.cpp' FILE */
