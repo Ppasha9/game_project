@@ -167,6 +167,13 @@ bool Input::MouseInit( void )
   return true;
 } /* End of 'Input::MouseInit' function */
 
+void Input::InitAll(void)
+{
+  KeyboardInit();
+  MouseInit();
+  JoySticksInit();
+} /* End of 'Input::InitAll' function */
+
 bool Input::MouseUpdate( void )
 {
   if (!IsMouseAvailable())
@@ -228,6 +235,14 @@ bool Input::JoyUpdate(UINT Id)
   XINPUT_GAMEPAD_Y;
   return false;
 } /* End of 'JoyUpdate' function */
+
+void Input::UpdateAll(void)
+{
+  KeyboardUpdate();
+  MouseUpdate();
+  for (auto &it = JoySticks.begin(); it != JoySticks.end(); it++)
+    JoyUpdate(it->first);
+} /* End of 'Input::UpdateAll' function */
 
 void Input::Initizalize( void )
 {
