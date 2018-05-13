@@ -18,7 +18,7 @@ BoundingSphere::BoundingSphere(PhysObject *Obj, const float Radius, const std::s
 {
   render::Render &rnd = render::Render::getInstance();
   rnd.createPrim(_primName, rnd.createGeom(ObjName + "_sphere", geom::Geom().createSphere({ 0, 0, 0 }, Radius, 12, 12)), rnd.getMaterial("mtl"), rnd.getShader("default"),
-    render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME, false);
+    render::Prim::ProjMode::FRUSTUM, render::Prim::FillMode::WIREFRAME);
 } /* End of constructor */
 
 /* Getting radius of the sphere function */
