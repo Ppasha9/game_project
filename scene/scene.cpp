@@ -13,6 +13,7 @@
 
 #include "scene.h"
 #include "../input/input.h"
+#include "../render/text/text.h"
 
 using namespace scene;
 using namespace input;
@@ -63,9 +64,26 @@ void Scene::Response(void)
   else
   {
     // Response only menu
-    bool leftButtPressed = input.MouseKeyHit(DIK_LEFT);
-    Vec2i mousePos = input.MousePos();
+    bool leftButtPressed = input.MouseKeyHit(MOUSE_LEFT);
+    Vec2f mousePos = input.MousePosf();
     string menuRes = _menuSyst->response(leftButtPressed, mousePos[0], mousePos[1]);
+
+    if (menuRes == "exit")
+      exit(0);
+
+    static render::Text mouseText = render::Text("mouse_pos_text", "Mouse Pos: 0 0", 100, 200, render::Text::Font::FONT_ID::ARIAL, 30, {1, 1, 1, 1});
+    static Vec2f oldMousePos = 0;
+
+    if (!(oldMousePos == mousePos))
+    {
+      char txt[300];
+      sprintf(txt, "Mouse Pos: %f %f", mousePos[0], mousePos[1]);
+      mouseText.setOutText(txt).setPrim();
+      oldMousePos = mousePos;
+    }
+
+    mouseText.draw();
+
     if (menuRes.size() != 0)
     {
       _isGame = true;

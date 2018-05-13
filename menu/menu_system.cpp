@@ -9,6 +9,7 @@
 */
 
 #include "menu_system.h"
+#include "../render/text/text.h"
 
 /* Checking line size */
 bool MenuSystem::empty( string & Line )
@@ -123,7 +124,7 @@ MenuSystem::MenuSystem( std::ifstream & In )
 } /* End of constructor */
 
 /* Response function */
-std::string MenuSystem::response( bool Pressed, int X, int Y )
+std::string MenuSystem::response( bool Pressed, float X, float Y )
 {
   render::Render &inst = render::Render::getInstance();
 
@@ -159,6 +160,8 @@ void MenuSystem::render()
 
     inst.drawPrim(ButtonPrims[i], scale * tran);
 
-    //render::Text mousePosText = render::Text("mouse_pos_text", "Mouse Pos: 0 0", 100, 200, render::Text::Font::FONT_ID::ARIAL, 30, {1, 1, 1, 1});
+    render::Text buttonText = render::Text(Buttons[i]->getName() + "_text", Buttons[i]->getName(), (r._x0 + r._w / 3) * inst.getWidth(), (r._y0 + r._h / 3) * inst.getHeight(),
+                                           render::Text::Font::FONT_ID::ARIAL, r._h * inst.getHeight() / 3, {0, 0, 0, 1});
+    buttonText.draw();
   }
 } /* End of 'MenuSystem::render' function */
