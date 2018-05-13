@@ -111,7 +111,7 @@ LRESULT CALLBACK Win::winFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
 } /* End of 'Win::winFunc' function */
 
 /* Window message loop function */
-WPARAM Win::run( VOID )
+WPARAM Win::run( void )
 {
   MSG msg;
 

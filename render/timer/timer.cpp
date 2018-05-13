@@ -14,7 +14,7 @@
 using namespace render;
 
 // Initializing the constant
-const float Timer::MAX_ENABLED_DELTA_TIME = 0.05;
+const float Timer::MAX_ENABLED_DELTA_TIME = 0.05f;
 
 /* Class constructor */
 Timer::Timer(void) : _time(0), _globalTime(0), _deltaTime(0), _globalDeltaTime(0), _fps(0), _timeFPS(0), _timeFreq(0), _timeStart(0),

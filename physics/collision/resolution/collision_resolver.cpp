@@ -120,7 +120,7 @@ void ContactResolver::response(ObjectContactsVector &ObjContacts) const
   for (auto &elem : ObjContacts)
   {
     float damp = 1.0F;
-    for (int i(0); i < elem.first.size(); i++)
+    for (unsigned int i(0); i < elem.first.size(); i++)
       resolve(elem.second, elem.first[i], damp);
   }
 } /* End of 'response' function */

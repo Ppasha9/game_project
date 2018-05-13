@@ -29,7 +29,7 @@ public:
   static LRESULT CALLBACK winFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
   /* Window message loop function */
-  WPARAM run( VOID );
+  WPARAM run( void );
 
   /* Changing the window activity state */
   void setActive( bool ActiveState )

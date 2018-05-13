@@ -86,7 +86,7 @@ void ContactDetector::integrate(void)
 {
   render::Timer &timer = render::Timer::getInstance();
   for (auto &elem : _boundingVolumes)
-    elem.second->integrate(timer._deltaTime);
+    elem.second->integrate((float)timer._deltaTime);
 } /* End of 'integrate' function */
 
 /* Getting the pointer to physics object function */
