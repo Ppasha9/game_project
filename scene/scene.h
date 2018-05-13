@@ -11,18 +11,51 @@
  * NOTE: scene logic file
  */
 
+#include "ball/ball.h"
+#include "player/player.h"
+#include "../menu/menu_system.h"
+#include <vector>
+
 /* Scene namespace */
 namespace scene
 {
+  using pvec = std::vector<Player *>;
+
+  const static UINT MAX_PLAYERS_COUNT = 4;
+
   /* Scene class */
   class Scene
   {
   private:
-    // TODO: all motherfucka
+    /// Active objects
+    Ball *_ball;
+    pvec _player;
+    /// Menu and logic
+    bool _isGame;
+    MenuSystem *_menuSyst;
 
+    // Creation part
+    Scene(void);
+
+    void BallCreate(void);
+
+    void EnviCreate(void);
+
+    void PlayersCreate(UINT OneTeamCount);
+
+    void TwoPlayersCreate(void);
+
+    void FourPlayersCreate(void);
+
+    void Response(void);
+
+    void Draw(void);
   public:
-    // TODO: all motherfucka
+    static void Initialize(void);
 
+    static void ResponseS(void);
+
+    static void DrawS(void);
   }; /* End of 'Scene' class */
 } /* End of 'scene' namespace */
 

@@ -76,6 +76,8 @@ namespace input
 
     bool MouseInit( void );
 
+    void InitAll(void);
+
     bool JoySticksInit(const Vec2f &DeadZone = Vec2f{0.05f, 0.02f});
 
     static void Initizalize( void );
@@ -89,6 +91,8 @@ namespace input
     void GetJoyIds( uvec &Ids );
 
     bool JoyUpdate( UINT Id );
+
+    void UpdateAll(void);
 
     static void Destroy( void );
 
