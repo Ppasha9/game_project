@@ -29,7 +29,8 @@ namespace scene
   private:
     /// Active objects
     Ball *_ball;
-    pvec _player;
+    pvec _playersA;
+    pvec _playersB;
     /// Menu and logic
     bool _isGame;
     MenuSystem *_menuSyst;
@@ -37,11 +38,17 @@ namespace scene
     // Creation part
     Scene(void);
 
+    ~Scene(void);
+
+    void Exit(void);
+
     void BallCreate(void);
 
     void EnviCreate(void);
 
     void PlayersCreate(UINT OneTeamCount);
+
+    Player *PlayerCreate(const string &Name, const Vec3f &Pos, const Vec3f &Dir, Vec4f Color);
 
     void TwoPlayersCreate(void);
 

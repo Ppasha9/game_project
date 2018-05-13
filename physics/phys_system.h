@@ -56,6 +56,9 @@ namespace phys
     /* Drawing debug primitives function */
     void debugDraw(void) const;
 
+    /* Removing physic object function */
+    void removeObject(const std::string &Name);
+
     /* Class destructor */
     ~PhysicsSystem(void);
   }; /* End of 'PhysicsSystem' class */

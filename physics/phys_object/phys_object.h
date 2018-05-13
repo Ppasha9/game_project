@@ -123,6 +123,12 @@ namespace phys
     /* Getting object inverse mass function */
     float getInverseMass(void) const;
 
+    /* Getting angular damping function */
+    float getAngDamping(void) const;
+
+    /* Getting linear damping function */
+    float getLinDamping(void) const;
+
     /* Getting object position function */
     math::Vec3f getPos(void) const;
 
@@ -150,6 +156,9 @@ namespace phys
     /* Setting object inverse mass function */
     /* NOTE: it can throw an exception */
     void setInverseMass(const float InverseMass);
+
+    /* Reseting all parametrs function */
+    void reset(const math::Vec3f &Pos);
 
     /* Setting linear damping function */
     void setLinearDamping(const float LinearDamping);

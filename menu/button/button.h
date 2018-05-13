@@ -72,6 +72,12 @@ public:
     return _colCur;
   } /* End of 'getName' function */
 
+  /* Getting button current color */
+  math::Vec4f getTextColor()
+  {
+    return _colText;
+  } /* End of 'getName' function */
+
   virtual void onHover()
   {
   }

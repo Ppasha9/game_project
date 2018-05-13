@@ -217,6 +217,28 @@ void PhysObject::applyForce(const Force *Force, const float Duration)
   Force->applyForce(*this, Duration);
 } /* End of 'applyForce' function */
 
+/* Reseting all parametrs function */
+void PhysObject::reset(const math::Vec3f &Pos)
+{
+  math::Matr3f inverseInertia = _inverseInertiaTensor;
+  math::Matr3f iitWorld = _iitWorld;
+  *this = PhysObject(Pos, _inverseMass, _linearDamping, _angularDamping);
+  _inverseInertiaTensor = inverseInertia;
+  _iitWorld = iitWorld;
+} /* End of 'reset' function */
+
+/* Getting angular damping function */
+float PhysObject::getAngDamping(void) const
+{
+  return _angularDamping;
+} /* End of 'getAngDamping' function */
+
+/* Getting linear damping function */
+float PhysObject::getLinDamping(void) const
+{
+  return _linearDamping;
+} /* End of 'getLinDamping' function */
+
 /* Integration function */
 void PhysObject::integrate(float Duration)
 {
@@ -247,8 +269,8 @@ void PhysObject::integrate(float Duration)
     //_orientation = math::Quatf(_rotation.getNormalized(), _rotation.length() * Duration);
 
   // Impose drag.
-  _velocity *= pow(_linearDamping, Duration);
-  _rotation *= pow(_angularDamping, Duration);
+  //_velocity *= pow(_linearDamping, Duration);
+  //_rotation *= pow(_angularDamping, Duration);
 
   // Normalize the orientation, and update the matrices with the new position and orientation.
   calculateDerivedData();

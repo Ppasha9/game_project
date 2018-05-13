@@ -161,7 +161,7 @@ void MenuSystem::render()
     inst.drawPrim(ButtonPrims[i], scale * tran);
 
     render::Text buttonText = render::Text(Buttons[i]->getName() + "_text", Buttons[i]->getName(), (r._x0 + r._w / 3) * inst.getWidth(), (r._y0 + r._h / 3) * inst.getHeight(),
-                                           render::Text::Font::FONT_ID::ARIAL, r._h * inst.getHeight() / 3, {0, 0, 0, 1});
+                                           render::Text::Font::FONT_ID::ARIAL, r._h * inst.getHeight() / 3, Buttons[i]->getTextColor());
     buttonText.draw();
   }
 } /* End of 'MenuSystem::render' function */

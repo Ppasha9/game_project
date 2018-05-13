@@ -1,5 +1,5 @@
 button_click_begin
-	name "2 players"
+	name "continue"
 	rect 0.4 0.3 0.2 0.1
 	coldef 200 235 134
 	colhover 220 255 154
@@ -7,7 +7,7 @@ button_click_begin
 button_click_end
 
 button_click_begin
-	name "4 players"
+	name "2 players"
 	rect 0.4 0.45 0.2 0.1
 	coldef 200 235 134
 	colhover 220 255 154
@@ -15,8 +15,17 @@ button_click_begin
 button_click_end
 
 button_click_begin
-	name "exit"
+	name "4 players"
 	rect 0.4 0.6 0.2 0.1
+	coldef 200 235 134
+	colhover 220 255 154
+	coltext 0 0 0
+button_click_end
+
+
+button_click_begin
+	name "exit"
+	rect 0.4 0.75 0.2 0.1
 	coldef 200 235 134
 	colhover 220 255 154
 	coltext 255 0 0

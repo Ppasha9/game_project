@@ -324,7 +324,7 @@
       <Filter>Source Files\Menu system</Filter>
     </ClInclude>
     <ClInclude Include="menu\button\button_click\button_click.h">
-      <Filter>Source Files\Menu system\Button\Button Click</Filter> 
+      <Filter>Source Files\Menu system\Button\Button Click</Filter>
     </ClInclude>
     <ClInclude Include="input\input.h">
       <Filter>Source Files\Input</Filter>
@@ -335,14 +335,14 @@
     <ClInclude Include="scene\player\player.h">
       <Filter>Source Files\Scene\Player</Filter>
     </ClInclude>
-    <ClInclude Include="scene\ball\ball.h">
-      <Filter>Source Files\Scene\Ball</Filter>
-    </ClInclude>
     <ClInclude Include="sound\sound.h">
       <Filter>Source Files\Sound</Filter>
     </ClInclude>
     <ClInclude Include="sound\wave.h">
       <Filter>Source Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\ball\ball.h">
+      <Filter>Source Files\Scene\Ball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,6 +38,15 @@ namespace math
       std::copy(Init.begin(), Init.end(), _coords);
     } /* End of 'Vector' function */
 
+    /* Constructor with all set params */
+    template <typename DType>
+    Vector( const std::initializer_list<DType> &Init )
+    {
+      size_t i = 0;
+      for (auto it = Init.begin(); it != Init.end(); it++, i++)
+        _coords[i] = (Type)*it;
+    } /* End of 'Vector' function */
+
     /* Sum two Vectors */
     inline Vector operator+( const Vector &Vec ) const
     {
