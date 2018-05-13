@@ -15,6 +15,7 @@
 #include "../../../math/math_def.h"
 #include "../../phys_object/phys_object.h"
 #include "../../../render/timer/timer.h"
+#include "../../../render/render.h"
 
 /* Physics namespace */
 namespace phys

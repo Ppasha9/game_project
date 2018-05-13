@@ -19,8 +19,6 @@ cbuffer ConstBuffer
 struct VsOut
 {
   float4 pos   : SV_POSITION;
-  float4 w_pos : POSITION;
-  float4 norm  : NORMAL;
   float2 tex   : TEXTURE;
 };
 
@@ -29,13 +27,8 @@ VsOut main(float4 pos : POSITION, float3 norm : NORMAL, float2 tex : TEXTURE)
   VsOut output;
 
   pos = mul(pos, world);
-  output.w_pos = pos;
-
   pos = mul(pos, view);
   pos = mul(pos, proj);
-
-  output.norm = float4(norm.x, norm.y, norm.z, 0);
-  output.norm = mul(output.norm, world);
 
   output.pos = pos;
   output.tex = tex;

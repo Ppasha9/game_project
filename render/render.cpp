@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 12.05.2018
+ * LAST UPDATE: 14.05.2018
  * NOTE: render handle implementation file
  */
 
@@ -19,7 +19,6 @@
 #include "render.h"
 #include "..\\render\timer\timer.h"
 #include "text\text.h"
-#include "../physics/phys_system.h"
 
 using namespace render;
 
@@ -603,7 +602,6 @@ void Render::render( void )
   fpsText.draw();
 
   /* -------------- */
-  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
   startFrame();
 
@@ -651,6 +649,7 @@ void Render::render( void )
       drawPrim(p);
     break;
   }
+  setViewport(0, 0, (float)_width, (float)_height);
 
   // Render pixel screen-space primitives
   setProjMode(Prim::ProjMode::SCREENSPACE_PIXEL);

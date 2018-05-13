@@ -31,8 +31,6 @@ cbuffer ConstBuffer
 struct VsOut
 {
   float4 pos   : SV_POSITION;
-  float4 w_pos : POSITION;
-  float4 norm  : NORMAL;
   float2 tex   : TEXTURE;
 };
 

@@ -118,6 +118,9 @@
     <Filter Include="Source Files\Sound">
       <UniqueIdentifier>{e773e4e7-3df3-48bd-817b-f36aed15028f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scene\Environment">
+      <UniqueIdentifier>{2e09b878-da8f-4aab-9fc1-bbb86998b2ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -212,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="sound\sound.cpp">
       <Filter>Source Files\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\environment\environment.cpp">
+      <Filter>Source Files\Scene\Environment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -324,7 +330,7 @@
       <Filter>Source Files\Menu system</Filter>
     </ClInclude>
     <ClInclude Include="menu\button\button_click\button_click.h">
-      <Filter>Source Files\Menu system\Button\Button Click</Filter> 
+      <Filter>Source Files\Menu system\Button\Button Click</Filter>
     </ClInclude>
     <ClInclude Include="input\input.h">
       <Filter>Source Files\Input</Filter>
@@ -343,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="sound\wave.h">
       <Filter>Source Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\environment\environment.h">
+      <Filter>Source Files\Scene\Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
