@@ -561,7 +561,8 @@ void Render::setProjMode( Prim::ProjMode Method )
 /* Start frame function */
 void Render::startFrame( void )
 {
-  float clear_color[4] = {0.3f, 0.5f, 0.7f, 1.0f};
+  //float clear_color[4] = {0.3f, 0.5f, 0.7f, 1.0f};
+  float clear_color[4] = {0, 0, 0, 1};
 
   // Clear the back buffer.
   _deviceContext->ClearRenderTargetView(_renderTargetView, clear_color);
