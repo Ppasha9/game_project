@@ -196,22 +196,59 @@ namespace math
     /* Transform quaternion to matrix function. */
     inline Matrix<3, 3, Type> toMatr3x3(void) const
     {
-      Matrix<3, 3, Type> matr =
-        { 1 - 2 * _vec[1] * _vec[1] - 2 * _vec[2] * _vec[2], 2 * _vec[0] * _vec[1] - 2 * _scalar * _vec[2],     2 * _vec[0] * _vec[2] + 2 * _scalar * _vec[1],
-          2 * _vec[0] * _vec[1] + 2 * _scalar * _vec[2],     1 - 2 * _vec[0] * _vec[0] - 2 * _vec[2] * _vec[2], 2 * _vec[1] * _vec[2] - 2 * _scalar * _vec[0],
-          2 * _vec[0] * _vec[2] - 2 * _scalar * _vec[1],     2 * _vec[1] * _vec[2] + 2 * _scalar * _vec[0],     1 - 2 * _vec[0] * _vec[0] - 2 * _vec[1] * _vec[1] };
-      return matr;
+      float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+      float s = 2.0f / getSquare();
+      x2 = _vec[0] * s;    y2 = _vec[1] * s;    z2 = _vec[2] * s;
+      xx = _vec[0] * x2;   xy = _vec[0] * y2;   xz = _vec[0] * z2;
+      yy = _vec[1] * y2;   yz = _vec[1] * z2;   zz = _vec[2] * z2;
+      wx = _scalar * x2;   wy = _scalar * y2;   wz = _scalar * z2;
+
+      math::Matrix<3, 3, Type> res;
+      res.setIdentity();
+
+      res._values[0][0] = 1.0f - (yy + zz);
+      res._values[1][0] = xy - wz;
+      res._values[2][0] = xz + wy;
+
+      res._values[0][1] = xy + wz;
+      res._values[1][1] = 1.0f - (xx + zz);
+      res._values[2][1] = yz - wx;
+
+      res._values[0][2] = xz - wy;
+      res._values[1][2] = yz + wx;
+      res._values[2][2] = 1.0f - (xx + yy);
+
+      return res;
     } /* End of 'toMatr3x3' function */
 
     /* Transform quaternion to matrix function. */
     inline Matrix<4, 4, Type> toMatr4x4(void) const
     {
-      Matrix<4, 4, Type> matr =
-      { 1 - 2 * _vec[1] * _vec[1] - 2 * _vec[2] * _vec[2], 2 * _vec[0] * _vec[1] - 2 * _scalar * _vec[2],     2 * _vec[0] * _vec[2] + 2 * _scalar * _vec[1],     0,
-        2 * _vec[0] * _vec[1] + 2 * _scalar * _vec[2],     1 - 2 * _vec[0] * _vec[0] - 2 * _vec[2] * _vec[2], 2 * _vec[1] * _vec[2] - 2 * _scalar * _vec[0],     0,
-        2 * _vec[0] * _vec[2] - 2 * _scalar * _vec[1],     2 * _vec[1] * _vec[2] + 2 * _scalar * _vec[0],     1 - 2 * _vec[0] * _vec[0] - 2 * _vec[1] * _vec[1], 0,
-        0,                                                 0,                                                 0,                                                 1 };
-      return matr;
+      float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+      float s = 2.0f / getSquare();
+      x2 = _vec[0] * s;    y2 = _vec[1] * s;    z2 = _vec[2] * s;
+      xx = _vec[0] * x2;   xy = _vec[0] * y2;   xz = _vec[0] * z2;
+      yy = _vec[1] * y2;   yz = _vec[1] * z2;   zz = _vec[2] * z2;
+      wx = _scalar * x2;   wy = _scalar * y2;   wz = _scalar * z2;
+
+      math::Matrix<4, 4, Type> res;
+      res.setIdentity();
+
+      res._values[0][0] = 1.0f - (yy + zz);
+      res._values[1][0] = xy - wz;
+      res._values[2][0] = xz + wy;
+
+      res._values[0][1] = xy + wz;
+      res._values[1][1] = 1.0f - (xx + zz);
+      res._values[2][1] = yz - wx;
+
+      res._values[0][2] = xz - wy;
+      res._values[1][2] = yz + wx;
+      res._values[2][2] = 1.0f - (xx + yy);
+
+      res._values[3][3] = 1;
+
+      return res;
     } /* End of 'toMatr4x4' function */
 
     /* Vector rotate with quaternion function. */

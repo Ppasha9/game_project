@@ -12,13 +12,13 @@
 using namespace scene;
 
 /* Impulse coefficient */
-const float Player::ImpulseCoeff = 2.0f;
+const float Player::ImpulseCoeff = 6.0f;
 /* Rotation coefficient */
-const float Player::RotationCoeff = 1.5f;
+const float Player::RotationCoeff = 0.005f;
 
 /* Class constructor */
-Player::Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const std::string &Name) : _obj(Obj), _dirVec(0), _prim(Prim),
-  _name(Name), _upVec(0)
+Player::Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec, const std::string &Name) :
+  _obj(Obj), _dirVec(DirVec), _prim(Prim), _name(Name), _upVec({ 0, 1, 0 })
 {
 } /* End of constructor */
 
@@ -32,29 +32,31 @@ Player::~Player(void)
 void Player::action(const COMMAND_TYPE ComType)
 {
   math::Matr4f matr = _obj->getTransormMatrix();
+  matr = matr.getTranspose();
+
   math::Vec4f dirV = { _dirVec[0], _dirVec[1], _dirVec[2], 0 };
   dirV = matr * dirV;
-  _dirVec = { dirV[0], dirV[1], dirV[2] };
-  _dirVec.normalize();
+  dirV.normalize();
+  math::Vec3f dirV3 = { dirV[0], dirV[1], dirV[2] };
 
   math::Vec4f upV = { _upVec[0], _upVec[1], _upVec[2], 0 };
   upV = matr * upV;
-  _upVec = { upV[0], upV[1], upV[2] };
-  _upVec.normalize();
+  upV.normalize();
+  math::Vec3f upV3 = { upV[0], upV[1], upV[2] };
 
   switch (ComType)
   {
   case COMMAND_TYPE::MoveForward:
-    _obj->addImpulse(_dirVec * ImpulseCoeff);
+    _obj->addImpulse(dirV3 * ImpulseCoeff);
     break;
   case COMMAND_TYPE::MoveBack:
-    _obj->addImpulse(-_dirVec * ImpulseCoeff);
+    _obj->addImpulse(-dirV3 * ImpulseCoeff);
     break;
   case COMMAND_TYPE::MoveLeft:
-    _obj->addRotation(_upVec * RotationCoeff);
+    _obj->addRotation(upV3 * RotationCoeff);
     break;
   case COMMAND_TYPE::MoveRight:
-    _obj->addRotation(-_upVec * RotationCoeff);
+    _obj->addRotation(-upV3 * RotationCoeff);
     break;
   }
 } /* End of 'action' function */

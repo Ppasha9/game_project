@@ -46,12 +46,15 @@ namespace scene
     /* Primitive name */
     std::string _name;
 
+    /* Damping coeff */
+
+
   public:
     /* Default class constructor */
     Player(void) = default;
 
     /* Class constructor */
-    Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const std::string &Name);
+    Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec, const std::string &Name);
 
     /* Action function */
     void action(const COMMAND_TYPE ComType);

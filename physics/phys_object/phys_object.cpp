@@ -206,7 +206,7 @@ math::Matr4f PhysObject::getTransormMatrix(void) const
 
   res *= _orientation.toMatr4x4();
   res *= math::Matr4f::getTranslate(_position);
-  //res._values[0][0] = res._values[1][1] = res._values[2][2] = 1;
+  //res._values[0][0] = res._values[1][1] = res._values[2][2] = res._values[3][3] = 1.0f;
 
   return res;
 } /* End of 'getTransormMatrix' function */
@@ -244,6 +244,7 @@ void PhysObject::integrate(float Duration)
   // Update angular position.
   if (hasFiniteMass())
     _orientation.addScaledVector(_rotation, Duration);
+    //_orientation = math::Quatf(_rotation.getNormalized(), _rotation.length() * Duration);
 
   // Impose drag.
   _velocity *= pow(_linearDamping, Duration);
