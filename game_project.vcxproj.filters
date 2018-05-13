@@ -94,6 +94,15 @@
     <Filter Include="Source Files\Timer">
       <UniqueIdentifier>{972caea8-6af7-423e-a22d-36aed0788bb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Menu system">
+      <UniqueIdentifier>{2c7897d3-28be-438a-9f43-f04d44022516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu system\Button">
+      <UniqueIdentifier>{12651af8-7d47-48c5-8a01-0165878d6f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu system\Button\Button Click">
+      <UniqueIdentifier>{1cd6c26a-1c2b-4c7d-ab85-df2b78cb2d55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -170,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="render\text\text.cpp">
       <Filter>Source Files\Render support\Resources\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="menu\menu_system.cpp">
+      <Filter>Source Files\Menu system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +286,15 @@
     </ClInclude>
     <ClInclude Include="render\text\text.h">
       <Filter>Source Files\Render support\Resources\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\button\button.h">
+      <Filter>Source Files\Menu system\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu_system.h">
+      <Filter>Source Files\Menu system</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\button\button_click\button_click.h">
+      <Filter>Source Files\Menu system\Button\Button Click</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
