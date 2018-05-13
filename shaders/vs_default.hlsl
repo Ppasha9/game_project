@@ -35,7 +35,6 @@ VsOut main( float4 pos : POSITION, float3 norm : NORMAL, float2 tex : TEXTURE )
 
   output.norm = float4(norm.x, norm.y, norm.z, 0);
   output.norm = mul(output.norm, world);
-  output.norm = normalize(output.norm);
 
   output.pos = pos;
   output.tex = tex;

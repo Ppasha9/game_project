@@ -106,6 +106,15 @@
     <Filter Include="Source Files\Scene\Ball">
       <UniqueIdentifier>{38a65e44-d3f2-4d7d-ad33-d5b58c10b576}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Menu system">
+      <UniqueIdentifier>{2c7897d3-28be-438a-9f43-f04d44022516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu system\Button">
+      <UniqueIdentifier>{12651af8-7d47-48c5-8a01-0165878d6f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu system\Button\Button Click">
+      <UniqueIdentifier>{1cd6c26a-1c2b-4c7d-ab85-df2b78cb2d55}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Sound">
       <UniqueIdentifier>{e773e4e7-3df3-48bd-817b-f36aed15028f}</UniqueIdentifier>
     </Filter>
@@ -185,6 +194,9 @@
     </ClCompile>
     <ClCompile Include="render\text\text.cpp">
       <Filter>Source Files\Render support\Resources\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="menu\menu_system.cpp">
+      <Filter>Source Files\Menu system</Filter>
     </ClCompile>
     <ClCompile Include="input\input.cpp">
       <Filter>Source Files\Input</Filter>
@@ -304,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="render\text\text.h">
       <Filter>Source Files\Render support\Resources\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\button\button.h">
+      <Filter>Source Files\Menu system\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\menu_system.h">
+      <Filter>Source Files\Menu system</Filter>
+    </ClInclude>
+    <ClInclude Include="menu\button\button_click\button_click.h">
+      <Filter>Source Files\Menu system\Button\Button Click</Filter> 
     </ClInclude>
     <ClInclude Include="input\input.h">
       <Filter>Source Files\Input</Filter>
