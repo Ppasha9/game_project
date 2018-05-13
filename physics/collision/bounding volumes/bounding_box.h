@@ -4,7 +4,7 @@
  * FILE: bounding_box.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 02.05.2018
  * NOTE: box bounding volume declaration file
  */
 
@@ -25,21 +25,53 @@ namespace phys
   class BoundingBox : public BoundingVolume
   {
   private:
-    /* Vector of half size of box */
-    math::Vec3f _halfSize;
+    /* Vector of direction hals-size of box */
+    math::Vec3f _dirHalfVec;
+    /* Vector of right hals-size of box */
+    math::Vec3f _rightHalfVec;
+    /* Half of the height of the box */
+    float _halfHeight;
+
+    /* Boundary vertices of the box */
+    math::Vec3f _vertices[8];
+
+    /* Update current vertices position function */
+    void updateVertices(void);
+
+    /* Setting the vertices to start position function */
+    void setStartVertices(void);
+
+    /* Getting the closest vertex to certain point function */
+    math::Vec3f getClosestVertexToPoint(const math::Vec3f &Point) const;
+
+    /* Collidding with the point */
+    bool isCollide(const math::Vec3f &Point, math::Vec3f &Normal, float &Penetration) const;
 
   public:
     /* Default class constructor */
     BoundingBox(void) = default;
 
     /* Class constructor */
-    BoundingBox(PhysObject *Obj, const math::Vec3f &HalfSize);
+    BoundingBox(PhysObject *Obj, const math::Vec3f &DirHalfVec, const math::Vec3f &RightHalfVec, const float HalfHeight, const std::string &ObjName);
 
-    /* Getting size of box function */
-    math::Vec3f getHalfSize(void) const;
+    /*
+     * Informative functions.
+     */
 
-    /* Setting new size of box function */
-    void setHalfSize(const math::Vec3f HalfSize);
+    /* Getting direction half-size of box function */
+    math::Vec3f getDirHalfVec(void) const;
+
+    /* Getting right half-size of box function */
+    math::Vec3f getRightHalfVec(void) const;
+
+    /* Getting half of the height of the box */
+    float getHalfHeight(void) const;
+
+    /* Integrate volume's physics object */
+    virtual void integrate(const float Duration);
+
+    /* Getting boundary vertex position function */
+    math::Vec3f getVertexPos(const int Index) const;
 
     /*
      * Collision functions.

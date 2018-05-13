@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="geometry\geometry.cpp" />
+    <ClCompile Include="input\input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu\menu_system.cpp" />
     <ClCompile Include="physics\collision\bounding volumes\bounding_box.cpp" />
@@ -171,11 +172,15 @@
     <ClCompile Include="render\render_texture.cpp" />
     <ClCompile Include="render\text\text.cpp" />
     <ClCompile Include="render\timer\timer.cpp" />
+    <ClCompile Include="scene\ball\ball.cpp" />
+    <ClCompile Include="scene\player\player.cpp" />
+    <ClCompile Include="scene\scene.cpp" />
     <ClCompile Include="win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="def.h" />
     <ClInclude Include="geometry\geometry.h" />
+    <ClInclude Include="input\input.h" />
     <ClInclude Include="math\math_def.h" />
     <ClInclude Include="math\matrix.h" />
     <ClInclude Include="math\quat.h" />
@@ -210,6 +215,9 @@
     <ClInclude Include="render\texture.h" />
     <ClInclude Include="render\text\text.h" />
     <ClInclude Include="render\timer\timer.h" />
+    <ClInclude Include="scene\ball\ball.h" />
+    <ClInclude Include="scene\player\player.h" />
+    <ClInclude Include="scene\scene.h" />
     <ClInclude Include="win\win.h" />
   </ItemGroup>
   <ItemGroup>

@@ -124,24 +124,40 @@ MenuSystem::MenuSystem( std::ifstream & In )
 /* Response function */
 std::string MenuSystem::response( bool Pressed, int X, int Y )
 {
+  render::Render &inst = render::Render::getInstance();
+
   for (auto bt : Buttons)
     if (bt->isInside(X, Y))
       if (Pressed)
         return bt->getName();
       else
+      {
         bt->onHover();
+        inst.setMaterialCoeffs(inst.getMaterial(bt->getName() + "_mtl"), {bt->getColor(), {0, 0, 0, 1}, {0, 0, 0, 1}, 1});
+      }
     else
+    {
       bt->onDef();
+      inst.setMaterialCoeffs(inst.getMaterial(bt->getName() + "_mtl"), {bt->getColor(), {0, 0, 0, 1}, {0, 0, 0, 1}, 1});
+    }
 
   return string();
-}
+} /* End of 'MenuSystem::response' function */
 
 /* Render function */
 void MenuSystem::render()
 {
-  render::Render &Inst = render::Render::getInstance();
-  for (auto bt : ButtonPrims)
+  render::Render &inst = render::Render::getInstance();
+  for (int i = 0; i < Buttons.size(); i++)
   {
-    Inst.drawPrim(bt);
+    math::Matr4f scale(1);
+    Rect r = Buttons[i]->getRect();
+    scale._values[0][0] *= 1 / r._w;
+    scale._values[1][1] *= 1 / r._h;
+
+    math::Matr4f tran(1);
+    tran.getTranslate(r._x0, r._y0, 0);
+
+    inst.drawPrim(ButtonPrims[i], scale * tran);
   }
 } /* End of 'MenuSystem::render' function */

@@ -60,6 +60,18 @@ public:
     return _name;
   } /* End of 'getName' function */
 
+  /* Getting button name */
+  Rect getRect()
+  {
+    return _r;
+  } /* End of 'getName' function */
+
+  /* Getting button current color */
+  math::Vec4f getColor()
+  {
+    return _colCur;
+  } /* End of 'getName' function */
+
   virtual void onHover()
   {
   }

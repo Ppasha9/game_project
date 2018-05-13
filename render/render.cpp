@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 28.04.2018
+ * LAST UPDATE: 12.05.2018
  * NOTE: render handle implementation file
  */
 
@@ -17,8 +17,9 @@
 #include <d3d11.h>
 
 #include "render.h"
-#include "..\physics\phys_system.h"
+#include "..\\render\timer\timer.h"
 #include "text\text.h"
+#include "../physics/phys_system.h"
 
 using namespace render;
 
@@ -577,9 +578,6 @@ void Render::response( void )
   timer.response();
   _responseFunc();
 
-  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
-  physSys.response();
-
   render();
 
   timer.incrFrame();
@@ -605,10 +603,9 @@ void Render::render( void )
   fpsText.draw();
 
   /* -------------- */
+  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
   startFrame();
-
-  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
   // Render frustum primitives
   setProjMode(Prim::ProjMode::FRUSTUM);
@@ -619,60 +616,39 @@ void Render::render( void )
     applyCamera(0);
     setViewport(0, 0, (float)_width, (float)_height);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
     break;
   case SplitScreenMode::HALVES:
     applyCamera(0);
     setViewport(0, 0, (float)_width, _height / 2.0F);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
 
     applyCamera(1);
     setViewport(0, _height / 2.0F, (float)_width, _height / 2.0F);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
     break;
   case SplitScreenMode::QUARTERS:
     applyCamera(0);
     setViewport(0, 0, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
 
     applyCamera(1);
     setViewport(_width / 2.0F, 0, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
 
     applyCamera(2);
     setViewport(0, _height / 2.0F, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
 
     applyCamera(3);
     setViewport(_width / 2.0F, _height / 2.0F, _width / 2.0F, _height / 2.0F);
     for (auto &p : _frustumPrims)
-    {
-      setPrimMatrix(PrimPtr(p), physSys.getObjectMatrix(p->_name));
       drawPrim(p);
-    }
     break;
   }
 

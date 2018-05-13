@@ -4,7 +4,7 @@
  * FILE: bounding_volume.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 02.05.2018
  * NOTE: basic bounding volume declaration file
  */
 
@@ -66,8 +66,9 @@ namespace phys
     PhysObject *_body;
     /* The offset of primitive due to physic object */
     math::Matr4f _offset;
+
     /* The bounding primitive (for debug) */
-    //render::PrimPtr _primitive;
+    std::string _primName;
 
   public:
     /* Type of the bounding volume */
@@ -77,17 +78,19 @@ namespace phys
     BoundingVolume(void) = default;
 
     /* Class constructor */
-    BoundingVolume(PhysObject *Obj, const bounding_volume_type Type = bounding_volume_type::SPHERE) : _body(Obj), _type(Type)
+    BoundingVolume(PhysObject *Obj, const std::string &ObjName, const bounding_volume_type Type = bounding_volume_type::SPHERE) : _body(Obj), _type(Type),
+      _primName(ObjName + "_primitive")
     {
     } /* End of constructor */
 
     /* Class constructor */
-    BoundingVolume(PhysObject *Obj, math::Matr4f &Matr, const bounding_volume_type Type = bounding_volume_type::SPHERE) : _body(Obj), _offset(Matr), _type(Type)
+    BoundingVolume(PhysObject *Obj, math::Matr4f &Matr, const std::string &ObjName, const bounding_volume_type Type = bounding_volume_type::SPHERE) : _body(Obj), _offset(Matr), _type(Type),
+      _primName(ObjName + "_primitive")
     {
     } /* End of constructor */
 
     /* Integrate volume's physics object */
-    void integrate(const float Duration)
+    virtual void integrate(const float Duration)
     {
       _body->integrate(Duration);
     } /* End of 'integrate' function */
@@ -104,11 +107,16 @@ namespace phys
       return _body;
     } /* End of 'getPhysObjectPointer' function */
 
-    /* Drawing debug primitive function */
-    void draw(void)
+    /* Getting position of the sphere function */
+    math::Vec3f getPos(void) const
     {
-      //render::Render &Rnd = render::Render::getInstance();
-      //Rnd.draw
+      return _body->getPos();
+    } /* End of 'getPos' function */
+
+    /* Getting the name of the debug primitive */
+    std::string getPrimName(void) const
+    {
+      return _primName;
     } /* End of 'draw' function */
 
     /* Apply force function */

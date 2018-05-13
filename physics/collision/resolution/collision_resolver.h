@@ -22,10 +22,10 @@ namespace phys
   {
   private:
     /* Resolve the pair of objects function */
-    void resolve(ObjectContactsPair &Pair) const;
+    void resolve(PhysicsObjectsPair &Pair, Contact Contact, float DampingCoeff) const;
 
     /* Adding the change of velocity by impulse function */
-    void addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, const math::Vec3f RelContactPos[2]) const;
+    void addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, const math::Vec3f RelContactPos[2], float DampingCoeff) const;
 
   public:
     /* Default class constructor */

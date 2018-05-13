@@ -37,22 +37,36 @@ void PhysicsSystem::registerObject(const std::string &Name, PhysObject *Obj, con
   switch (VolumeType)
   {
   case bounding_volume_type::SPHERE:
-    tmp = 2.0 / 3 * Obj->getMass() * pow(*((float *)Params), 2);
+    tmp = 2.0F / 5 * Obj->getMass() * pow(*((float *)Params), 2);
     tensor.setDiag(tmp);
     Obj->setInertiaTensor(tensor);
-    _detector.addVolume(Name, new BoundingSphere(Obj, *((float *)Params)));
+    _detector.addVolume(Name, new BoundingSphere(Obj, *((float *)Params), Name));
     break;
   case bounding_volume_type::BOX:
-    _detector.addVolume(Name, new BoundingBox(Obj, *((const math::Vec3f *)Params)));
+    struct dummyBox
+    {
+      math::Vec3f _dirVec;
+      math::Vec3f _rightVec;
+      float _halfHeight;
+    } *paramsBox;
+    paramsBox = (dummyBox *)Params;
+
+    tensor = { 1.0F / 12 * (pow(2 * paramsBox->_rightVec.length(), 2) + pow(2 * paramsBox->_halfHeight, 2)) * Obj->getMass(), 0, 0,
+               0, 1.0F / 12 * (pow(2 * paramsBox->_dirVec.length(), 2) + pow(2 * paramsBox->_halfHeight, 2)) * Obj->getMass(), 0,
+               0, 0, 1.0F / 12 * (pow(2 * paramsBox->_dirVec.length(), 2) + pow(2 * paramsBox->_rightVec.length(), 2)) * Obj->getMass() };
+
+    Obj->setInertiaTensor(tensor);
+    _detector.addVolume(Name, new BoundingBox(Obj, paramsBox->_dirVec, paramsBox->_rightVec, paramsBox->_halfHeight, Name));
     break;
   case bounding_volume_type::PLANE:
-    struct dummy
+    struct dummyPlane
     {
       math::Vec3f _normal;
-      float _offset;
-    } *params;
-    params = (dummy *)Params;
-    _detector.addVolume(Name, new BoundingPlane(Obj, params->_normal, params->_offset));
+      math::Vec3f _fPoint;
+      math::Vec3f _sPoint;
+    } *paramsPlane;
+    paramsPlane = (dummyPlane *)Params;
+    _detector.addVolume(Name, new BoundingPlane(Obj, paramsPlane->_normal, paramsPlane->_fPoint, paramsPlane->_sPoint, Name));
     break;
   }
 } /* End of 'registerObject' function */
@@ -90,5 +104,11 @@ PhysObject * PhysicsSystem::getObject(const std::string &Name)
 {
   return _detector.getObject(Name);
 } /* End of 'getObject' function */
+
+/* Drawing debug primitives function */
+void PhysicsSystem::debugDraw(void) const
+{
+  _detector.debugDraw();
+} /* End of 'debugDraw' function */
 
 /* END OF 'phys_system.cpp' FILE */

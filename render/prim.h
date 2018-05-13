@@ -4,7 +4,7 @@
  * FILE: prim.h
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 20.04.2018
+ * LAST UPDATE: 12.05.2018
  * NOTE: geometry primitive handle file
  */
 
@@ -44,10 +44,10 @@ namespace render
     ShaderPtr _shader;
     MaterialPtr _material;
 
-    math::Matr4f _world;
-
     FillMode _fillMode;
     ProjMode _projMode;
+
+    bool _isPhys;
 
     /* Create primitive function */
     Prim( const string &PrimName ) : Resource(PrimName) {}

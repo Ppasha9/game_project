@@ -14,6 +14,7 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 
 #include "math\math_def.h"
 
@@ -25,6 +26,11 @@ namespace render
   class Render;
   template<typename ResType>
     class ResMap;
+}
+
+namespace error
+{
+  using RunError = std::runtime_error;
 }
 
 /* END OF 'def.h' FILE */

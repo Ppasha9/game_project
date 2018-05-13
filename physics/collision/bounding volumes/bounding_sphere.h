@@ -4,7 +4,7 @@
  * FILE: bounding_sphere.h
  * AUTHORS:
  *   Denisov Pavel
- * LAST UPDATE: 22.04.2018
+ * LAST UPDATE: 02.05.2018
  * NOTE: sphere bounding volume declaration file
  */
 
@@ -33,13 +33,10 @@ namespace phys
     BoundingSphere(void) = default;
 
     /* Class constructor */
-    BoundingSphere(PhysObject *Obj, const float Radius);
+    BoundingSphere(PhysObject *Obj, const float Radius, const std::string &ObjName);
 
     /* Getting radius of the sphere function */
     float getRadius(void) const;
-
-    /* Getting position of the sphere function */
-    math::Vec3f getPos(void) const;
 
     /*
      * Collision functions.
