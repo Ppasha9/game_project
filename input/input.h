@@ -52,7 +52,6 @@ namespace input
     Vec2i _mousePos;
     /// Joysticks
 
-
     Input( void );
 
     ~Input();

@@ -15,6 +15,7 @@
 #include "../../../math/math_def.h"
 #include "../../phys_object/phys_object.h"
 #include "../../../render/timer/timer.h"
+#include "../../../render/render.h"
 
 /* Physics namespace */
 namespace phys
@@ -138,10 +139,12 @@ namespace phys
       return std::vector<Contact>();
     } /* End of 'getContactData' function */
 
-    /* Debug function for setting primitive */
-    //virtual void setPrimitive(const std::string &Name, const render::Geom &Geom)
-    //{
-    //} /* End of 'setPrimitive' function */
+    /* Drawing debug primitive function */
+    virtual void debugDraw(void) const
+    {
+      render::Render &rnd = render::Render::getInstance();
+      rnd.drawPrim(rnd.getPrim(_primName), _body->getTransormMatrix());
+    } /* End of 'debugDraw' function */
   }; /* End of 'BoundingVolume' class */
 }; /* End of 'phys' namespace */
 

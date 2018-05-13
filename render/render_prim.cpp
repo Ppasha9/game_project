@@ -14,7 +14,7 @@ using namespace render;
 
 /* Create primitive function */
 PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
-  const string &MtlName, const string &ShName, Prim::ProjMode ProjM, Prim::FillMode FillM)
+  const string &MtlName, const string &ShName, Prim::ProjMode ProjM, Prim::FillMode FillM )
 {
   PrimPtr tmp;
 
@@ -36,7 +36,7 @@ PrimPtr Render::createPrim( const string &PrimName, const string &GeomName,
 
 /* Create primitive function */
 PrimPtr Render::createPrim( const string &PrimName, const GeomPtr &Geometry,
-  const MaterialPtr &Mtl, const ShaderPtr &Sh, Prim::ProjMode ProjM, Prim::FillMode FillM)
+  const MaterialPtr &Mtl, const ShaderPtr &Sh, Prim::ProjMode ProjM, Prim::FillMode FillM )
 {
   PrimPtr tmp;
 

@@ -214,6 +214,7 @@ bool Input::MouseUpdate( void )
   ScreenToClient(Render::getInstance().getHWnd(), &p);
 
   _mousePos = {p.x, p.y};
+
   // Clump mouse position
   Render &render = Render::getInstance();
   int width = render.getWidth();

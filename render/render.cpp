@@ -4,7 +4,7 @@
  * FILE: render.cpp
  * AUTHORS:
  *   Vasilyev Peter
- * LAST UPDATE: 12.05.2018
+ * LAST UPDATE: 14.05.2018
  * NOTE: render handle implementation file
  */
 
@@ -19,7 +19,6 @@
 #include "render.h"
 #include "..\\render\timer\timer.h"
 #include "text\text.h"
-#include "../physics/phys_system.h"
 
 using namespace render;
 
@@ -278,8 +277,8 @@ void Render::init( int Width, int Height, HWND hWnd )
 
   // Setup the raster description
   raster_desc.AntialiasedLineEnable = false;
-  //raster_desc.CullMode = D3D11_CULL_BACK;
-  raster_desc.CullMode = D3D11_CULL_NONE;
+  raster_desc.CullMode = D3D11_CULL_BACK;
+  //raster_desc.CullMode = D3D11_CULL_NONE;
   raster_desc.DepthBias = 0;
   raster_desc.DepthBiasClamp = 0.0f;
   raster_desc.DepthClipEnable = true;
@@ -589,7 +588,7 @@ void Render::render( void )
   /* Temporary code !!! */
   /* Until the scene class will be appeared !!! */
   Timer &timer = Timer::getInstance();
-  static Text fpsText = Text("fps_text", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::SANS, 30, { 1, 0, 0, 1 });
+  static Text fpsText = Text("fps", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::SANS, 30, { 1, 0, 0, 1 });
   static float oldfps = 0;
 
   if (oldfps != timer._fps)
@@ -603,7 +602,6 @@ void Render::render( void )
   fpsText.draw();
 
   /* -------------- */
-  phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
   startFrame();
 
@@ -651,6 +649,7 @@ void Render::render( void )
       drawPrim(p);
     break;
   }
+  setViewport(0, 0, (float)_width, (float)_height);
 
   // Render pixel screen-space primitives
   setProjMode(Prim::ProjMode::SCREENSPACE_PIXEL);

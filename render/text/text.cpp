@@ -338,7 +338,8 @@ Text & Text::setPlacement(const PLACEMENT NewPlacement)
 void Text::draw(void)
 {
   render::Render &render = render::Render::getInstance();
-  math::Matr4f world; 
+  math::Matr4f world;
+
 
   switch (_placement)
   {

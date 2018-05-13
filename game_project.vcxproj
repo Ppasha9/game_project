@@ -173,6 +173,7 @@
     <ClCompile Include="render\text\text.cpp" />
     <ClCompile Include="render\timer\timer.cpp" />
     <ClCompile Include="scene\ball\ball.cpp" />
+    <ClCompile Include="scene\environment\environment.cpp" />
     <ClCompile Include="scene\player\player.cpp" />
     <ClCompile Include="scene\scene.cpp" />
     <ClCompile Include="sound\sound.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="render\text\text.h" />
     <ClInclude Include="render\timer\timer.h" />
     <ClInclude Include="scene\ball\ball.h" />
+    <ClInclude Include="scene\environment\environment.h" />
     <ClInclude Include="scene\player\player.h" />
     <ClInclude Include="scene\scene.h" />
     <ClInclude Include="sound\sound.h" />

@@ -95,12 +95,18 @@ PhysObject * ContactDetector::getObject(const std::string &Name)
   return _boundingVolumes[Name]->getPhysObjectPointer();
 } /* End of 'getObject' function */
 
+void phys::ContactDetector::remove(const string & Name)
+{
+  auto &obj = _boundingVolumes.find(Name);
+  if (obj != _boundingVolumes.end())
+    _boundingVolumes.erase(obj);
+} /* End of 'phys::ContactDetector::remove' function */
+
 /* Drawing debug primitives function */
 void ContactDetector::debugDraw(void) const
 {
-  render::Render &rnd = render::Render::getInstance();
   for (BoundingVolumeMap::const_iterator it = _boundingVolumes.begin(); it != _boundingVolumes.end(); it++)
-    rnd.drawPrim(rnd.getPrim(it->second->getPrimName()), getObjectMatrix(it->first));
+    it->second->debugDraw();
 } /* End of 'debugDraw' function */
 
 /* END OF 'collision_detector.cpp' FILE */

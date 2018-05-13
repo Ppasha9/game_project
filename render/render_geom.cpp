@@ -21,9 +21,7 @@ GeomPtr Render::createGeom( const string &GeomName )
   if ((tmp = getGeom(GeomName))._resource != nullptr)
     return tmp;
 
-  // return createGeom(GeomName, geom::Geom().LoadObj(string("bin\\models\\").append(GeomName)));
-
-  return nullptr;
+  return createGeom(GeomName, geom::Geom().loadObj(GeomName));
 } /* End of 'Render::createGeom' function */
 
 /* Create geometry function */

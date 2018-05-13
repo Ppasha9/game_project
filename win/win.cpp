@@ -189,12 +189,7 @@ void Win::onPaint( void )
 /* WM_CLOSE window message handle function */
 void Win::onClose( void )
 {
-  int MessageId = MessageBox(_hWnd,
-                    "Exit program?",
-                    "Exit",
-                    MB_OKCANCEL | MB_ICONQUESTION);
-  if (MessageId == IDOK)
-    DestroyWindow(_hWnd);
+  DestroyWindow(_hWnd);
 } /* End of 'Win::onClose' function */
 
 /* WM_ERASEBKGND window message handle function */

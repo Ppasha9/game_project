@@ -97,8 +97,8 @@ void Scene::PlayersCreate(UINT OneTeamCount)
   for (UINT i = 0; i < OneTeamCount; i++)
   {
     string name = string("player") + std::to_string(i); 
-    float cosa = cos(dangle * i),
-           sina = sin(dangle * i);
+    float cosa = (float)cos(dangle * i),
+           sina = (float)sin(dangle * i);
     Vec3f dir{posRad * cosa, 0, posRad * sina};
     Vec3f pos = center + dir;
     _playersA.push_back(PlayerCreate(name + "A", pos, -dir, colorA));

@@ -99,7 +99,7 @@ void Player::update(void)
 {
   render::Timer &timer = render::Timer::getInstance();
   float damp = _obj->getAngDamping();
-  _oldRot *= pow(damp, timer._deltaTime);
+  _oldRot *= (float)pow(damp, timer._deltaTime);
 } /* End of 'update' function */
 
 /* END OF 'player.cpp' FILE */

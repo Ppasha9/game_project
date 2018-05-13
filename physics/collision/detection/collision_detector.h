@@ -59,6 +59,8 @@ namespace phys
     /* Getting the pointer to physics object function */
     PhysObject * getObject(const std::string &Name);
 
+    void remove(const string &Name);
+
     /* Integrate function */
     void integrate(void);
 
