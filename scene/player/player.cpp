@@ -19,14 +19,14 @@ const float Player::ImpulseCoeff = 5.0f;
 const float Player::RotationCoeff = 1.0f;
 // Jump coeficent
 
+const float Player::Radius = 3;
 const float Player::WMaxTime = 0.30;
-
 
 /* Class constructor */
 Player::Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec,
-               const std::string &Name, const moveMap &Moves) :
+               const std::string &Name, const moveMap &Moves, const math::Matr4f &StartOri) :
   _obj(Obj), _dirVec(DirVec), _prim(Prim), _name(Name), _upVec({ 0, 1, 0 }), _oldRot({0, 0, 0}), _curW(0),
-  _moves(Moves), _kickLastTime(render::Timer::getInstance()._time), _jumpLastTime(render::Timer::getInstance()._time)
+  _moves(Moves), _kickLastTime(render::Timer::getInstance()._time), _jumpLastTime(render::Timer::getInstance()._time), _startOri(StartOri)
 {
 } /* End of constructor */
 
@@ -124,7 +124,8 @@ void Player::draw(void)
   render::Render &rnd = render::Render::getInstance();
   phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
-  rnd.drawPrim(_prim, physSys.getObjectMatrix(_name));
+  rnd.drawPrim(_prim, math::Matr4f().getScale({2 * Radius, 2 * Radius, 2 * Radius, 1}) *
+    math::Matr4f(_startOri) * physSys.getObjectMatrix(_name));
 } /* End of 'draw' function */
 
 /* Updating function */

@@ -30,6 +30,8 @@ namespace scene
     std::string _name;
 
   public:
+    const static float Radius;
+
     /* Default class constructor */
     Ball(void) = default;
 

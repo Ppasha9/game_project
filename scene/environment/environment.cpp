@@ -63,9 +63,13 @@ Environment::Environment( void )
     math::Vec3f _sPoint;
   };
 
+  float slope_len = sqrt(_standsHeight * _standsHeight + _standsWidth * _standsWidth);
+
   plane_bb
-    lw = {{1, 0, 0}, {-_width / 2, 0, 0}, {-_width / 2, 1, 0}},
-    rw = {{-1, 0, 0}, {_width / 2, 0, 0}, {_width / 2, 1, 0}},
+    lw = {{1, 0, 0}, {-_width / 2 - _standsWidth, 0, 0}, {-_width / 2 - _standsWidth, 1, 0}},
+    rw = {{-1, 0, 0}, {_width / 2 + _standsWidth, 0, 0}, {_width / 2 + _standsWidth, 1, 0}},
+    ls = {{_standsHeight / slope_len, _standsWidth / slope_len, 0}, {-_width / 2, 0, 0}, {-_width / 2, 0, 1}},
+    rs = {{-_standsHeight / slope_len, _standsWidth / slope_len, 0}, {_width / 2, 0, 0}, {_width / 2, 0, 1}},
     pw = {{0, 0, 1}, {0, 0, -_length / 2}, {0, 1, -_length / 2}},
     yw = {{0, 0, -1}, {0, 0, _length / 2}, {0, 1, _length / 2}},
     fl = {{0, 1, 0}, {0, 0, 0}, {1, 0, 0}},
@@ -84,6 +88,8 @@ Environment::Environment( void )
 
   phs.registerObject("l_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &lw);
   phs.registerObject("r_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &rw);
+  phs.registerObject("l_stands", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &ls);
+  phs.registerObject("r_stands", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &rs);
   phs.registerObject("floor", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &fl);
   phs.registerObject("ceiling", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &cl);
   //phs.registerObject("p_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &pw);
@@ -161,7 +167,7 @@ void Environment::draw( void )
   auto &t = Timer::getInstance();
   const double max_angle = 15, w = 3;
   double angle = max_angle * sin(t._time * w);
-  const static float num = 5;
+  const static float num = 10;
   math::Matr4f world_l = math::Matr4f().getRotateY(-90) * math::Matr4f().getRotateX(angle) * math::Matr4f().getTranslate({-_width / 2, (float)fabs(0.69 * cos(t._time * w)), _length / 2 * (1 - 1.5F / num)});
   math::Matr4f world_r = math::Matr4f().getRotateY(90) * math::Matr4f().getRotateX(angle) * math::Matr4f().getTranslate({_width / 2, (float)fabs(0.69 * cos(t._time * w)), _length / 2 * (1 - 1.5F / num)});
   const static int rows = 3;

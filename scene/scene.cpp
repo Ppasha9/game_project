@@ -66,7 +66,7 @@ void Scene::BallCreate(void)
   // Render types
   auto &rnd = render::Render::getInstance();
 
-  float rad = 1.5;
+  float rad = Ball::Radius;
   render::GeomPtr geom = rnd.createGeom("ball");
   render::MaterialPtr mtl = rnd.createMaterial("ball_mtl", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
   rnd.setMaterialTexture(mtl, rnd.createTexture("ball.tga"), 1);
@@ -97,6 +97,8 @@ void scene::Scene::LightUpdate(void)
     rnd.setLight(i++, render::LightSystem::LightSource(p->GetPos() + math::Vec3f{0.0f, 2.0f, 0.0f}, Environment::_radius, {1, 1, 0}));
   for (auto &p : _playersB)
     rnd.setLight(i++, render::LightSystem::LightSource(p->GetPos() + math::Vec3f{0.0f, 2.0f, 0.0f}, Environment::_radius, {1, 0, 1}));
+  for (; i < 5; i++)
+    rnd.setLight(i, render::LightSystem::LightSource({0, 0, 0}, 0, {0, 0, 0}));
 } /* End of 'scene::Scene::LightUpdate' function */
 
 void Scene::PlayersCreate(UINT OneTeamCount)
@@ -112,7 +114,7 @@ void Scene::PlayersCreate(UINT OneTeamCount)
   float posRad = Environment::_radius;
   Vec3f center = Environment::_center + Vec3f{0, 1.7f, 0};
   double dangle = math::PI_2 / OneTeamCount;
-  Vec4f colorA{0.1, 0.5, 0.7, 1.0}, colorB{0.6, 0.2, 0.7, 1.0};
+  Vec4f colorA{0.69, 0.69, 0.30, 1.0}, colorB{0.69, 0.30, 0.69, 1.0};
   for (UINT i = 0; i < OneTeamCount; i++)
   {
     string name = string("player") + std::to_string(i); 
@@ -139,7 +141,7 @@ Player * Scene::PlayerCreate(const moveMap &Preset, const string &Name, const Ve
   // Render types
   auto &rnd = render::Render::getInstance();
 
-  float rad = 1.5;
+  float rad = Player::Radius;
 
   // render::GeomPtr geom = rnd.createGeom("name w/o .obj");
   // render::MaterialPtr mtl = rnd.createMaterial(Name + "_mtl", {{0.01f, 0.01f, 0.01f, 1}, Color, {0.7f, 0.7f, 0.7f, 1}, 100});
@@ -147,9 +149,10 @@ Player * Scene::PlayerCreate(const moveMap &Preset, const string &Name, const Ve
   // render::PrimPtr pr = rnd.createPrim(Name, geom, mtl);
 
 
-  render::GeomPtr geom = rnd.createGeom(Name + "_geom", geom::Geom().createSphere({0, 0, 0}, rad, 30, 30));
-  render::MaterialPtr mtl = rnd.createMaterial(Name + "_mtl", {{0.01f, 0.01f, 0.01f, 1}, Color, {0.7f, 0.7f, 0.7f, 1}, 100});
-  rnd.setMaterialTexture(mtl, rnd.createTexture("flat_color.tga"), 1);
+  //render::GeomPtr geom = rnd.createGeom(Name + "_geom", geom::Geom().createSphere({0, 0, 0}, rad, 30, 30));
+  render::GeomPtr geom = rnd.createGeom("drone");
+  render::MaterialPtr mtl = rnd.createMaterial(Name + "_mtl", {{0.01f * Color[0], 0.01f * Color[1], 0.01f * Color[2], 1}, Color, {0.7f, 0.7f, 0.7f, 1}, 100});
+  rnd.setMaterialTexture(mtl, rnd.createTexture("drone.tga"), 1);
   render::PrimPtr pr = rnd.createPrim(Name, geom, mtl);
 
   // Phys types
@@ -158,7 +161,8 @@ Player * Scene::PlayerCreate(const moveMap &Preset, const string &Name, const Ve
   auto &instP = phys::PhysicsSystem::getInstance();
   instP.registerObject(Name, obj, phys::bounding_volume_type::SPHERE, &rad);
   instP.applyForceToObj(Name, &Grav);
-  return new Player(pr, obj, Dir, Name, Preset);
+  return new Player(pr, obj, Dir, Name, Preset,
+    math::Matr4f().getRotateY(atan2(Dir * math::Vec3f{1, 0, 0}, Dir * math::Vec3f{0, 0, -1}), false));
 } /* End of 'PlayerCreate' function */
 
 void Scene::Response(void)
@@ -298,13 +302,27 @@ void Scene::Response(void)
 
 void Scene::Draw(void)
 {
+  render::Timer &timer = render::Timer::getInstance();
+  static render::Text fpsText = render::Text("fps", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::ARIAL, 30, { 1, 0, 0, 1 });
+  static float oldfps = 0;
+
+  if (oldfps != timer._fps)
+  {
+    char txt[300];
+    sprintf(txt, "FPS: %f", timer._fps);
+    fpsText.setOutText(txt).setPrim();
+    oldfps = (float)timer._fps;
+  }
+
+  fpsText.draw();
+
   if (_isGame)
   {
     phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
-    physSys.debugDraw();
+    //physSys.debugDraw();
 
     // Draw scene
-    //_ball->draw();
+    _ball->draw();
     // Draw players
     for (auto &it = _playersA.begin(); it != _playersA.end(); it++)
       (*it)->draw();

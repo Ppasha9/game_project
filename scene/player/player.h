@@ -38,12 +38,16 @@ namespace scene
   class Player
   {
   public:
+    static const float Radius;
 
   private:
     /* Impulse coefficient */
     static const float ImpulseCoeff;
     /* Rotation coefficient */
     static const float RotationCoeff;
+
+    /* Starting orientation matrix */
+    math::Matr4f _startOri;
 
     /* The direction vector */
     math::Vec3f _dirVec;
@@ -74,7 +78,8 @@ namespace scene
     Player(void) = default;
 
     /* Class constructor */
-    Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec, const std::string &Name, const moveMap &Moves);
+    Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec,
+      const std::string &Name, const moveMap &Moves, const math::Matr4f &StartOri);
 
     /* Action function */
     int action(const COMMAND_TYPE ComType);

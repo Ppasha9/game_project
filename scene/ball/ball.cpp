@@ -12,6 +12,8 @@
 #include "../../physics/forces/gravity/gravity.h"
 using namespace scene;
 
+const float Ball::Radius = 2;
+
  /* Class constructor */
 Ball::Ball(const std::string &Name, const render::PrimPtr &Prim, phys::PhysObject *Obj) : _obj(Obj), _prim(Prim),
   _name(Name)
@@ -24,7 +26,7 @@ void Ball::draw(void)
   render::Render &rnd = render::Render::getInstance();
   phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
 
-  rnd.drawPrim(_prim, physSys.getObjectMatrix(_name));
+  rnd.drawPrim(_prim, math::Matr4f().getScale({Radius, Radius, Radius, 1}) * physSys.getObjectMatrix(_name));
 } /* End of 'draw' function */
 
 Vec3f Ball::GetPos(void)

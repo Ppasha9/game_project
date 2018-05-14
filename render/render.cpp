@@ -586,24 +586,6 @@ void Render::response( void )
 /* Render all primitives function */
 void Render::render( void )
 {
-  /* Temporary code !!! */
-  /* Until the scene class will be appeared !!! */
-  Timer &timer = Timer::getInstance();
-  static Text fpsText = Text("fps", "FPS: 0.0", 0, 0, render::Text::Font::FONT_ID::SANS, 30, { 1, 0, 0, 1 });
-  static float oldfps = 0;
-
-  if (oldfps != timer._fps)
-  {
-    char txt[300];
-    sprintf(txt, "FPS: %f", timer._fps);
-    fpsText.setOutText(txt).setPrim();
-    oldfps = (float)timer._fps;
-  }
-
-  fpsText.draw();
-
-  /* -------------- */
-
   startFrame();
 
   // Render frustum primitives
