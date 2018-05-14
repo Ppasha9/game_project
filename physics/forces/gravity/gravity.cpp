@@ -13,7 +13,7 @@
 using namespace phys;
 
 /* Static const of gravity acceleration on Earth */
-const math::Vec3f Gravity::constEarthGravity = { 0, -9.8f, 0 };
+const math::Vec3f Gravity::constEarthGravity = { 0, -9.8f * 3, 0 };
 
 /* Default class constructor */
 Gravity::Gravity(void) : _gravity(constEarthGravity)

@@ -42,7 +42,7 @@ namespace phys
     void registerObject(const std::string &Name, PhysObject *Obj, const bounding_volume_type VolumeType, void *Params);
 
     /* Response function */
-    void response(void);
+    void response(void (*RespFunc)(const math::Vec3f &, const phys::bounding_volume_type, const phys::bounding_volume_type));
 
     /* Getting physics object transformation matrix for rendering function */
     const math::Matr4f getObjectMatrix(const std::string &Name) const;

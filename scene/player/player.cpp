@@ -16,14 +16,16 @@ using namespace scene;
 /* Impulse coefficient */
 const float Player::ImpulseCoeff = 5.0f;
 /* Rotation coefficient */
-const float Player::RotationCoeff = 0.6f;
+const float Player::RotationCoeff = 1.0f;
 // Jump coeficent
+
+const float Player::WMaxTime = 0.30;
 
 
 /* Class constructor */
 Player::Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec,
                const std::string &Name, const moveMap &Moves) :
-  _obj(Obj), _dirVec(DirVec), _prim(Prim), _name(Name), _upVec({ 0, 1, 0 }), _oldRot({0, 0, 0}),
+  _obj(Obj), _dirVec(DirVec), _prim(Prim), _name(Name), _upVec({ 0, 1, 0 }), _oldRot({0, 0, 0}), _curW(0),
   _moves(Moves), _kickLastTime(render::Timer::getInstance()._time), _jumpLastTime(render::Timer::getInstance()._time)
 {
 } /* End of constructor */
@@ -38,6 +40,9 @@ Player::~Player(void)
 /* Action function */
 int Player::action(const COMMAND_TYPE ComType)
 {
+  double curTime = render::Timer::getInstance()._time;
+  float deltaTime = (float)render::Timer::getInstance()._deltaTime;
+
   math::Matr4f matr = _obj->getTransormMatrix();
   matr = matr.getTranspose();
 
@@ -51,7 +56,6 @@ int Player::action(const COMMAND_TYPE ComType)
   upV.normalize();
   math::Vec3f upV3 = { upV[0], upV[1], upV[2] };
 
-  double curTime = render::Timer::getInstance()._time;
   switch (ComType)
   {
   case COMMAND_TYPE::MoveForward:
@@ -61,14 +65,22 @@ int Player::action(const COMMAND_TYPE ComType)
     _obj->addImpulse(-dirV3 * ImpulseCoeff);
     break;
   case COMMAND_TYPE::MoveLeft:
+    if (_curW < Player::RotationCoeff)
+      _curW += Player::RotationCoeff * deltaTime / WMaxTime;
+    else
+      _curW = Player::RotationCoeff;
     _obj->addRotation(-_oldRot);
-    _obj->addRotation(upV3 * RotationCoeff);
-    _oldRot = upV3 * RotationCoeff;
+    _obj->addRotation(upV3 * _curW);
+    _oldRot = upV3 * _curW;
     break;
   case COMMAND_TYPE::MoveRight:
+    if (_curW > -Player::RotationCoeff)
+      _curW -= Player::RotationCoeff * deltaTime / WMaxTime;
+    else
+      _curW = -Player::RotationCoeff;
     _obj->addRotation(-_oldRot);
-    _obj->addRotation(-upV3 * RotationCoeff);
-    _oldRot = -upV3 * RotationCoeff;
+    _obj->addRotation(upV3 * _curW);
+    _oldRot = upV3 * _curW;
     break;
   case COMMAND_TYPE::MoveJump:
     if (curTime - _jumpLastTime >= JUMP_DELTA_TIME)
@@ -121,6 +133,7 @@ void Player::update(void)
   render::Timer &timer = render::Timer::getInstance();
   float damp = _obj->getAngDamping();
   _oldRot *= (float)pow(damp, 2 * timer._deltaTime);
+  _curW *= (float)pow(damp, 2 * timer._deltaTime); 
 } /* End of 'update' function */
 
 void scene::Player::SetCamera(UINT Id)

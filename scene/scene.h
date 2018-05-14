@@ -16,7 +16,9 @@
 #include "../menu/menu_system.h"
 #include "environment/environment.h"
 #include "../render/text/text.h"
+#include "../sound/sound.h"
 #include <vector>
+
 
 /* Scene namespace */
 namespace scene
@@ -47,6 +49,12 @@ namespace scene
     // Scores
     math::Vec2i _score;
     render::Text _scoreText;
+
+    // SOUND
+    snd::Sound *_ballsTouch,
+               *_ballWallTouch,
+               *_ulta,
+               *_goal;
 
     // Creation part
     Scene(void);
@@ -83,6 +91,8 @@ namespace scene
     static void ResponseS(void);
 
     static void DrawS(void);
+
+    static void PhysResponse(const math::Vec3f &Pos, const phys::bounding_volume_type FType, const phys::bounding_volume_type SType);
   }; /* End of 'Scene' class */
 } /* End of 'scene' namespace */
 

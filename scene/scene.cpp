@@ -16,6 +16,7 @@
 #include "../render/text/text.h"
 #include "../physics/forces/gravity/gravity.h"
 #include "../physics/phys_system.h"
+#include "../sound/sound.h"
 
 using namespace scene;
 using namespace input;
@@ -23,7 +24,9 @@ using namespace input;
 Scene *s_Scene;
 
 Scene::Scene(void) :
-  _isGame(false)
+  _isGame(false), _ballsTouch(new snd::Sound("ahhh.wav")),
+  _ballWallTouch(new snd::Sound("walls.wav")) ,
+  _ulta(new snd::Sound("ulta.wav")), _goal(new snd::Sound("goal.wav"))
 {
   // Menu creation
   std::ifstream menuFile("bin//menu//main.menu");
@@ -187,6 +190,9 @@ void Scene::Response(void)
         if (Dist >= KICK_DIST)
           continue;
         _ball->ApplyForce(Dir * (KICK_DIST / Dist / Dist) * KICK_FORCE);
+        // Sound play
+        _ulta->stop();
+        _ulta->play();
       }
     }
     for (auto &it = _playersB.begin(); it != _playersB.end(); it++, i++)
@@ -204,6 +210,9 @@ void Scene::Response(void)
         if (Dist >= KICK_DIST)
           continue;
         _ball->ApplyForce(Dir * (KICK_DIST / Dist / Dist) * KICK_FORCE);
+        // Sound play
+        _ulta->stop();
+        _ulta->play();
       }
     }
     // Light response
@@ -212,7 +221,7 @@ void Scene::Response(void)
     // Response scene
     // Phys response
     phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
-    physSys.response();
+    physSys.response(PhysResponse);
 
     // Buttons control
     if (input.KeyHit(DIK_ESCAPE))
@@ -224,6 +233,10 @@ void Scene::Response(void)
     int isG = IsGoal();
     if (isG != -1)
     {
+      // Play goal sound
+      _goal->stop();
+      _goal->play();
+
       _score._coords[isG]++;
 
       char txt[300];
@@ -395,4 +408,20 @@ void Scene::DrawS(void)
 {
   s_Scene->Draw();
 } /* End of 'Scene::DrawS' function */
+
+void Scene::PhysResponse(const math::Vec3f &Pos, const phys::bounding_volume_type FType, const phys::bounding_volume_type SType)
+{
+  if (FType == phys::bounding_volume_type::SPHERE && SType == phys::bounding_volume_type::SPHERE)
+  {
+    s_Scene->_ballsTouch->stop();
+    s_Scene->_ballsTouch->play();
+  }
+  else if (FType == phys::bounding_volume_type::SPHERE && SType == phys::bounding_volume_type::BOX ||
+           SType == phys::bounding_volume_type::SPHERE && FType == phys::bounding_volume_type::BOX)
+  {
+    s_Scene->_ballWallTouch->stop();
+    s_Scene->_ballWallTouch->play();
+  }
+} /* End of 'PhysResponse' function */
+
 /* END OF 'scene.cpp' FILE */

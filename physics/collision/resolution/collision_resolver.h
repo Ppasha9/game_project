@@ -32,7 +32,7 @@ namespace phys
     ContactResolver(void) = default;
 
     /* Response function */
-    void response(ObjectContactsVector &ObjContacts) const;
+    void response(ObjectContactsVector &ObjContacts, void (*RespFunc)(const math::Vec3f &, const phys::bounding_volume_type, const phys::bounding_volume_type)) const;
   }; /* End of 'ContactResolver' class */
 }; /* End of 'phys' namespace */
 

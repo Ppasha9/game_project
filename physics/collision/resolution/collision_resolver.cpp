@@ -133,13 +133,15 @@ void ContactResolver::resolve(PhysicsObjectsPair &Pair, Contact Contact, float D
 } /* End of 'resolve' function */
 
 /* Response function */
-void ContactResolver::response(ObjectContactsVector &ObjContacts) const
+void ContactResolver::response(ObjectContactsVector &ObjContacts, void (*RespFunc)(const math::Vec3f &, const phys::bounding_volume_type, const phys::bounding_volume_type)) const
 {
   for (auto &elem : ObjContacts)
   {
     float damp = 1.0F;
     for (unsigned int i(0); i < elem.first.size(); i++)
       resolve(elem.second, elem.first[i], damp);
+
+    RespFunc(elem.first[0]._position, elem.second.first->_type, elem.second.second->_type);
   }
 } /* End of 'response' function */
 

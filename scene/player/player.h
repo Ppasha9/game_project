@@ -19,7 +19,7 @@ namespace scene
 {
   static const double KICK_DELTA_TIME = 1.5;
   static const double JUMP_DELTA_TIME = 1.6;
-  static const double JUMP_COEF = 400;
+  static const float JUMP_COEF = 400;
   /* Command enumeration */
   enum struct COMMAND_TYPE
   {
@@ -58,6 +58,12 @@ namespace scene
 
     /* The rotation vector on previous frame */
     math::Vec3f _oldRot;
+    /* Rotation vector current length */
+    float _curW;
+
+    // Time needed to gain maximum rotation
+    const static float WMaxTime;
+
     // controls
     moveMap _moves;
     // Kick time

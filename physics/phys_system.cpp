@@ -72,13 +72,13 @@ void PhysicsSystem::registerObject(const std::string &Name, PhysObject *Obj, con
 } /* End of 'registerObject' function */
 
 /* Response function */
-void PhysicsSystem::response(void)
+void PhysicsSystem::response(void (*RespFunc)(const math::Vec3f &, const phys::bounding_volume_type, const phys::bounding_volume_type))
 {
   render::Timer &timer = render::Timer::getInstance();
   if (timer._deltaTime > render::Timer::MAX_ENABLED_DELTA_TIME)
     return;
 
-  _resolver.response(_generator.response(_detector.response()));
+  _resolver.response(_generator.response(_detector.response()), RespFunc);
   _detector.integrate();
 } /* End of 'response' function */
 
