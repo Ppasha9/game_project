@@ -17,19 +17,27 @@
 /* Scene namespace */
 namespace scene
 {
+  static const double KICK_DELTA_TIME = 1.5;
+  static const double JUMP_DELTA_TIME = 1.6;
+  static const double JUMP_COEF = 400;
+  /* Command enumeration */
+  enum struct COMMAND_TYPE
+  {
+    MoveForward,
+    MoveLeft,
+    MoveRight,
+    MoveBack,
+    MoveJump,
+    MoveKick
+  }; /* End of 'COMMAND_TYPE' enum */
+
+  using moveMap = std::map<UINT, COMMAND_TYPE>;
+
   using namespace math;
   /* Player class */
   class Player
   {
   public:
-    /* Command enumeration */
-    enum struct COMMAND_TYPE
-    {
-      MoveForward,
-      MoveLeft,
-      MoveRight,
-      MoveBack
-    }; /* End of 'COMMAND_TYPE' enum */
 
   private:
     /* Impulse coefficient */
@@ -50,16 +58,20 @@ namespace scene
 
     /* The rotation vector on previous frame */
     math::Vec3f _oldRot;
-
+    // controls
+    moveMap _moves;
+    // Kick time
+    double _kickLastTime;
+    double _jumpLastTime;
   public:
     /* Default class constructor */
     Player(void) = default;
 
     /* Class constructor */
-    Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec, const std::string &Name);
+    Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec, const std::string &Name, const moveMap &Moves);
 
     /* Action function */
-    void action(const COMMAND_TYPE ComType);
+    int action(const COMMAND_TYPE ComType);
 
     Vec3f GetPos(void);
 
@@ -72,6 +84,11 @@ namespace scene
 
     /* Updating function */
     void update(void);
+
+    void SetCamera(UINT Id);
+
+    /* Move by keyboard */
+    int MoveKeyboard(const std::vector<UINT> &Moves);
 
     /* Class destructor */
     ~Player(void);

@@ -106,6 +106,8 @@ namespace input
     // Keyboard work functions
     bool KeyHit( size_t KeyCode ) const;
 
+    void KeysHited(std::vector<UINT> &Keys);
+
     bool KeyNewHit( size_t KeyCode ) const;
     // Mouse work functions
     Vec3f MouseSpeed( float Dt = 1.0f ) const; 

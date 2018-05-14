@@ -217,7 +217,7 @@ std::vector<Contact> BoundingSphere::getContactData(const BoundingBox *Box) cons
   math::Vec3f closestPtWorld = { x, y, z };
 
   Contact contact;
-  contact._normal = -(center - closestPtWorld).getNormalized();
+  contact._normal = (center - closestPtWorld).getNormalized();
   contact._position = closestPtWorld;
   contact._penetration = _radius - sqrt(dist);
   contact.calculateContactBasis();

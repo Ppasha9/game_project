@@ -300,6 +300,14 @@ bool Input::KeyHit( size_t KeyCode ) const
   return (_keyStates[KeyCode] & 0x80) != 0;
 } /* End of 'Input::KeyHit' function */
 
+void input::Input::KeysHited(std::vector<UINT>& Keys)
+{
+  Keys.clear();
+  for (UINT i = 0; i < KEYBOARD_SIZE; i++)
+    if (_keyStates[i] & 0x80)
+      Keys.push_back(i);
+} /* End of 'input::Input::KeysHited' function */
+
 bool Input::KeyNewHit( size_t KeyCode ) const
 {
   return (_keyStates[KeyCode] & 0x80) != 0 &&

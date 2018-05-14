@@ -25,7 +25,7 @@ namespace phys
     void resolve(PhysicsObjectsPair &Pair, Contact Contact, float DampingCoeff) const;
 
     /* Adding the change of velocity by impulse function */
-    void addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, const math::Vec3f RelContactPos[2], float DampingCoeff) const;
+    void addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, math::Vec3f RelContactPos[2], float DampingCoeff) const;
 
   public:
     /* Default class constructor */

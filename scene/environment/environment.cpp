@@ -59,18 +59,17 @@ Environment::Environment( void )
   struct plane_bb
   {
     math::Vec3f _normal;
-    float _offset;
     math::Vec3f _fPoint;
     math::Vec3f _sPoint;
   };
 
   plane_bb
-    lw = {{1, 0, 0}, 0, {-_width / 2, 0, 0}, {-_width / 2, 1, 0}},
-    rw = {{-1, 0, 0}, 0, {_width / 2, 0, 0}, {_width / 2, 1, 0}},
-    pw = {{0, 0, 1}, 0, {0, 0, -_length / 2}, {0, 1, -_length / 2}},
-    yw = {{0, 0, -1}, 0, {0, 0, _length / 2}, {0, 1, _length / 2}},
-    fl = {{0, 1, 0}, 0, {0, 0, 0}, {1, 0, 0}},
-    cl = {{0, -1, 0}, 0, {0, _height, 0}, {1, _height, 0}};
+    lw = {{1, 0, 0}, {-_width / 2, 0, 0}, {-_width / 2, 1, 0}},
+    rw = {{-1, 0, 0}, {_width / 2, 0, 0}, {_width / 2, 1, 0}},
+    pw = {{0, 0, 1}, {0, 0, -_length / 2}, {0, 1, -_length / 2}},
+    yw = {{0, 0, -1}, {0, 0, _length / 2}, {0, 1, _length / 2}},
+    fl = {{0, 1, 0}, {0, 0, 0}, {1, 0, 0}},
+    cl = {{0, -1, 0}, {0, _height, 0}, {1, _height, 0}};
   
   struct box_bb
   {

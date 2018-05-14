@@ -42,7 +42,7 @@ void Ball::SetPos(const Vec3f &Pos)
 
 void Ball::ApplyForce(const Vec3f &Force)
 {
-  _obj->addForce(Force);
+  _obj->addImpulse(Force);
 } /* End of 'Ball::ApplyForce' function */
 
 /* Class destructor */

@@ -384,6 +384,7 @@ geom::Geom & geom::Geom::loadObj( const string & name )
   std::ifstream in;
   string tmp;
   float x, y, z;
+  static Geom *nil = new Geom;
 
   std::vector<math::Vec3f> poss;
   std::vector<math::Vec3f> norms;
@@ -395,6 +396,8 @@ geom::Geom & geom::Geom::loadObj( const string & name )
 
   in.open(full_name);
 
+  if (!in.is_open())
+    return *nil;
   while (!in.eof())
   {
     string type;

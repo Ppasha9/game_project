@@ -15,11 +15,10 @@
 #include "../input/input.h"
 #include "../render/text/text.h"
 #include "../physics/forces/gravity/gravity.h"
+#include "../physics/phys_system.h"
 
 using namespace scene;
 using namespace input;
-
-#define TO_STR(A) (#A)
 
 Scene *s_Scene;
 
@@ -37,6 +36,10 @@ Scene::Scene(void) :
   Input::Initizalize();
   Input &inp = Input::GetInstance();
   inp.InitAll();
+  // Presets create
+  ControlPresetsCreate();
+  _score = {0, 0};
+  _scoreText = render::Text("score_text", "0:0", render::Text::PLACEMENT::CENTER_UP, render::Text::Font::FONT_ID::COURIER, 50, {1, 1, 1, 1});
 } /* End of 'Scene::Scene' function */
 
 Scene::~Scene(void)
@@ -61,13 +64,13 @@ void Scene::BallCreate(void)
   auto &rnd = render::Render::getInstance();
 
   float rad = 1.5;
-  render::GeomPtr geom = rnd.createGeom("ball", geom::Geom().createSphere({0, 0, 0}, rad, 30, 30));
+  render::GeomPtr geom = rnd.createGeom("ball");
   render::MaterialPtr mtl = rnd.createMaterial("ball_mtl", {{0.01f, 0.01f, 0.01f, 1}, {0.69f, 0.69f, 0.69f, 1}, {0.7f, 0.7f, 0.7f, 1}, 100});
-  rnd.setMaterialTexture(mtl, rnd.createTexture("flat_color.tga"), 1);
+  rnd.setMaterialTexture(mtl, rnd.createTexture("ball.tga"), 1);
   render::PrimPtr ball = rnd.createPrim("ball", geom, mtl);
 
   // Phys types
-  phys::PhysObject *obj = new phys::PhysObject({0, 0, 0}, 1.0f / 30.0f, 0.8f, 0.8f);
+  phys::PhysObject *obj = new phys::PhysObject({0, 0, 0}, 1.0f / 2.0f, 0.8f, 0.8f);
   phys::Gravity Grav;
   auto &instP = phys::PhysicsSystem::getInstance();
   instP.registerObject("ball", obj, phys::bounding_volume_type::SPHERE, &rad);
@@ -77,8 +80,21 @@ void Scene::BallCreate(void)
 
 void Scene::EnviCreate(void)
 {
-
+  _envi = new Environment();
 } /* End of 'EnviCreate' function */
+
+void scene::Scene::LightUpdate(void)
+{
+  auto &rnd = render::Render::getInstance();
+  rnd.setLight(0, render::LightSystem::LightSource({0, 69, 0}, 300, {1, 1, 1}));
+
+  int i = 1;
+
+  for (auto &p : _playersA)
+    rnd.setLight(i++, render::LightSystem::LightSource(p->GetPos() + math::Vec3f{0.0f, 2.0f, 0.0f}, Environment::_radius, {1, 1, 0}));
+  for (auto &p : _playersB)
+    rnd.setLight(i++, render::LightSystem::LightSource(p->GetPos() + math::Vec3f{0.0f, 2.0f, 0.0f}, Environment::_radius, {1, 0, 1}));
+} /* End of 'scene::Scene::LightUpdate' function */
 
 void Scene::PlayersCreate(UINT OneTeamCount)
 {
@@ -90,43 +106,56 @@ void Scene::PlayersCreate(UINT OneTeamCount)
   _playersA.clear();
   _playersB.clear();
 
-  Vec3f center{0, 0, 0};
-  float posRad = 10;
-  double dangle = math::PI / OneTeamCount;
+  float posRad = Environment::_radius;
+  Vec3f center = Environment::_center + Vec3f{0, 1.7f, 0};
+  double dangle = math::PI_2 / OneTeamCount;
   Vec4f colorA{0.1, 0.5, 0.7, 1.0}, colorB{0.6, 0.2, 0.7, 1.0};
   for (UINT i = 0; i < OneTeamCount; i++)
   {
     string name = string("player") + std::to_string(i); 
-    float cosa = (float)cos(dangle * i),
-           sina = (float)sin(dangle * i);
+    float cosa = (float)cos(math::PI_2 + dangle * i),
+           sina = (float)sin(math::PI_2 + dangle * i);
     Vec3f dir{posRad * cosa, 0, posRad * sina};
     Vec3f pos = center + dir;
-    _playersA.push_back(PlayerCreate(name + "A", pos, -dir, colorA));
+
+    UINT index = min(i * 2, _presets.size());
+    const moveMap &preset = _presets[index];
+
+    _playersA.push_back(PlayerCreate(preset, name + "A", pos, -dir, colorA));
 
     dir = -dir;
     pos = center + dir;
-    _playersB.push_back(PlayerCreate(name + "B", pos, -dir, colorB));
+    index = min(i * 2 + 1, _presets.size());
+    const moveMap &presetB = _presets[index];
+    _playersB.push_back(PlayerCreate(presetB, name + "B", pos, -dir, colorB));
   }
 } /* End of 'Scene::PlayersCreate' function */
 
-Player * Scene::PlayerCreate(const string &Name, const Vec3f &Pos, const Vec3f &Dir, Vec4f Color)
+Player * Scene::PlayerCreate(const moveMap &Preset, const string &Name, const Vec3f &Pos, const Vec3f &Dir, Vec4f Color)
 {
   // Render types
   auto &rnd = render::Render::getInstance();
 
   float rad = 1.5;
-  render::GeomPtr geom = rnd.createGeom(Name + "_geom", geom::Geom().createSphere(Pos, rad, 30, 30));
+
+  // render::GeomPtr geom = rnd.createGeom("name w/o .obj");
+  // render::MaterialPtr mtl = rnd.createMaterial(Name + "_mtl", {{0.01f, 0.01f, 0.01f, 1}, Color, {0.7f, 0.7f, 0.7f, 1}, 100});
+  // rnd.setMaterialTexture(mtl, rnd.createTexture("name of texture.tga"), 1);
+  // render::PrimPtr pr = rnd.createPrim(Name, geom, mtl);
+
+
+  render::GeomPtr geom = rnd.createGeom(Name + "_geom", geom::Geom().createSphere({0, 0, 0}, rad, 30, 30));
   render::MaterialPtr mtl = rnd.createMaterial(Name + "_mtl", {{0.01f, 0.01f, 0.01f, 1}, Color, {0.7f, 0.7f, 0.7f, 1}, 100});
   rnd.setMaterialTexture(mtl, rnd.createTexture("flat_color.tga"), 1);
   render::PrimPtr pr = rnd.createPrim(Name, geom, mtl);
 
   // Phys types
-  phys::PhysObject *obj = new phys::PhysObject(Pos, 1.0f / 30.0f, 0.8f, 0.8f);
+  phys::PhysObject *obj = new phys::PhysObject(Pos, 1.0f / 20.0f, 0.8f, 0.8f);
   phys::Gravity Grav;
   auto &instP = phys::PhysicsSystem::getInstance();
   instP.registerObject(Name, obj, phys::bounding_volume_type::SPHERE, &rad);
   instP.applyForceToObj(Name, &Grav);
-  return new Player(pr, obj, Dir, Name);
+  return new Player(pr, obj, Dir, Name, Preset);
 } /* End of 'PlayerCreate' function */
 
 void Scene::Response(void)
@@ -134,12 +163,51 @@ void Scene::Response(void)
   Input &input = Input::GetInstance();
   // Input update
   input.UpdateAll();
+  auto &rnd = render::Render::getInstance();
 
   if (_isGame)
   {
     render::Render &rnd = render::Render::getInstance();
     // Response camera
-    rnd.setCamera(0, true, { -60, 20, 60 }, { 0, 1, 0 }, { 0, 1, 0 });
+    UINT i = 0;
+    std::vector<UINT> keys;
+    input.KeysHited(keys) ;
+    for (auto &it = _playersA.begin(); it != _playersA.end(); it++, i++)
+    {
+      (*it)->SetCamera(i);
+      (*it)->update();
+      int res = (*it)->MoveKeyboard(keys);
+      if (res == 0)
+      {
+        Vec3f ballPos = _ball->GetPos();
+        Vec3f playerPos = (*it)->GetPos();
+        Vec3f Dir = ballPos - playerPos;
+        float Dist = Dir.length();
+        Dir.norm();
+        if (Dist >= KICK_DIST)
+          continue;
+        _ball->ApplyForce(Dir * (KICK_DIST / Dist / Dist) * KICK_FORCE);
+      }
+    }
+    for (auto &it = _playersB.begin(); it != _playersB.end(); it++, i++)
+    {
+      (*it)->SetCamera(i);
+      (*it)->update();
+      int res = (*it)->MoveKeyboard(keys);
+      if (res == 0)
+      {
+        Vec3f ballPos = _ball->GetPos();
+        Vec3f playerPos = (*it)->GetPos();
+        Vec3f Dir = ballPos - playerPos;
+        float Dist = Dir.length();
+        Dir.norm();
+        if (Dist >= KICK_DIST)
+          continue;
+        _ball->ApplyForce(Dir * (KICK_DIST / Dist / Dist) * KICK_FORCE);
+      }
+    }
+    // Light response
+    LightUpdate();
 
     // Response scene
     // Phys response
@@ -148,9 +216,25 @@ void Scene::Response(void)
 
     // Buttons control
     if (input.KeyHit(DIK_ESCAPE))
+    {
       _isGame = false;
+    }
     // ball
     
+    int isG = IsGoal();
+    if (isG != -1)
+    {
+      _score._coords[isG]++;
+
+      char txt[300];
+      sprintf(txt, "%i:%i", _score[0], _score[1]);
+      _scoreText.setOutText(txt).setPrim();
+
+      if (_playersA.size() == 2)
+        FourPlayersCreate();
+      else if (_playersA.size() == 1)
+        TwoPlayersCreate();
+    }
   }
   else
   {
@@ -178,7 +262,10 @@ void Scene::Response(void)
         delete _menuSyst;
         _menuSyst = new MenuSystem(menuFile);
         menuFile.close();
+        rnd.setSplitScreen(render::Render::SplitScreenMode::HALVES);
         TwoPlayersCreate();
+        _score = {0, 0};
+        _scoreText.setOutText("0:0").setPrim();
       } else if (menuRes == "4 players")
       {
         _isGame = true;
@@ -187,7 +274,10 @@ void Scene::Response(void)
         delete _menuSyst;
         _menuSyst = new MenuSystem(menuFile);
         menuFile.close();
+        rnd.setSplitScreen(render::Render::SplitScreenMode::QUARTERS);
         FourPlayersCreate();
+        _score = {0, 0};
+        _scoreText.setOutText("0:0").setPrim();
       }
     }
   }
@@ -197,13 +287,19 @@ void Scene::Draw(void)
 {
   if (_isGame)
   {
+    phys::PhysicsSystem &physSys = phys::PhysicsSystem::getInstance();
+    physSys.debugDraw();
+
     // Draw scene
-    _ball->draw();
+    //_ball->draw();
     // Draw players
     for (auto &it = _playersA.begin(); it != _playersA.end(); it++)
       (*it)->draw();
     for (auto &it = _playersB.begin(); it != _playersB.end(); it++)
       (*it)->draw();
+    _envi->draw();
+
+    _scoreText.draw();
   }
   else
   {
@@ -214,17 +310,75 @@ void Scene::Draw(void)
 
 void Scene::TwoPlayersCreate(void)
 {
-  Vec3f center{0, 0, 0};
+  Vec3f center = Environment::_center;
   PlayersCreate(1);
-  _ball->SetPos(center);
+  _ball->SetPos(Environment::_center + Vec3f{0, 5, 0});
 } /* End of 'Scene::TwoPlayersCreate' function */
 
 void Scene::FourPlayersCreate(void)
 {
-  Vec3f center{0, 0, 0};
+
+  Vec3f center = Environment::_center;
   PlayersCreate(2);
-  _ball->SetPos(center);
+  _ball->SetPos(Environment::_center + Vec3f{0, 5, 0});
 } /* End of 'Scene::FourPlayersCreate' function */
+
+void scene::Scene::ControlPresetsCreate(void)
+{
+  // First key preset
+  moveMap preset;
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_W, COMMAND_TYPE::MoveForward));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_A, COMMAND_TYPE::MoveLeft));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_D, COMMAND_TYPE::MoveRight));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_S, COMMAND_TYPE::MoveBack));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_Q, COMMAND_TYPE::MoveJump));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_E, COMMAND_TYPE::MoveKick));
+  _presets.push_back(preset);
+  preset.clear();
+  // Second key preset
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_UPARROW, COMMAND_TYPE::MoveForward));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_LEFTARROW, COMMAND_TYPE::MoveLeft));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RIGHTARROW, COMMAND_TYPE::MoveRight));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_DOWNARROW, COMMAND_TYPE::MoveBack));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RCONTROL, COMMAND_TYPE::MoveJump));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RSHIFT, COMMAND_TYPE::MoveKick));
+  _presets.push_back(preset);
+  preset.clear();
+  // Third key preset
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_T, COMMAND_TYPE::MoveForward));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_F, COMMAND_TYPE::MoveLeft));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_H, COMMAND_TYPE::MoveRight));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_G, COMMAND_TYPE::MoveBack));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_R, COMMAND_TYPE::MoveJump));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_Y, COMMAND_TYPE::MoveKick));
+
+  _presets.push_back(preset);
+  preset.clear();
+  // Fourth key preset
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_NUMPAD8, COMMAND_TYPE::MoveForward));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_NUMPAD4, COMMAND_TYPE::MoveLeft));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_NUMPAD6, COMMAND_TYPE::MoveRight));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_NUMPAD5, COMMAND_TYPE::MoveBack));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_NUMPAD7, COMMAND_TYPE::MoveJump));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_NUMPAD9, COMMAND_TYPE::MoveKick));
+  _presets.push_back(preset);
+  preset.clear();
+} /* End of 'scene::Scene::ControlPresetsCreate' function */
+
+int Scene::IsGoal(void) const
+{
+  math::Vec3f ballPos = _ball->GetPos();
+
+  if (ballPos[2] >= Environment::_length / 2 && ballPos[0] <= Environment::_goalWidth / 2 && ballPos[0] >= -Environment::_goalWidth / 2 &&
+      ballPos[1] >= 0 && ballPos[1] <= Environment::_goalHeight)
+    return 0;
+
+  if (ballPos[2] <= -Environment::_length / 2 && ballPos[0] <= Environment::_goalWidth / 2 && ballPos[0] >= -Environment::_goalWidth / 2 &&
+      ballPos[1] >= 0 && ballPos[1] <= Environment::_goalHeight)
+    return 1;
+
+  return -1;
+} /* End of 'IsGoal' function */
 
 void Scene::Initialize(void)
 {

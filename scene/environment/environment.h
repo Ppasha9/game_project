@@ -20,15 +20,6 @@ namespace scene
   class Environment
   {
   private:
-    static const float _width;
-    static const float _standsWidth;
-    static const float _standsHeight;
-    static const float _length;
-    static const float _height;
-    static const float _goalWidth;
-    static const float _goalHeight;
-    static const float _goalDepth;
-
     render::PrimPtr
       _wallPrim,
       _goalPrim,
@@ -38,6 +29,15 @@ namespace scene
       _petrPrim;
 
   public:
+    static const float _width;
+    static const float _standsWidth;
+    static const float _standsHeight;
+    static const float _length;
+    static const float _height;
+    static const float _goalWidth;
+    static const float _goalHeight;
+    static const float _goalDepth;
+
     static const math::Vec3f _center;
     static const float _radius;
 

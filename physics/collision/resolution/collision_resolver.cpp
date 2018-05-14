@@ -13,10 +13,17 @@
 using namespace phys;
 
 /* Adding the change of velocity by impulse function */
-void ContactResolver::addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, const math::Vec3f RelContactPos[2], float DampingCoeff) const
+void ContactResolver::addChange(PhysicsObjectsPair &Pair, const Contact &Contact, const float DeltaVel, math::Vec3f RelContactPos[2], float DampingCoeff) const
 {
   PhysObject *FObj = Pair.first->getPhysObjectPointer();
   PhysObject *SObj = Pair.second->getPhysObjectPointer();
+
+  if (!FObj->hasFiniteMass())
+  {
+    FObj = Pair.second->getPhysObjectPointer();
+    SObj = Pair.first->getPhysObjectPointer();
+    std::swap(RelContactPos[0], RelContactPos[1]);
+  }
 
   math::Vec3f velocity = FObj->getRotation() & RelContactPos[0];
   velocity += FObj->getVelocity();
@@ -112,6 +119,17 @@ void ContactResolver::resolve(PhysicsObjectsPair &Pair, Contact Contact, float D
 
   // Adding change velocity to objects
   addChange(Pair, Contact, deltaVelocity, relativeContactPosition, DampingCoeff);
+
+  if (SObj->hasFiniteMass())
+  {
+    std::swap(relativeContactPosition[0], relativeContactPosition[1]);
+
+    phys::Contact tmp(Contact._position, -Contact._normal, Contact._penetration);
+    tmp.calculateContactBasis();
+    addChange(PhysicsObjectsPair(Pair.second, Pair.first), tmp, deltaVelocity, relativeContactPosition, DampingCoeff);
+  }
+  //else
+  //  addChange(PhysicsObjectsPair(Pair.second, Pair.first), tmp, deltaVelocity, relativeContactPosition, DampingCoeff);
 } /* End of 'resolve' function */
 
 /* Response function */

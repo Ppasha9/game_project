@@ -269,8 +269,9 @@ void PhysObject::integrate(float Duration)
     //_orientation = math::Quatf(_rotation.getNormalized(), _rotation.length() * Duration);
 
   // Impose drag.
-  //_velocity *= pow(_linearDamping, Duration);
-  //_rotation *= pow(_angularDamping, Duration);
+  _velocity *= pow(_linearDamping, Duration);
+  _velocity *= pow(_linearDamping, Duration);
+  _rotation *= pow(_angularDamping, Duration);
 
   // Normalize the orientation, and update the matrices with the new position and orientation.
   calculateDerivedData();

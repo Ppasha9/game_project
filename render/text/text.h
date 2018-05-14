@@ -242,6 +242,9 @@ namespace render
     /* Get text primitive height in pixels function. */
     int getHeight(void) const;
 
+    /* Default constructor */
+    Text(void) = default;
+
     /* Class constructor */
     Text(const std::string &Name);
 
