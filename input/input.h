@@ -122,6 +122,8 @@ namespace input
     // Joystick work functions
     bool JoyHit(UINT Id, UINT Button) const;
 
+    void JoyHits(std::vector<UINT> &Hits);
+
     bool IsNewJoyHit(UINT Id, UINT Button)  const;
 
     Vec2f LeftStick(UINT Id) const;

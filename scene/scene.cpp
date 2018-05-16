@@ -24,7 +24,7 @@ using namespace input;
 Scene *s_Scene;
 
 Scene::Scene(void) :
-  _isGame(false), _ballsTouch(new snd::Sound("ahhh.wav")),
+  _isGame(false), _ballsTouch(new snd::Sound("balls.wav")),
   _ballWallTouch(new snd::Sound("walls.wav")) ,
   _ulta(new snd::Sound("ulta.wav")), _goal(new snd::Sound("goal.wav"))
 {
@@ -178,7 +178,9 @@ void Scene::Response(void)
     // Response camera
     UINT i = 0;
     std::vector<UINT> keys;
-    input.KeysHited(keys) ;
+    std::vector<UINT> joys;
+    input.KeysHited(keys);
+    input.JoyHits(joys);
     for (auto &it = _playersA.begin(); it != _playersA.end(); it++, i++)
     {
       (*it)->SetCamera(i);
@@ -198,12 +200,46 @@ void Scene::Response(void)
         _ulta->stop();
         _ulta->play();
       }
+      // Check gamepad
+      res = (*it)->MoveKeyboard(joys);
+      if (res == 0)
+      {
+        Vec3f ballPos = _ball->GetPos();
+        Vec3f playerPos = (*it)->GetPos();
+        Vec3f Dir = ballPos - playerPos;
+        float Dist = Dir.length();
+        Dir.norm();
+        if (Dist >= KICK_DIST)
+          continue;
+        _ball->ApplyForce(Dir * (KICK_DIST / Dist / Dist) * KICK_FORCE);
+        // Sound play
+        _ulta->stop();
+        _ulta->play();
+      }
+
     }
     for (auto &it = _playersB.begin(); it != _playersB.end(); it++, i++)
     {
       (*it)->SetCamera(i);
       (*it)->update();
       int res = (*it)->MoveKeyboard(keys);
+      if (res == 0)
+      {
+        Vec3f ballPos = _ball->GetPos();
+        Vec3f playerPos = (*it)->GetPos();
+        Vec3f Dir = ballPos - playerPos;
+        float Dist = Dir.length();
+        Dir.norm();
+        if (Dist >= KICK_DIST)
+          continue;
+        _ball->ApplyForce(Dir * (KICK_DIST / Dist / Dist) * KICK_FORCE);
+        // Sound play
+        _ulta->stop();
+        _ulta->play();
+      }
+
+      // Check gamepad
+      res = (*it)->MoveKeyboard(joys);
       if (res == 0)
       {
         Vec3f ballPos = _ball->GetPos();
@@ -358,14 +394,30 @@ void scene::Scene::ControlPresetsCreate(void)
 {
   // First key preset
   moveMap preset;
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_W, COMMAND_TYPE::MoveForward));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_A, COMMAND_TYPE::MoveLeft));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_D, COMMAND_TYPE::MoveRight));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_S, COMMAND_TYPE::MoveBack));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_Q, COMMAND_TYPE::MoveJump));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_E, COMMAND_TYPE::MoveKick));
-  _presets.push_back(preset);
-  preset.clear();
+  Input &inp = Input::GetInstance();
+  uvec ids;
+  inp.GetJoyIds(ids);
+
+  if (ids.size() > 0)
+  {
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_DPAD_UP, COMMAND_TYPE::MoveForward));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_DPAD_LEFT, COMMAND_TYPE::MoveLeft));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_DPAD_RIGHT, COMMAND_TYPE::MoveRight));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_DPAD_DOWN, COMMAND_TYPE::MoveBack));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_A, COMMAND_TYPE::MoveJump));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_X, COMMAND_TYPE::MoveKick));
+  }
+  else
+  {
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_W, COMMAND_TYPE::MoveForward));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_A, COMMAND_TYPE::MoveLeft));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_D, COMMAND_TYPE::MoveRight));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_S, COMMAND_TYPE::MoveBack));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_Q, COMMAND_TYPE::MoveJump));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_E, COMMAND_TYPE::MoveKick));
+    _presets.push_back(preset);
+    preset.clear();
+  }
   // Second key preset
   preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_UPARROW, COMMAND_TYPE::MoveForward));
   preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_LEFTARROW, COMMAND_TYPE::MoveLeft));

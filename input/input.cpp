@@ -361,6 +361,28 @@ bool Input::JoyHit(UINT Id, UINT Button) const
   return (joy->second._curState.Gamepad.wButtons & Button) != 0;
 } /* End of Input::JoyHit function */
 
+void Input::JoyHits(std::vector<UINT>& Hits)
+{
+  Hits.clear();
+  auto joy = JoySticks.begin();
+  if (joy == JoySticks.end())
+    return;
+  auto id = joy->first;
+
+  if (JoyHit(id, XINPUT_GAMEPAD_DPAD_UP))
+    Hits.push_back(XINPUT_GAMEPAD_DPAD_UP);
+  if (JoyHit(id, XINPUT_GAMEPAD_DPAD_LEFT))
+    Hits.push_back(XINPUT_GAMEPAD_DPAD_LEFT);
+  if (JoyHit(id, XINPUT_GAMEPAD_DPAD_RIGHT))
+    Hits.push_back(XINPUT_GAMEPAD_DPAD_RIGHT);
+  if (JoyHit(id, XINPUT_GAMEPAD_DPAD_DOWN))
+    Hits.push_back(XINPUT_GAMEPAD_DPAD_DOWN);
+  if (JoyHit(id, XINPUT_GAMEPAD_A))
+    Hits.push_back(XINPUT_GAMEPAD_A);
+  if (JoyHit(id, XINPUT_GAMEPAD_X))
+    Hits.push_back(XINPUT_GAMEPAD_X);
+} /* End of 'Input::JoyHits' function */
+
 bool Input::IsNewJoyHit(UINT Id, UINT Button) const
 {
   auto joy = JoySticks.find(Id);

@@ -20,7 +20,7 @@ const float Player::RotationCoeff = 1.0f;
 // Jump coeficent
 
 const float Player::Radius = 3;
-const float Player::WMaxTime = 0.30;
+const float Player::WMaxTime = 0.30f;
 
 /* Class constructor */
 Player::Player(const render::PrimPtr &Prim, phys::PhysObject *Obj, const math::Vec3f &DirVec,
