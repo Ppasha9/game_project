@@ -406,25 +406,27 @@ void scene::Scene::ControlPresetsCreate(void)
     preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_DPAD_DOWN, COMMAND_TYPE::MoveBack));
     preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_A, COMMAND_TYPE::MoveJump));
     preset.insert(std::pair<UINT, COMMAND_TYPE>(XINPUT_GAMEPAD_X, COMMAND_TYPE::MoveKick));
+    _presets.push_back(preset);
+    preset.clear();
   }
   else
   {
-    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_W, COMMAND_TYPE::MoveForward));
-    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_A, COMMAND_TYPE::MoveLeft));
-    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_D, COMMAND_TYPE::MoveRight));
-    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_S, COMMAND_TYPE::MoveBack));
-    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_Q, COMMAND_TYPE::MoveJump));
-    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_E, COMMAND_TYPE::MoveKick));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_UPARROW, COMMAND_TYPE::MoveForward));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_LEFTARROW, COMMAND_TYPE::MoveLeft));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RIGHTARROW, COMMAND_TYPE::MoveRight));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_DOWNARROW, COMMAND_TYPE::MoveBack));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RCONTROL, COMMAND_TYPE::MoveJump));
+    preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RSHIFT, COMMAND_TYPE::MoveKick));
     _presets.push_back(preset);
     preset.clear();
   }
   // Second key preset
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_UPARROW, COMMAND_TYPE::MoveForward));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_LEFTARROW, COMMAND_TYPE::MoveLeft));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RIGHTARROW, COMMAND_TYPE::MoveRight));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_DOWNARROW, COMMAND_TYPE::MoveBack));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RCONTROL, COMMAND_TYPE::MoveJump));
-  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_RSHIFT, COMMAND_TYPE::MoveKick));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_W, COMMAND_TYPE::MoveForward));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_A, COMMAND_TYPE::MoveLeft));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_D, COMMAND_TYPE::MoveRight));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_S, COMMAND_TYPE::MoveBack));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_Q, COMMAND_TYPE::MoveJump));
+  preset.insert(std::pair<UINT, COMMAND_TYPE>(DIK_E, COMMAND_TYPE::MoveKick));
   _presets.push_back(preset);
   preset.clear();
   // Third key preset
