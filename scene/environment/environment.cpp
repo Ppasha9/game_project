@@ -68,10 +68,10 @@ Environment::Environment( void )
   plane_bb
     lw = {{1, 0, 0}, {-_width / 2 - _standsWidth, 0, 0}, {-_width / 2 - _standsWidth, 1, 0}},
     rw = {{-1, 0, 0}, {_width / 2 + _standsWidth, 0, 0}, {_width / 2 + _standsWidth, 1, 0}},
+    yw = {{0, 0, 1}, {0, 0, -_length / 2 - _goalDepth}, {0, 1, -_length / 2 - _goalDepth}},
+    pw = {{0, 0, -1}, {0, 0, _length / 2 + _goalDepth}, {0, 1, _length / 2 + _goalDepth}},
     ls = {{_standsHeight / slope_len, _standsWidth / slope_len, 0}, {-_width / 2, 0, 0}, {-_width / 2, 0, 1}},
     rs = {{-_standsHeight / slope_len, _standsWidth / slope_len, 0}, {_width / 2, 0, 0}, {_width / 2, 0, 1}},
-    pw = {{0, 0, 1}, {0, 0, -_length / 2}, {0, 1, -_length / 2}},
-    yw = {{0, 0, -1}, {0, 0, _length / 2}, {0, 1, _length / 2}},
     fl = {{0, 1, 0}, {0, 0, 0}, {1, 0, 0}},
     cl = {{0, -1, 0}, {0, _height, 0}, {1, _height, 0}};
   
@@ -83,22 +83,24 @@ Environment::Environment( void )
   };
 
   box_bb
-    bs = {{0, 0, -_goalDepth / 2}, {(_width - _goalWidth) / 4, 0, 0}, _height / 2},
+    bs = {{0, 0, -_goalDepth / 2}, {(_width + _standsWidth * 2 - _goalWidth) / 4, 0, 0}, _height / 2},
     bg = {{0, 0, -_goalDepth / 2}, {_goalWidth / 2, 0, 0}, _height / 2};
 
   phs.registerObject("l_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &lw);
   phs.registerObject("r_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &rw);
+  phs.registerObject("p_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &pw);
+  phs.registerObject("y_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &yw);
   phs.registerObject("l_stands", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &ls);
   phs.registerObject("r_stands", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &rs);
   phs.registerObject("floor", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &fl);
   phs.registerObject("ceiling", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &cl);
   //phs.registerObject("p_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &pw);
   //phs.registerObject("y_wall", {0, 0, 0}, 0, 0, 0, phys::bounding_volume_type::PLANE, &yw);
-  phs.registerObject("p_left", {-(_width - _goalWidth) / 4 - _goalWidth / 2, _height / 2, -(_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
-  phs.registerObject("p_right", {(_width - _goalWidth) / 4 + _goalWidth / 2, _height / 2, -(_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
+  phs.registerObject("p_left", {-(_width + _standsWidth * 2 - _goalWidth) / 4 - _goalWidth / 2, _height / 2, -(_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
+  phs.registerObject("p_right", {(_width + _standsWidth * 2 - _goalWidth) / 4 + _goalWidth / 2, _height / 2, -(_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
   phs.registerObject("p_goal", {0, _height / 2 + _goalHeight, -(_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bg);
-  phs.registerObject("y_left", {-(_width - _goalWidth) / 4 - _goalWidth / 2, _height / 2, (_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
-  phs.registerObject("y_right", {(_width - _goalWidth) / 4 + _goalWidth / 2, _height / 2, (_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
+  phs.registerObject("y_left", {-(_width + _standsWidth * 2 - _goalWidth) / 4 - _goalWidth / 2, _height / 2, (_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
+  phs.registerObject("y_right", {(_width + _standsWidth * 2 - _goalWidth) / 4 + _goalWidth / 2, _height / 2, (_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bs);
   phs.registerObject("y_goal", {0, _height / 2 + _goalHeight, (_length + _goalDepth) / 2}, 0, 0, 0, phys::bounding_volume_type::BOX, &bg);
 } /* End of 'Environment::Environment' function */
 
